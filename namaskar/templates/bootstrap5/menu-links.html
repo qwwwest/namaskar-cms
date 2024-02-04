@@ -1,0 +1,22 @@
+<!-- menu-links-->
+<ul>
+    {% for elt in elts %}
+    {% if elt.active || level || parentActive %}
+    <li class="nav-item">
+        <a href="{{ elt.absUrl }}" class="nav-link {{ elt.active }}">{{ elt.title}}</a>
+
+        {% if elt.children %}
+
+        {% include menu-links.html with:
+        - elts: elt.children
+        - level: level - 1
+        - parentActive: parentActive
+        %}
+
+        {% endif %}
+
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+<!-- /menu-links-->

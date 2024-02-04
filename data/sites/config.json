@@ -1,0 +1,7 @@
+<?php
+
+$debugmode = true;
+$salt = '';
+$superadmin = "login::password";
+
+ 

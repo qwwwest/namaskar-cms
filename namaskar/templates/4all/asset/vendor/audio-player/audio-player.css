@@ -1,0 +1,369 @@
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+*,
+*:before,
+*:after {
+    outline: 0;
+    box-sizing: border-box;
+}
+
+input,
+button {
+    outline: none;
+}
+
+.simple-audio-player a,
+.simple-audio-player a:hover,
+.simple-audio-player a:visited {
+    color: #ddd;
+    text-decoration: none;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-align {
+    align-items: center;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* HTML5 Audio Player with Playlist, source: https://codepen.io/sekedus/pen/ExxjZEz */
+.simple-audio-player button,
+.simple-audio-player input,
+.simple-audio-player img {
+    border: 0;
+}
+
+:root {
+    --audioplayer-background: white;
+    --audioplayer-button: black;
+    --audioplayer-button-disabled: #666;
+    --audioplayer-hover-background: #ddd;
+    --audioplayer-hover-color: #000;
+    --audioplayer-strip1: #eee;
+    --audioplayer-strip2: #fff;
+}
+
+.simple-audio-player {
+    max-width: 600px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    text-align: initial;
+    line-height: initial;
+    background: var(--audioplayer-background);
+    color: var(--audioplayer-button);
+    margin: 0 auto;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid var(--audioplayer-button);
+}
+
+.simple-audio-player .simp-album {
+    padding: 20px 25px 5px;
+}
+
+.simple-audio-player .simp-album .simp-cover {
+    margin-right: 20px;
+}
+
+.simple-audio-player .simp-album .simp-cover img {
+    max-width: 80px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+.simple-audio-player .simp-album .simp-title {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+.simple-audio-player .simp-album .simp-artist {
+    font-size: 90%;
+    color: #6c7883;
+}
+
+.simple-audio-player .simp-controls {
+    padding: 15px;
+}
+
+.simple-audio-player .simp-controls button {
+    font-size: 130%;
+    width: 32px;
+    height: 32px;
+    background: none;
+    color: var(--audioplayer-button);
+    padding: 7px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 3px;
+}
+
+.simple-audio-player .simp-controls button[disabled] {
+    color: var(--audioplayer-button-disabled);
+    cursor: initial;
+}
+
+.simple-audio-player .simp-controls button:not([disabled]):hover {
+    background: var(--audioplayer-hover-background);
+    color: var(--audioplayer-hover-color);
+}
+
+.simple-audio-player .simp-controls .simp-prev,
+.simple-audio-player .simp-controls .simp-next {
+    font-size: 100%;
+}
+
+.simple-audio-player .simp-controls .simp-tracker,
+.simple-audio-player .simp-controls .simp-volume {
+    flex: 1;
+    margin-left: 10px;
+    position: relative;
+}
+
+.simple-audio-player .simp-controls .simp-buffer {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 5px;
+    margin-top: -2.5px;
+    border-radius: 100px;
+}
+
+.simple-audio-player .simp-controls .simp-loading .simp-buffer {
+    -webkit-animation: audio-progress 1s linear infinite;
+    animation: audio-progress 1s linear infinite;
+    background-image: linear-gradient(-45deg, #000 25%, transparent 25%, transparent 50%, #000 50%, #000 75%, transparent 75%, transparent);
+    background-repeat: repeat-x;
+    background-size: 25px 25px;
+    color: transparent;
+}
+
+.simple-audio-player .simp-controls .simp-time,
+.simple-audio-player .simp-controls .simp-others {
+    margin-left: 10px;
+}
+
+.simple-audio-player .simp-controls .simp-others {
+    display: none ! important;
+}
+
+.simple-audio-player .simp-controls .simp-volume {
+    max-width: 110px;
+}
+
+.simple-audio-player .simp-controls .simp-volume .simp-mute {
+    margin-right: 5px;
+}
+
+.simple-audio-player .simp-controls .simp-others .simp-active {
+    background: #242f3d;
+}
+
+.simple-audio-player .simp-controls .simp-others .simp-shide button {
+    font-size: 100%;
+    padding: 0;
+    width: 24px;
+    height: 14px;
+    display: block;
+}
+
+.simple-audio-player .simp-controls input[type=range] {
+    -webkit-appearance: none;
+    background: transparent;
+    height: 19px;
+    margin: 0;
+    width: 100%;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.simple-audio-player .simp-controls input[type=range]::-webkit-slider-runnable-track {
+    background: rgba(183, 197, 205, .66);
+    height: 5px;
+    border-radius: 2.5px;
+    transition: box-shadow .3s ease;
+    position: relative;
+}
+
+.simple-audio-player .simp-controls input[type=range]::-moz-range-track {
+    background: rgba(183, 197, 205, .66);
+    height: 5px;
+    border-radius: 2.5px;
+    transition: box-shadow .3s ease;
+    position: relative;
+}
+
+.simple-audio-player .simp-controls .simp-load .simp-progress::-webkit-slider-runnable-track {
+    background: #2f3841;
+}
+
+.simple-audio-player .simp-controls .simp-load .simp-progress::-moz-range-track {
+    background: #2f3841;
+}
+
+.simple-audio-player .simp-controls .simp-loading .simp-progress::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, .25);
+}
+
+.simple-audio-player .simp-controls .simp-loading .simp-progress::-moz-range-track {
+    background: rgba(255, 255, 255, .25);
+}
+
+.simple-audio-player .simp-controls input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #fff;
+    height: 13px;
+    width: 13px;
+    margin-top: -4px;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 0 0 1px rgba(47, 52, 61, .2);
+}
+
+.simple-audio-player .simp-controls input[type=range]::-moz-range-thumb {
+    -webkit-appearance: none;
+    background: #fff;
+    height: 13px;
+    width: 13px;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .15), 0 0 0 1px rgba(47, 52, 61, .2);
+}
+
+.simple-audio-player .simp-footer {
+    padding: 10px 10px 12px;
+    font-size: 90%;
+    text-align: center;
+    opacity: .7;
+}
+
+.simple-audio-player .simp-display {
+    overflow: hidden;
+    max-height: 650px;
+    transition: max-height .5s ease-in-out;
+}
+
+.simple-audio-player .simp-hide {
+    max-height: 0;
+}
+
+/* playlist */
+.simple-audio-player ul {
+    margin: 5px 0 0;
+    padding: 0;
+    list-style: none;
+
+}
+
+.simple-audio-player ul li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin: 0;
+    padding: 8px 20px;
+    cursor: pointer;
+}
+
+.simple-audio-player ul li.album {
+    background-color: var(--audioplayer-button) !important;
+    color: var(--audioplayer-background) !important;
+    opacity: .5;
+    text-decoration: none !important;
+    cursor: default !important;
+}
+
+.simple-audio-player ul li:last-child {
+    padding-bottom: 13px;
+}
+
+.simple-audio-player ul li:nth-child(odd) {
+    background: var(--audioplayer-strip1);
+}
+
+.simple-audio-player ul li:hover {
+
+    text-decoration: underline;
+}
+
+.simple-audio-player ul li.simp-active {
+    color: var(--audioplayer-button);
+    font-weight: bold;
+}
+
+.simple-audio-player ul li.simp-active::before {
+    content: '▶ ';
+}
+
+.simple-audio-player ul li .simp-desc {
+    font-size: 90%;
+    opacity: .5;
+    margin-left: 5px;
+}
+
+/* playlist scrollbar */
+.simple-audio-player ul {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: #73797f #2f3841;
+}
+
+.simple-audio-player ul::-webkit-scrollbar-track {
+    background-color: #2f3841;
+}
+
+.simple-audio-player ul::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2f3841;
+}
+
+.simple-audio-player ul::-webkit-scrollbar-thumb {
+    background-color: #73797f;
+}
+
+/* progress animation */
+@-webkit-keyframes audio-progress {
+    to {
+        background-position: 25px 0;
+    }
+}
+
+@keyframes audio-progress {
+    to {
+        background-position: 25px 0;
+    }
+}
+
+/* mobile */
+@media screen and (max-width:480px) {
+
+    .simple-audio-player .simp-controls .simp-volume,
+    .simple-audio-player .simp-controls .simp-others {
+        display: none;
+    }
+
+    .simple-audio-player .simp-controls .simp-time {
+        margin-right: 10px;
+    }
+}
+
+@media screen and (max-width:370px) {
+
+    .simple-audio-player .simp-time .simp-slash,
+    .simple-audio-player .simp-time .end-time {
+        display: none;
+    }
+}

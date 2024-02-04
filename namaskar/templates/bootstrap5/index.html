@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="{{page.language}}" data-bs-theme="{{ theme.colormode ? theme.colormode : 'auto'}}">
+
+<head>
+    {% if theme.colormodee %}
+    <script src="{{asset}}/coloor-mode.js"></script>
+    {% end if %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Qwwwest">
+    <meta name="generator" content="Namaskar">
+    <title>{{page.title}} :: {{site.name}}</title>
+
+
+    {% if theme.bootswatch %}
+    <link href="{{asset}}/vendor/bootswatch/{{theme.bootswatch}}/bootstrap.min.css" rel="stylesheet">
+    {% else %}
+    <link href="{{asset}}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    {% endif %}
+    <link href="{{asset}}/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="{{asset}}/namaskar.css" rel="stylesheet">
+    <link href="{{asset}}/styles.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="navbar-{{ theme.navbar.position ?? 'normal' }} 
+{{ page.show.regions ? 'show-regions': ''}}">
+    {# https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb {% include color-mode.html %} #}
+
+    [region header.top ]
+    {% include navbar.html %}
+
+    [region header.bottom ]
+
+    <div class="container-fluid pb-3 flex-grow-1 d-flex flex-column flex-sm-row overflow-auto">
+
+        {% if page.regions.sidebar.first || site.regions.sidebar.first %}
+
+        {% include aside.html %}
+        {% endif %}
+        <div class="container col overflow-auto h-100 ">
+
+
+            [region breadcrumb]
+            {% include breadcrumb.html %}
+            [render "page.region.breadcrumb"]
+
+            <main class="container col overflow-auto h-100 border rounded-3 p-3">
+
+                [region help]
+
+                [region main.top]
+                {% if page.admin %}
+                {% include admin.html %}
+                {% end if %}
+
+
+
+                {% if site.autoTitle %}
+                <h1>{{page.title}}</h1>
+                {% end if %}
+
+                [content]
+                [region main.bottom]
+            </main>
+
+        </div>
+    </div>
+
+    {% if page.regions.footer %}
+    <footer class="pt-3 mt-4 text-body-secondary border-top">
+        [region footer]
+    </footer>
+    {% end if %}
+
+    <script src="{{asset}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    {% if site.load.highlight.js %}
+    <link rel="stylesheet" href="{{asset}}/vendor/highlight/{{ site.load.highlight.js.theme }}.min.css">
+    <script src="{{asset}}/vendor/highlight/highlight.min.js"></script>
+    <script>//hljs.highlightAll();
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                className = el.className;
+                console.log("className = ".className);
+                hljs.highlightElement(el);
+            });
+        });
+    </script>
+
+    {% end if %}
+    {% if site.microlight %}
+    <script src="{{asset}}/vendor/js/microlight.js"></script>
+    <script>microlight.reset();</script>
+    {% end if %}
+
+    {% if site.jquery %}
+    <script src="{{asset}}/vendor/js/jquery.js"></script>
+    {% end if %}
+
+    <script src="{{asset}}/namaskar.js"></script>
+
+</body>
+
+</html>

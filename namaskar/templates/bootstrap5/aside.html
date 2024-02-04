@@ -1,0 +1,31 @@
+{#
+<button class="navbar-toggler d-block d-lg-none offcanvasbutton" type="button" data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvasResponsive" aria-controls="#offcanvasResponsive" aria-label="Toggle navigation">
+    <svg width="100%" height="100%" alt="">
+        <use xlink:href="{{asset}}/shapes.svg#menu2"></use>
+    </svg>
+    BLEP
+</button>
+#}
+
+<aside
+    class=" row flex-grow-sm-1 flex-grow-0 sticky-topcol-sm-3 flex-grow-sm-1 flex-shrink-1 flex-grow-0  pb-sm-0 pb-3">
+    <div class="offcanvas-lg offcanvas-start sidemenu" tabindex="-1" id="offcanvasResponsive"
+        aria-labelledby="offcanvasResponsiveLabel">
+        <div class="offcanvas-header">
+            <h2 class="offcanvas-title" id="offcanvasResponsiveLabel">
+                {{ page.menu.aside.left.title }}efzef </h2>
+            {# <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasResponsive"
+                aria-label="Close"></button> #}
+        </div>
+        <div class="offcanvas-body ">
+            <div class="flex-shrink-0 p-3" style="width: 280px;">
+
+                [region sidebar.first]
+
+
+
+            </div>
+        </div>
+    </div>
+</aside>

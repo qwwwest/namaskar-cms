@@ -1,0 +1,42 @@
+<ul class="submenu{{ depth === 1 ? " top" : "" }}">
+    {% for elt in elts %}
+
+    {% if elt.children && isElementAccessible( elt ) %}
+    <li class=" submenu level{{ depth }}">
+        {% if type === 'dynamic' %}
+        <button class="btn btn-toggle align-items-center rounded {{ elt.active || level > 1 ? '': ' collapsed'}}"
+            data-bs-toggle="collapse" data-bs-target="#id{{elt.id}}"
+            aria-expanded="{{ elt.active || level > 1 ? 'true': 'false'}}">
+            <svg class="bi" width="24" height="24" alt="">
+                <use xlink:href="{{asset}}/shapes.svg#chevronright"></use>
+            </svg>
+
+        </button>
+        {% endif %}
+        <a href="{{ homepath }}/{{ elt.url }}"
+            class=" rounded level{{ depth }}{{ elt.current ? ' current': ' collapsed'}}">
+            {{ elt.title }}
+        </a>
+        <div class="collapse{{ elt.active || level > 1 ? ' show active': ''}}" id="id{{elt.id}}">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                {% include submenu.html with:
+                - elts: elt.children
+                - type : type
+                - level: level - 1
+                - depth: depth + 1
+                - parentActive: parentActive
+                - homepath: homepath
+                %}
+            </ul>
+        </div>
+    </li>
+    {% endif %}
+    {% if ! elt.children && isElementAccessible( elt ) %}
+    <li class="nav-item"><a href="{{ homepath }}/{{ elt.url }}"
+            class="rounded level{{ depth }}{{ elt.active ? ' show active': ''}}{{ elt.current ? '  current': ''}}">{{
+            elt.title}} </a>
+    </li>
+    {% endif %}
+
+    {% endfor %}
+</ul>
