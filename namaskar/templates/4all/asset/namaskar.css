@@ -697,3 +697,18 @@ h1.page404 {
   font-size: 12rem;
   display: block;
 }
+
+h1 {
+  font-size: 5rem;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 4rem;
+
+}
+
+h3 {
+  font-size: 3rem;
+
+}

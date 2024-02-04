@@ -4,12 +4,13 @@ use Qwwwest\Namaskar\Kernel;
 $this->registerComponent('offcanvas');
 $this->registerComponent('sidebar');
 $this->registerComponent('breadcrumb', false);
-$this->registerComponent('quote');
+$this->registerComponent('quoote');
 
 $this->registerHtmlElement('p');
 $this->registerHtmlElement('div');
 
 $this->shortCode2Template('alert');
+$this->shortCode2Template('quote');
 $this->shortCode2Template('highlight', 'alert', true, ['type' => 'highlight']);
 $this->shortCode2Template('info', 'alert', true, ['type' => 'info']);
 $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
