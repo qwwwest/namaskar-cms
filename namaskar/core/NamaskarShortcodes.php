@@ -729,9 +729,26 @@ $this->shortcodes->addShortcode('=', function ($attributes, $content, $tagName) 
 
     return ($this->conf)($attributes[0]);
 });
+$this->shortcodes->addShortcode('shortcodes', function ($attributes, $content, $tagName) {
 
+    $shortcodes = $this->shortcodes->getShortcodes();
+    $list = '';
+    foreach ($shortcodes as $tag => $shortcode) {
+        $list .= "$tag "; # code...
+    }
+
+    return $list;
+});
 $this->shortcodes->addShortcode('link', function ($attributes, $content, $tagName) {
     $href = $attributes[0];
+
+    if ($href === '..') {
+        $url = ($this->conf)('url');
+        $parentId = $this->mempad->getElementByUrl($url)->parent;
+        if ($parentId) {
+            $href = $this->mempad->getElementById($parentId)->url;
+        }
+    }
     $absroot = ($this->conf)('absroot');
     if (isset($attributes[1])) {
         $text = $attributes[1];

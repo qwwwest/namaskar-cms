@@ -62,8 +62,11 @@ class AssetController extends AbstractController
 
 
     #[Route('/{domain?}/asset/{asset*}')]
-    public function domainAssetManager($domain, $asset = '/'): ?Response
+    public function domainAssetManager($domain = null, $asset = null): ?Response
     {
+
+        if ($asset === null || $asset === '')
+            return null;
 
         // if domain is null, we use from global
         if (!$domain)
@@ -79,12 +82,14 @@ class AssetController extends AbstractController
     }
 
     #[Route('/asset/{asset*}')]
-    public function singleAssetManager($asset = '/'): ?Response
+    public function singleAssetManager($asset = null): ?Response
     {
 
+        if ($asset === null || $asset === '')
+            return null;
         // if domain is null, we use from global
-       
-            $domain = $GLOBALS['mempad'];
+
+        $domain = $GLOBALS['mempad'];
 
 
         $page = new PageDataBuilder($domain);
@@ -99,7 +104,7 @@ class AssetController extends AbstractController
     {
 
         $filenames = [];
- 
+
 
         $filenames[] = "/$theme/asset/$rest";
         $filenames[] = "/bootstrap5/asset/$rest";
@@ -115,7 +120,7 @@ class AssetController extends AbstractController
                     return $response;
                 }
 
-           
+
             }
         }
         return $this->response('asset not found' . $filename);
@@ -128,7 +133,7 @@ class AssetController extends AbstractController
         //     }
         // }
 
-      
+
 
 
     }
