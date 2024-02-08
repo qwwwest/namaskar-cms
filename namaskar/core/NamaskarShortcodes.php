@@ -1,13 +1,13 @@
 <?php
 use Qwwwest\Namaskar\Kernel;
 
-$this->registerComponent('offcanvas');
-$this->registerComponent('sidebar');
-$this->registerComponent('breadcrumb', false);
-$this->registerComponent('quoote');
+//$this->registerComponent('offcanvas');
+//$this->registerComponent('sidebar');
+//$this->registerComponent('breadcrumb', false);
 
-$this->registerHtmlElement('p');
-$this->registerHtmlElement('div');
+
+//$this->registerHtmlElement('p');
+//$this->registerHtmlElement('div');
 
 $this->shortCode2Template('alert');
 $this->shortCode2Template('quote');
@@ -15,10 +15,6 @@ $this->shortCode2Template('highlight', 'alert', true, ['type' => 'highlight']);
 $this->shortCode2Template('info', 'alert', true, ['type' => 'info']);
 $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
 $this->shortCode2Template('warning', 'alert', true, ['type' => 'warning']);
-
-
-
-
 
 $this->shortcodes->addShortcode('submenu', function ($attributes, $content, $tagName) {
 
@@ -154,16 +150,6 @@ $this->shortcodes->addShortcode('video-bg-fullscreen', function ($attributes, $c
 
 });
 //////
-$this->shortcodes->addShortcode('mp3', function ($attributes, $content, $tagName) {
-    // $path = $attributes[0];
-
-    //$folder =  ($this->conf)($attributes[0]);
-    //$playlist =  ($this->conf)($attributes[0]);
-
-    $content = $this->renderBlock("{> audio-player $attributes[0]}");
-    $content = $this->shortcodes->process($content);
-    return $content;
-});
 
 $this->shortcodes->addShortcode('.audio', function ($attributes, $content, $tagName) {
 
@@ -194,7 +180,7 @@ $this->shortcodes->addShortcode('.audio', function ($attributes, $content, $tagN
 });
 
 
-$this->shortcodes->addShortcode('vimeo', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('.vimeo', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
 
     $ratio = $attributes[1] ?? '16x9';
@@ -231,28 +217,6 @@ COL;
 HTML;
 });
 
-$this->shortcodes->addShortcode('===', function ($attributes, $content, $tagName) {
-    $content = explode("\n[===]", $content);
-    $nb = count($content);
-    $cols = '';
-    foreach ($content as $key => $value) {
-
-        $value = $this->renderBlock(trim($value));
-        $cols .= <<<COL
-<div class="col">
-        $value
-</div>
-COL;
-    }
-
-    return <<<HTML
-
-  <div class="row row-cols-1 row-cols-lg-$nb">
-  $cols
-  </div>
-
-HTML;
-});
 
 $this->shortcodes->addShortcode('?', function ($attributes, $content, $tagName) {
 
@@ -279,7 +243,7 @@ $this->shortcodes->addShortcode('dump', function ($attributes, $content, $tagNam
 html;
 });
 
-$this->shortcodes->addShortcode('meta', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('.meta', function ($attributes, $content, $tagName) {
 
     $meta = <<<META
     <meta name="description" content="{= page.description}" />
@@ -303,7 +267,7 @@ META;
 
 // foreach item in LIST
 // foreach file in MASK (ex:foreach file in "logo/*.svg")
-$this->shortcodes->addShortcode('foreach', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('.foreach', function ($attributes, $content, $tagName) {
 
     $html = '';
     $varname = $attributes[0];
@@ -378,7 +342,7 @@ $this->shortcodes->addShortcode('foreach', function ($attributes, $content, $tag
     return $this->shortcodes->process($html);
 });
 
-$this->shortcodes->addShortcode('+', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('include', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
@@ -406,7 +370,7 @@ $this->shortcodes->addShortcode('+', function ($attributes, $content, $tagName) 
     //return $content;
 });
 
-$this->shortcodes->addShortcode('include', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('.include', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
@@ -493,61 +457,6 @@ HTML;
     return $content;
 });
 
-$this->shortcodes->addShortcode('partial', function ($attributes, $content, $tagName) {
-    static $rec = 0;
-    $rec++;
-
-    // relative path are not allowed
-    if (strpos($attributes[0], '/') !== false) {
-        die('partial ' . $attributes[0] . ' not allowed');
-    }
-
-    $content = $this->resolve_template('_' . $attributes[0]);
-    if ($rec > 20) {
-        die('recurtion spotted in partial ' . $attributes[0]);
-    }
-
-    if (count($attributes) > 1 ?? false) {
-        for ($i = 1; $i < count($attributes); $i++) {
-            $content = str_replace(
-                '$attributes[' . $i . ']',
-                $attributes[$i],
-                $content
-            );
-        }
-    }
-    $rec--;
-    return ($this->shortcodes->process($content));
-});
-
-$this->shortcodes->addShortcode('>', function ($attributes, $content, $tagName) {
-    static $rec = 0;
-    $rec++;
-    return ($this->shortcodes->process("BLEP> " . $content));
-    // relative path are not allowed
-    if (strpos($attributes[0], '/') !== false) {
-        die('partial(>) ' . $attributes[0] . ' not allowed');
-    }
-
-    $content = $this->resolve_template('_' . $attributes[0]);
-    if ($rec > 20) {
-        die('recurtion spotted in partial ' . $attributes[0]);
-    }
-
-    // $elt = ($this->conf)($attributes[1]);
-
-    if (count($attributes) > 1 ?? false) {
-        for ($i = 1; $i < count($attributes); $i++) {
-            $content = str_replace(
-                '$attributes[' . $i . ']',
-                $attributes[$i],
-                $content
-            );
-        }
-    }
-    $rec--;
-    return ($this->shortcodes->process($content));
-});
 
 $this->shortcodes->addShortcode('render', function ($attributes, $content, $tagName) {
 
@@ -605,7 +514,7 @@ $this->shortcodes->addShortcode('#', function ($attributes, $content, $tagName) 
 });
 
 
-$this->shortcodes->addShortcode('all', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('_all', function ($attributes, $content, $tagName) {
 
     $content = "\n";
     if ($attributes[0] === 'links') {
@@ -734,7 +643,12 @@ $this->shortcodes->addShortcode('shortcodes', function ($attributes, $content, $
     $shortcodes = $this->shortcodes->getShortcodes();
     $list = '';
     foreach ($shortcodes as $tag => $shortcode) {
-        $list .= "$tag "; # code...
+        // shortcodes starting with '_' or '.' are for internal use.
+        if (strpos($tag, '.') === 0 || strpos($tag, '_') === 0)
+            continue;
+
+        if (preg_match('/^[A-Za-z]/', $tag))
+            $list .= ($list) ? " &bull; <b>$tag</b> " : "<b>$tag</b>"; # code...
     }
 
     return $list;
@@ -786,7 +700,9 @@ $this->shortcodes->addShortcode('img', function ($attributes, $content, $tagName
         MODAL;
 
         $html = ($this->shortcodes->process($html));
-    }if ($caption) {
+    }
+
+    if ($caption) {
 
         $html = <<<IMG
         <figure class="figure">
@@ -1126,7 +1042,7 @@ $this->shortcodes->addShortcode('carousel', function ($attributes, $content, $ta
     return $this->templateHandler($attributes, null, $tagName, false);
 });
 
-$this->shortcodes->addShortcode('lightboxModal', function ($attributes, $content, $tagName) {
+$this->shortcodes->addShortcode('.lightboxModal', function ($attributes, $content, $tagName) {
 
     return $this->templateHandler($attributes, null, $tagName, false);
 });
@@ -1187,170 +1103,3 @@ $this->shortcodes->addShortcode('list', function ($attributes, $content, $tagNam
 });
 
 
-$this->shortcodes->addShortcode('menumd', function ($attributes, $content, $tagName) {
-
-    $folder = 'media/' . $attributes[0] . '/';
-    $root = $this->conf->value('page.url');
-
-    $html = '';
-
-    if (!$folder) {
-        return '';
-    }
-
-    foreach (glob("$folder/{,*/,*/*/,*/*/*/}*.md", GLOB_BRACE) as $filename) {
-
-        [$title, $content] = $this->getTitleAndContentFromMarkdownFile($filename);
-
-        $slug = preg_replace(
-            '/^[0-9-]+[.-]/',
-            '',
-            pathinfo($filename, PATHINFO_FILENAME)
-        );
-        [, $dirname] = explode($folder, $filename);
-
-        $dirname = basename(dirname($dirname));
-
-        $dirname = str_replace('media/' . $attributes[0] . '/', '', $dirname);
-
-        if ($title === null) {
-            $title = $slug;
-        }
-
-        $html .= "<li><a href=\"$root/$dirname/$slug\">$title</a> </li>\n";
-    }
-
-    //  end of folder scanning
-    return '<nav class="sidemenu"><ul>' . $html . '</ul></nav>';
-});
-
-$this->shortcodes->addShortcode('___mount', function ($attributes, $content, $tagName) {
-    $folder = getcwd() . '/media/' . $attributes[0];
-
-    $file = $this->conf->value('page.urlNotFound');
-
-    $defaults = ['index.md', 'README.md', 'article.md'];
-    $default = '';
-    if ($file === '')
-        foreach ($defaults as $key => $value) {
-            if (is_file("$folder/$value")) {
-                $file = $value;
-                break;
-            }
-        }
-
-
-    $parts = pathinfo($file);
-    $content = null;
-
-
-    if (is_file("$folder/$file")) {
-        // "Root"
-        $assetsFolder = "media/$attributes[0]/$file/";
-        $glob = glob("$folder/$file", GLOB_BRACE);
-    } else {
-        $glob = glob("$folder/$parts[dirname]/*$parts[basename].md");
-        $assetsFolder = "media/$attributes[0]/$parts[dirname]/";
-    }
-
-    echo "assetsFolder = $assetsFolder";
-
-    if ($glob[0] ?? false) {
-
-        [$md, $content] = $this->getTitleAndContentFromMarkdownFile($glob[0]);
-        $content = $this->markdownParser->transform($content);
-        $content = $this->shortcodes->process($content);
-
-        $root = $this->conf->value('page.url');
-
-        $content = preg_replace(
-            '# (href|action) *= *"([^:"]*)("|(?:(?:%20|\s|\+)[^"]*"))#m',
-            ' $1="' . $root . '/$2$3',
-            $content
-        );
-        $content = preg_replace(
-            '# (src) *= *"([^:"]*)("|(?:(?:%20|\s|\+)[^"]*"))#m',
-            ' $1="' . "/$assetsFolder" . '/$2$3',
-            $content
-        );
-
-        ($this->conf)('page.urlNotFound', ''); //this way we don't have a 404.
-        return "<div>$content\n</div>";
-    }
-
-    return $this->Page404();
-});
-
-
-$this->shortcodes->addShortcode('newsletter-form', function ($attributes, $content, $tagName) {
-
-    $conf = $this->conf;
-    $conf('page.post', $_POST);
-    //$content ="";
-
-
-    $content = '';
-
-    $firstname = $_POST['firstname'] ?? '';
-    $lastname = $_POST['lastname'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $challenge = (int) ($_POST["challenge"] ?? 0);
-    $blep = $_POST['blep'] ?? null;
-    $submit = $_POST['submit'] ?? null;
-
-    $formHasError = false;
-    $done = false;
-
-    $message = '';
-
-    if ($submit && $firstname && $email && $blep) {
-        if ($challenge > 0 && md5($this->conf->value('site.newsletter.salt') . $challenge) === $blep) {
-            $message = $this->conf->value('site.newsletter.ok');
-            $date = date('Y-d-m H:i:s', time());
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $file = file_get_contents(NL_FILE);
-            $file .= <<<CSV
-$firstname\t$lastname\t$email\t$ip\t$date\n
-CSV;
-            file_put_contents(NL_FILE, $file);
-            $done = true;
-        } else {
-            $message = $this->conf->value('site.newsletter.challengeFail');
-
-
-        }
-    } else {
-
-
-        if ($submit)
-            $message = "Tous les champs sont obligatoires";
-
-    }
-
-    $conf('site.newsletter.firstname', $firstname);
-    $conf('site.newsletter.lastname', $lastname);
-    $conf('site.newsletter.email', $email);
-    $conf('site.newsletter.done', $done);
-
-    $a = random_int(1, 10);
-    $b = random_int(1, 10);
-    $newchallenge = "$a + $b";
-
-
-    $conf('site.newsletter.challenge', "$a + $b");
-    $blep = md5($this->conf->value('site.newsletter.salt') . ($a + $b));
-
-    $conf('site.newsletter.blep', $blep);
-
-    if ($message)
-        $content .= '<strong class="message"> ' . $message . '</strong>';
-
-    if ($done === false) {
-        $form = $this->renderBlock("{partial $attributes[partial]}");
-        $content .= $this->shortcodes->process($form);
-    }
-
-
-
-    return $content;
-});
