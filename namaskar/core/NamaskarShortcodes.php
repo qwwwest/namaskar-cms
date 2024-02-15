@@ -200,7 +200,7 @@ $this->shortcodes->addShortcode('====', function ($attributes, $content, $tagNam
     $cols = '';
     foreach ($content as $key => $value) {
 
-        $value = $this->shortcodes->process(($value));
+        $value = $this->renderBlock($value);
         $cols .= <<<COL
 <div class="col">
         $value
