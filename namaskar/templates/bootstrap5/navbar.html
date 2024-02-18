@@ -77,10 +77,10 @@
 <header class="mb-4">
   <nav class="navbar  bg-{{ theme.navbar.bgcolor }} navbar-{{ theme.navbar.type }} {{  theme.navbar.position }}
    navbar-expand-{{ theme.navbar.expand ?? 'none'}} 
-    bg-{{ theme.navbar.bg }}">
+    bg-{{ theme.navbar.bg }} ">
 
 
-    <div class="{{ theme.navbar.container }}  bg-{{ theme.navbar.bg }} mainlinks">
+    <div class="{{ theme.navbar.container }} bg-{{ theme.navbar.bg }} mainlinks">
       {% include hamburger.html %}
       <a class="navbar-brand" href="{{ homepath }}/{{ site.homeURL }}">
         {% if site.logo.svg %}
@@ -96,7 +96,7 @@
         <strong>{{ site.name }}</strong></a>
       {% include language-menu.html %}
 
-      {% if site.menu.main %}
+      {% if site.menu.main || page.regions.sidebar.first %}
       <div class=" collapse navbar-collapse h-100 bg-{{ theme.navbar.bg }}" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0 ">
           {% for item in site.menu.main %}

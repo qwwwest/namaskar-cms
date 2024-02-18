@@ -120,7 +120,7 @@ class MemPad
 
                 $title = ($rawMode === false) ? trim($title) : $rawtitle;
 
-                // HOME
+                // HOME => ends with //
                 if ($rest === '') {
                     $slug = '';
                     $this->homeId = $id;
@@ -138,11 +138,13 @@ class MemPad
                     }
                 }
 
-
-
-
             }
 
+            if ($this->homeId === null && $level === 1 && strpos($title, '.') !== 0) {
+                $slug = '';
+                $this->homeId = $id;
+                $idHome = $id;
+            }
 
             if ($slug === null)
                 $slug = self::slugify($title);
@@ -155,6 +157,9 @@ class MemPad
             //     $slug = '';
             //     $this->homeId = $id;
             // }
+
+
+
 
             $path[] = $title;
             $url[] = $slug;

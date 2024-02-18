@@ -2,9 +2,9 @@
     {% for elt in elts %}
 
     {% if elt.children && isElementAccessible( elt ) %}
-    <li class=" submenu level{{ depth }}">
+    <li class="submenu level{{ depth }}">
         {% if type === 'dynamic' %}
-        <button class="btn btn-toggle align-items-center rounded {{ elt.active || level > 1 ? '': ' collapsed'}}"
+        <button class="btn btn-toggle align-items-center {{ elt.active || level > 1 ? '': ' collapsed'}}"
             data-bs-toggle="collapse" data-bs-target="#id{{elt.id}}"
             aria-expanded="{{ elt.active || level > 1 ? 'true': 'false'}}">
             <svg class="bi" width="24" height="24" alt="">
@@ -13,8 +13,7 @@
 
         </button>
         {% endif %}
-        <a href="{{ homepath }}/{{ elt.url }}"
-            class=" rounded level{{ depth }}{{ elt.current ? ' current': ' collapsed'}}">
+        <a href="{{ homepath }}/{{ elt.url }}" class="level{{ depth }}{{ elt.current ? ' current': ' collapsed'}}">
             {{ elt.title }}
         </a>
         <div class="collapse{{ elt.active || level > 1 ? ' show active': ''}}" id="id{{elt.id}}">
@@ -33,7 +32,7 @@
     {% endif %}
     {% if ! elt.children && isElementAccessible( elt ) %}
     <li class="nav-item"><a href="{{ homepath }}/{{ elt.url }}"
-            class="rounded level{{ depth }}{{ elt.active ? ' show active': ''}}{{ elt.current ? '  current': ''}}">{{
+            class="level{{ depth }}{{ elt.active ? ' show active': ''}}{{ elt.current ? '  current': ''}}">{{
             elt.title}} </a>
     </li>
     {% endif %}

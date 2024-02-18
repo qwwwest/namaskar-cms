@@ -412,7 +412,7 @@ $this->shortcodes->addShortcode('featurette', function ($attributes, $content, $
         $title = "<h2 class='featurette-heading'>$title<span class='text-muted'>$subtitle</span></h2>";
 
     $content = $this->renderBlock($content);
-    $content = $this->shortcodes->process($content);
+    //$content = $this->shortcodes->process($content);
 
     $astart = ($link) ? "<a href='$link'>" : '';
     $aend = ($link) ? '</a>' : '';
@@ -943,12 +943,14 @@ $this->shortcodes->addShortcode('encode', function ($attributes, $content, $tagN
         }
     }
     $js = <<<SCR
-<span id="$id">[protected by js]</span><script>
-    (function (){let a="$key", b, c="$cipher_text", d="";b=a.split("").sort().join("");for(let e=c.length-1;e>-1;e--)
-    if(a.indexOf(c.charAt(e) !== false)) d+=b.charAt(a.indexOf(c.charAt(e)));else d+= c.charAt(e);d = d.split("").reverse().join("");
-    document.getElementById("$id").innerHTML=d;
-    }());
-    </script>
+<span id="$id">[protected by js]</span>
+
+<script>
+(function (){let a="$key", b, c="$cipher_text", d="";b=a.split("").sort().join("");for(let e=c.length-1;e>-1;e--)
+if(a.indexOf(c.charAt(e) !== false)) d+=b.charAt(a.indexOf(c.charAt(e)));else d+= c.charAt(e);d = d.split("").reverse().join("");
+document.getElementById("$id").innerHTML=d;
+}());
+</script>
 SCR;
 
     return trim($js);

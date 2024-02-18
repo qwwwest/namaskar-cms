@@ -242,8 +242,11 @@ class PageDataBuilder extends TemplateRenderer
     {
         if ($url === '//')
             return $this->mempad->getRootElements();
-        if ($url === '/')
-            return $this->mempad->getHome()->children;
+        if ($url === '/') {
+            $home = $this->mempad->getHome();
+            return $home->children ?? null;
+        }
+
 
         return $this->mempad->getElementByUrl($url)->children ?? null;
     }
@@ -490,6 +493,14 @@ class PageDataBuilder extends TemplateRenderer
 
         $content = $conf('page.rawContent');
 
+        // AUTOLINK: 
+        $content = preg_replace('"\n(http[s]?://[^\n]+?)\n"', '<a href="$1" target="_blank">$1</a>' . "\n", $content);
+        $content = preg_replace(
+            '"\nmailto:(.+?)\n"',
+            'mailto:[encode $1 /]' . "\n",
+            // {encode email /}
+            $content
+        );
         if ($conf('site.auto.title') === 'yes') {
             $content = "# " . $conf('page.title') . "\n\n$content";
         }
@@ -500,8 +511,7 @@ class PageDataBuilder extends TemplateRenderer
             $content = trim($this->renderContent($content));
 
 
-        // temp: autolinking
-        // $content = preg_replace('"\n(https?://\S+)"', '<a href="$1" target="_blank">$1</a>', $content);
+
         // $content = $this->shortcodes->process($content);
 
         // $content = str_replace('<table>', '<table class="table table-striped table-bordered">', $content);

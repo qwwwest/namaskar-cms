@@ -88,10 +88,10 @@
 <header class="mb-4">
   <nav class="navbar  bg-<?= $this->getValue('theme.navbar.bgcolor', $theme ?? null)  ?> navbar-<?= $this->getValue('theme.navbar.type', $theme ?? null)  ?> <?= $this->getValue('theme.navbar.position', $theme ?? null)  ?>
    navbar-expand-<?= $this->getValue('theme.navbar.expand', $theme ?? null) ?? 'none' ?> 
-    bg-<?= $this->getValue('theme.navbar.bg', $theme ?? null)  ?>">
+    bg-<?= $this->getValue('theme.navbar.bg', $theme ?? null)  ?> ">
 
 
-    <div class="<?= $this->getValue('theme.navbar.container', $theme ?? null)  ?>  bg-<?= $this->getValue('theme.navbar.bg', $theme ?? null)  ?> mainlinks">
+    <div class="<?= $this->getValue('theme.navbar.container', $theme ?? null)  ?> bg-<?= $this->getValue('theme.navbar.bg', $theme ?? null)  ?> mainlinks">
       
 <!-- <?= $this->theme."/"."hamburger.html" ?> -->
 <?php foreach(N('folder.templates') as $key => $folder) : ?>
@@ -123,7 +123,8 @@
 <!-- end <?= $this->theme."/"."language-menu.html" ?> -->
 
 
-      <?php if($this->getValue('site.menu.main', $site ?? null)): ?>
+      <?php if($this->getValue('site.menu.main', $site ?? null) 
+|| $this->getValue('page.regions.sidebar.first', $page ?? null)): ?>
       <div class=" collapse navbar-collapse h-100 bg-<?= $this->getValue('theme.navbar.bg', $theme ?? null)  ?>" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0 ">
            

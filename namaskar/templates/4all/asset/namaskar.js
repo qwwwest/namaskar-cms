@@ -116,6 +116,17 @@ if (sidebar && submenus) {
   submenus.innerHTML = sidebar.innerHTML;
 }
 
+const navSlide = () => {
+  const burger = document.getElementById('burger')
+
+  burger.addEventListener('click', () => {
+    document.body.classList.toggle('mobile-menu-show')
+
+  })
+
+}
+
+navSlide()
 
 let Namaskar = { items: [], index: 0 };
 

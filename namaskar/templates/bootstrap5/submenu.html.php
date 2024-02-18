@@ -17,9 +17,9 @@
 
     <?php if($this->getValue('elt.children', $elt ?? null) 
 && $this->isElementAccessible( $this->getValue('elt', $elt ?? null) )): ?>
-    <li class=" submenu level<?= $this->getValue('depth', $depth ?? null)  ?>">
+    <li class="submenu level<?= $this->getValue('depth', $depth ?? null)  ?>">
         <?php if($this->getValue('type', $type ?? null) === 'dynamic'): ?>
-        <button class="btn btn-toggle align-items-center rounded <?= $this->getValue('elt.active', $elt ?? null) 
+        <button class="btn btn-toggle align-items-center <?= $this->getValue('elt.active', $elt ?? null) 
 || $this->getValue('level', $level ?? null) > 1 ? '': ' collapsed' ?>"
             data-bs-toggle="collapse" data-bs-target="#id<?= $this->getValue('elt.id', $elt ?? null) ?>"
             aria-expanded="<?= $this->getValue('elt.active', $elt ?? null) 
@@ -30,8 +30,7 @@
 
         </button>
         <?php endif; ?>
-        <a href="<?= $this->getValue('homepath', $homepath ?? null)  ?>/<?= $this->getValue('elt.url', $elt ?? null)  ?>"
-            class=" rounded level<?= $this->getValue('depth', $depth ?? null)  ?><?= $this->getValue('elt.current', $elt ?? null) ? ' current': ' collapsed' ?>">
+        <a href="<?= $this->getValue('homepath', $homepath ?? null)  ?>/<?= $this->getValue('elt.url', $elt ?? null)  ?>" class="level<?= $this->getValue('depth', $depth ?? null)  ?><?= $this->getValue('elt.current', $elt ?? null) ? ' current': ' collapsed' ?>">
             <?= $this->getValue('elt.title', $elt ?? null)  ?>
         </a>
         <div class="collapse<?= $this->getValue('elt.active', $elt ?? null) 
@@ -52,7 +51,7 @@
     <?php if(! $this->getValue('elt.children', $elt ?? null) 
 && $this->isElementAccessible( $this->getValue('elt', $elt ?? null) )): ?>
     <li class="nav-item"><a href="<?= $this->getValue('homepath', $homepath ?? null)  ?>/<?= $this->getValue('elt.url', $elt ?? null)  ?>"
-            class="rounded level<?= $this->getValue('depth', $depth ?? null)  ?><?= $this->getValue('elt.active', $elt ?? null) ? ' show active': '' ?><?= $this->getValue('elt.current', $elt ?? null) ? '  current': '' ?>"><?= $this->getValue('elt.title', $elt ?? null) ?> </a>
+            class="level<?= $this->getValue('depth', $depth ?? null)  ?><?= $this->getValue('elt.active', $elt ?? null) ? ' show active': '' ?><?= $this->getValue('elt.current', $elt ?? null) ? '  current': '' ?>"><?= $this->getValue('elt.title', $elt ?? null) ?> </a>
     </li>
     <?php endif; ?>
 

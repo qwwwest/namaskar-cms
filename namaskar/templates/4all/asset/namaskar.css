@@ -164,6 +164,103 @@ ol.breadcrumb>li.breadcrumb-item>a {
 
 }
 
+/* Navbar */
+body.navbar-fixed-top {
+  margin-top: 60px;
+}
+
+a.navbar-brand svg.logo {
+
+  padding: 0;
+  margin: 0;
+  color: rgba(var(--bs-primary-rgb));
+}
+
+
+a.navbar-brand {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+
+}
+
+a.navbar-brand strong,
+a.navbar-brand strong:hover {
+  font-size: 3rem;
+  font-weight: bold;
+  padding: 4px;
+  color: white !important;
+}
+
+
+.bg-primary .navbar-nav .nav-link.active {
+
+  text-decoration: overline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.bg-primary .navbar-nav a.nav-link:hover {
+
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+  color: #fff !important;
+
+}
+
+nav.navbar {
+
+  z-index: 5000 !important;
+  margin: 0px !important;
+  height: 60px !important;
+}
+
+.navbar .nav-sep {
+
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
+.navbar .nav-sep:hover {
+  text-decoration: none ! important;
+
+}
+
+
+.navbar-brand {
+  transition: all;
+}
+
+.navbar-collapse.collapse.show,
+.navbar-collapse.collapsing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh !important;
+  padding: 30px 30px 30px 30px;
+  z-index: -10;
+
+
+}
+
+body.mobile-menu-show {
+  overflow-y: hidden;
+}
+
+body.mobile-menu-show .navbar-collapse.collapse.show,
+body.mobile-menu-show .navbar-collapse.collapsing {
+  margin-top: 60px;
+  overflow-y: auto;
+}
+
 ul.main-menu * {
   font-size: 2rem;
   font-weight: 700;
@@ -305,27 +402,33 @@ ul.main-menu a:hover {
 }
 
 .sidemenu {
-  font-size: 2rem !important;
+  font-size: 1.8rem !important;
 }
 
 .sidemenu a.level1 {
-  font-size: 2rem !important;
-  font-weight: bold;
+  font-size: 1em !important;
+  font-weight: normal;
 }
 
 .sidemenu a.level2 {
-  font-size: 1.8rem !important;
+  font-size: 1em !important;
   font-weight: normal;
 }
 
 .sidemenu a.level3 {
-  font-size: 1.6rem !important;
+  font-size: 1em !important;
   font-weight: normal;
 
 }
 
 .sidemenu ul {
   margin-left: 6px ! important;
+
+}
+
+#submenus>ul.submenu {
+  padding-bottom: 60px;
+
 }
 
 .sidemenu li.submenu {
@@ -382,6 +485,10 @@ main ul li {
 
 nav ul li a {
   text-decoration: none;
+  font-weight: normal;
+}
+
+aside .offcanvas-header ul li a {
   font-weight: bold;
 }
 
@@ -710,5 +817,27 @@ h2 {
 
 h3 {
   font-size: 3rem;
+
+}
+
+
+h2 a:hover::after {
+  content: ' #';
+  opacity: .5;
+}
+
+main h2,
+main h3 {
+
+  margin-bottom: .5em;
+  margin-top: 30px;
+
+}
+
+h2 a,
+h3 a,
+h4 a,
+h5 a {
+  text-decoration: none;
 
 }
