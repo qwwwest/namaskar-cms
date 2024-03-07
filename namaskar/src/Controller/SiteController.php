@@ -15,28 +15,18 @@ class SiteController extends AbstractController
     private $mempad = null;
 
 
- 
+
 
     #[Route('/{url*}')]
     public function showPage($url = '/'): ?Response
     {
-/*
-        if (strpos($url, 'root') === 0)
-            return null;
-        $domain = $GLOBALS['mempad'] ?? null;
 
-        if (!$domain) {
-            debug('domain not found', '');
-            return null;
-        }
-        */
-      
         return $this->render($url);
     }
 
 
-    #[Route('/sites')]
-    public function list(): Response
+    #[Rouuuute('/sites')]
+    public function ____list(): Response
     {
 
         $folder = N('folder.data');
@@ -65,13 +55,14 @@ class SiteController extends AbstractController
             'content' => $content,
             'public' => N('absroot'),
         ];
-        $this->buildTemplates('bootstrap5');
+
+
         return $this->render('bootstrap5', $vars);
 
 
     }
 
-    public function page404(): Response
+    public function ____page404(): Response
     {
         $folder = N('folder.data');
         $content = '';

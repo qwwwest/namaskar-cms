@@ -3,27 +3,14 @@ type = primary secondary success danger warning info light dark
 - title: "An Optional Title"
 - content: "your important message"
 - type: primary secondary success danger warning info light dark
+- icon: info warning check none
 - dismissible: true (clossing button)
 #}
 
-{% if type === "highlight" %}
-
-<div class="alert alert-premium{{ dismissible ? ' alert-dismissible fade show' : '' }} " role="alert">
-  {% if dismissible %}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-  </button>
-  {% endif %}
-  <h4 class="alert-heading"><svg class="bi flex-shrink-0 me-2" role="img">
-      {% if type %}
-      <use xlink:href="{{absroot}}/asset/shapes.svg#info"></use>
-      {% endif %}
-    </svg>{{title}}</h4>
 
 
-</div>
+{% if _1 %}
 
-
-{% else if title %}
 <div class="alert alert-{{type}}{{ dismissible ? ' alert-dismissible fade show' : '' }} " role="alert">
   {% if dismissible %}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">

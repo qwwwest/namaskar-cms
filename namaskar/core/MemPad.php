@@ -653,4 +653,51 @@ class MemPad
 
         echo "TIME" . round($time) . "ms";
     }
+
+    public static function hasConfig($fileName): bool
+    {
+        if (!file_exists($fileName)) {
+            die($fileName . ' mempad file not found for getConfig');
+        }
+
+        $header = file_get_contents($fileName, false, null, 0, 200);
+
+
+        return strpos($header, "\0\1.config") != false;
+
+
+    }
+
+    public static function getConfig($fileName): ?array
+    {
+        if (!file_exists($fileName)) {
+            die($fileName . ' mempad file not found for getConfig');
+        }
+
+        $rawFile = file_get_contents($fileName, false, null, 0, 200);
+
+
+        if (strpos($rawFile, "\0\1.config") === false)
+            return null;
+
+
+        $rawFile = file_get_contents($fileName);
+        $configStart = strpos($rawFile, "\0\1.config") + 1;
+        $length = strpos($rawFile, "\0\1", $configStart) + 1 - $configStart;
+        $rawConfig = substr($rawFile, $configStart, $length);
+
+        $rawConfig = explode("\0\2", $rawConfig);
+
+        $config = [];
+        foreach ($rawConfig as $key => $rawvalue) {
+            [$file, $content] = explode("\0", $rawvalue);
+            if ($key === 0)
+                $file = "config.ini";
+
+            $config[$file] = $content;
+        }
+        return $config;
+
+
+    }
 }

@@ -101,7 +101,8 @@ function dump($var, $name = '')
         },
         $text
     );
-    $text = preg_replace("|&lt;\?php&nbsp;|", "", $text, 1);
+    $text = preg_replace("|&lt;\?php |", "", $text, 1);
+
     $text = preg_replace('|=&gt;&nbsp;<br />&nbsp;&nbsp;array&nbsp;\(<br />|', " = [", $text, 1);
 
     $text = "<style> div.code {background-color:#eee}</style>\n<h2>DEBUG $name:</h2><div class='code'>$text</div>";
@@ -111,7 +112,7 @@ function dump($var, $name = '')
 function dd($var, $name = '')
 {
 
-    dump($var, $name = '');
+    dump($var, $name);
     die('');
 
 }

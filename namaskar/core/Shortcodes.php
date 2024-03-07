@@ -240,7 +240,8 @@ class Shortcodes
     {
         $tagRegex = join('|', array_map('preg_quote', array_keys($this->shortcodes)));
 
-        return
+
+        $shortcodeRegex =
             '/'
             . '\\[' // Opening bracket
             . '(\\[?)' // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
@@ -271,5 +272,7 @@ class Shortcodes
             . ')'
             . '(\\]?)' // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
             . '/s';
+
+        return ($shortcodeRegex);
     }
 }

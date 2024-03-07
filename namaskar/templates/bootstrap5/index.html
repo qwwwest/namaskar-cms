@@ -4,7 +4,9 @@
 <head>
     {% if theme.colormodee %}
     <script src="{{asset}}/coloor-mode.js"></script>
-    {% end if %}
+    {% endif %}
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -28,15 +30,16 @@
 </head>
 
 <body class="navbar-{{ theme.navbar.position ?? 'normal' }} 
-{{ page.show.regions ? 'show-regions': ''}}">
+{{ page.show.regions ? 'show-regions' : ''}}" data-bs-theme="{{ theme.colormode ? theme.colormode : 'auto' }}">
     {# https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb {% include color-mode.html %} #}
+
 
     [region header.top ]
     {% include navbar.html %}
 
     [region header.bottom ]
 
-    <div class="container-fluid pb-3 flex-grow-1 d-flex flex-column flex-sm-row overflow-auto">
+    <div class=" container-fluid pb-3 flex-grow-1 d-flex flex-column flex-sm-row overflow-auto">
 
         {% if page.regions.sidebar.first || site.regions.sidebar.first %}
 
@@ -46,23 +49,18 @@
 
 
             [region breadcrumb]
-            {% include breadcrumb.html %}
-            [render "page.region.breadcrumb"]
+            {% include breadcrumb.html if page.breadcrumb %}
+
 
             <main class="container col overflow-auto h-100 border rounded-3 p-3">
 
                 [region help]
 
                 [region main.top]
-                {% if page.admin %}
-                {% include admin.html %}
-                {% end if %}
-
-
 
                 {% if site.autoTitle %}
                 <h1>{{page.title}}</h1>
-                {% end if %}
+                {% endif %}
 
                 [content]
                 [region main.bottom]
@@ -75,7 +73,7 @@
     <footer class="pt-3 mt-4 text-body-secondary border-top">
         [region footer]
     </footer>
-    {% end if %}
+    {% endif %}
 
     <script src="{{asset}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -92,15 +90,15 @@
         });
     </script>
 
-    {% end if %}
+    {% endif %}
     {% if site.microlight %}
     <script src="{{asset}}/vendor/js/microlight.js"></script>
     <script>microlight.reset();</script>
-    {% end if %}
+    {% endif %}
 
     {% if site.jquery %}
     <script src="{{asset}}/vendor/js/jquery.js"></script>
-    {% end if %}
+    {% endif %}
 
     <script src="{{asset}}/namaskar.js"></script>
 

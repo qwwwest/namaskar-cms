@@ -3,8 +3,6 @@
 namespace Qwwwest\Namaskar;
 
 use App\Entity\UserEntity;
-use Qwwwest\Namaskar\TemplateRenderer;
-use Qwwwest\Namaskar\TemplateBuilder;
 use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\ZenConfig;
 
@@ -23,44 +21,17 @@ class AbstractController
         $domain = basename($domain);
 
         debug('page.type', N('page.type'));
-        $theme = N('page.theme') ?? N('site.theme') ?? 'bootstrap5';
-        $this->buildTemplates($theme);
 
 
+        $this->pageBuilder = new PageDataBuilder();
 
-        $this->pageBuilder = new PageDataBuilder($domain);
-        $this->pageBuilder->renderMainContent($url);
+        $html = $this->pageBuilder->renderWholePage($url);
 
-        $t = new TemplateRenderer(N('folder.templates'));
-        $html = $t->render($theme, $vars);
+        $time = intval((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 1000);
+        $html .= "<!-- $time ms -->";
 
-        if ($this->pageBuilder) {
-
-            $html = $this->pageBuilder->renderShortcodes($html, $t);
-        }
-        debug('render-template:', $theme);
 
         return $this->response($html, $this->pageBuilder->codeStatus);
-    }
-
-    public function buildTemplates($theme)
-    {
-        $folders = [];
-        foreach (N('folder.templates') as $key => $templateFolder) {
-
-            $dirname = $templateFolder . "/$theme";
-            if (strpos($theme, '/') !== false)
-                $dirname = dirname($templateFolder . "/$theme");
-
-            if (is_dir($dirname))
-                $folders[] = $dirname;
-
-
-        }
-
-
-        TemplateBuilder::build($folders);
-
     }
 
     public function response($content, $code = 200, $headers = []): Response

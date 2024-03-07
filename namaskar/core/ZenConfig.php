@@ -264,10 +264,11 @@ class ZenConfig
 
         if (count($args) === 1 && strpos($args[0], '!') === 0) {
             $sub = substr($args[0], 1);
-            if (!$this->isset($sub)) {
-                die($sub . " must exist");
-            }
-            ;
+            return !$this->isset($sub);
+            // if (!$this->isset($sub)) {
+            //     die($sub . " must exist");
+            // }
+            // ;
         }
 
         if (count($args) === 0) {
@@ -433,6 +434,11 @@ class ZenConfig
             return false;
         }
 
+        //blep: literal string value "'toto'" => "toto" 
+        if (strlen($varname) > 1 && substr($varname, 0, 1) === "'" && substr($varname, -1) === "'") {
+            return substr($varname, 1, -1);
+        }
+
         $vars = explode('.', $varname);
         //$ini = & $this->parsed;
         $last = count($vars) - 1;
@@ -511,6 +517,7 @@ class ZenConfig
                 return isset($ini[$var]);
             }
         }
+        return false;
     }
 
     /**

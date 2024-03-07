@@ -166,21 +166,31 @@ class Kernel extends EventDispatcher
 
         $conf('mempadFile', $mempadFile);
 
-        if (!$conf->addFile("$dataFolder/site.ini", true)) {
-            // no ini file. we use minemalistic values.
-            $conf->parseString("
-    [site]
-    name: '$project' 
-    domain: '$project' 
-    language: 'en'
-    theme: 'bootstrap5'
-    auto.title: 'yes'
-              
-                    ");
+
+        if ($configIni = MemPad::getConfig($mempadFile)) {
+
+            foreach ($configIni as $key => $ini) {
+                $conf->parseString($ini);
+            }
+
+        } else {
+            if (!$conf->addFile("$dataFolder/site.ini", true)) {
+                // no ini file. we use minemalistic values.
+                $conf->parseString("
+[site]
+name: '$project' 
+domain: '$project' 
+language: 'en'
+theme: 'bootstrap5'
+auto.title: 'yes'
+                  
+                        ");
+            }
+
+            $conf->addFile("$dataFolder/theme.ini", true);
+            $conf->addFile("$dataFolder/data.ini", true);
         }
 
-        $conf->addFile("$dataFolder/theme.ini", true);
-        $conf->addFile("$dataFolder/data.ini", true);
 
 
         $router = new Router($conf('url'), $conf('folder.controllers'));
@@ -224,7 +234,6 @@ class Kernel extends EventDispatcher
 
         if ($val === null)
             return $this->zconf->parsed;
-
 
         return $conf($val);
     }

@@ -9,53 +9,32 @@ use Qwwwest\Namaskar\Kernel;
 //$this->registerHtmlElement('p');
 //$this->registerHtmlElement('div');
 
-$this->shortCode2Template('alert');
+//$this->shortCode2Template('alert');
 $this->shortCode2Template('quote');
 $this->shortCode2Template('highlight', 'alert', true, ['type' => 'highlight']);
 $this->shortCode2Template('info', 'alert', true, ['type' => 'info']);
 $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
 $this->shortCode2Template('warning', 'alert', true, ['type' => 'warning']);
 
-$this->shortcodes->addShortcode('submenu', function ($attributes, $content, $tagName) {
 
 
-    $dynamic = isset($attributes[1]) && $attributes[1] !== 'full';
-    $type = $dynamic ? 'dynamic' : 'full';
-    $attributes['type'] = $type;
-    $attributes['level'] = $type === 'full' ? 1000 : $attributes[1];
-    $attributes['dynamic'] = $dynamic;
-    $attributes['full'] = !$dynamic;
+$this->addShortcode('alert', function ($attributes, $content, $tagName) {
 
-    $elts = null;
-    $url = $attributes[0];
-    //  die($url);
-    if ($url === '//') {
-        $elts = $this->mempad->getRootElements();
-    } else if ($url === '/') {
-        $elts = $this->mempad->getHome()->children;
-    } else {
 
-        $elts = $this->mempad->getElementByUrl($attributes[0]);
-        if ($elts) {
-            $elts = $elts->children;
-        } else
-            die("[submenu $url /] no children for: $url");
 
+    $type = $attributes[0];
+    if (isset ($attributes[1])) {
+        $title = $attributes[1];
+        return $this->renderTemplate($attributes, $content, 'alert-with-title', false);
     }
 
-
-    $attributes['elts'] = $elts;
-
-    // die("submenu: not found elements:'$url'");
+    return $this->renderTemplate($attributes, $content, 'alert', false);
 
 
-    return $this->renderTemplate($attributes, $content, 'submenu', false);
 });
 
 
-
-
-$this->shortcodes->addShortcode('youtube', function ($attributes, $content, $tagName) {
+$this->addShortcode('youtube', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
     $ratio = $attributes[1] ?? '16x9';
 
@@ -69,7 +48,7 @@ $this->shortcodes->addShortcode('youtube', function ($attributes, $content, $tag
     HTML;
 });
 
-$this->shortcodes->addShortcode('youtube-videos', function ($attributes, $content, $tagName) {
+$this->addShortcode('youtube-videos', function ($attributes, $content, $tagName) {
 
     $conf = $this->conf;
     $url = $this->conf->value('page.url');
@@ -107,7 +86,7 @@ $this->shortcodes->addShortcode('youtube-videos', function ($attributes, $conten
     $conf("page.youtube-videos", $items);
 
     $content = $this->renderBlock("{> youtube-videos}");
-    $content = $this->shortcodes->process($content);
+    $content = $this->processShortcodes($content);
 
 
 
@@ -115,7 +94,7 @@ $this->shortcodes->addShortcode('youtube-videos', function ($attributes, $conten
     return '<section class="youtubeVideos">' . $content . '</section>';
 });
 
-$this->shortcodes->addShortcode('video-background', function ($attributes, $content, $tagName) {
+$this->addShortcode('video-background', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
     $loop = $attributes['loop'] ?? '';
 
@@ -134,7 +113,7 @@ $this->shortcodes->addShortcode('video-background', function ($attributes, $cont
         HTML;
 });
 
-$this->shortcodes->addShortcode('video-bg-fullscreen', function ($attributes, $content, $tagName) {
+$this->addShortcode('video-bg-fullscreen', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
     $loop = $attributes['loop'] ?? '';
 
@@ -146,16 +125,16 @@ $this->shortcodes->addShortcode('video-bg-fullscreen', function ($attributes, $c
         {/background}
         HTML;
 
-    return $this->shortcodes->process($html);
+    return $this->processShortcodes($html);
 
 });
 //////
 
-$this->shortcodes->addShortcode('.audio', function ($attributes, $content, $tagName) {
+$this->addShortcode('.audio', function ($attributes, $content, $tagName) {
 
     $config = '{"shide_top":true,"shide_btm":false,"auto_load":true}';
     $config = '{"shide_top":false,"shide_btm":true,"auto_load":false}';
-    if (!isset($attributes['file']))
+    if (!isset ($attributes['file']))
         $attributes['this.items'] = $attributes[0];
     else {
 
@@ -180,7 +159,7 @@ $this->shortcodes->addShortcode('.audio', function ($attributes, $content, $tagN
 });
 
 
-$this->shortcodes->addShortcode('.vimeo', function ($attributes, $content, $tagName) {
+$this->addShortcode('.vimeo', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
 
     $ratio = $attributes[1] ?? '16x9';
@@ -194,7 +173,7 @@ $this->shortcodes->addShortcode('.vimeo', function ($attributes, $content, $tagN
 HTML;
 });
 
-$this->shortcodes->addShortcode('====', function ($attributes, $content, $tagName) {
+$this->addShortcode('====', function ($attributes, $content, $tagName) {
     $content = explode("\n[==]", $content);
     $nb = count($content);
     $cols = '';
@@ -218,7 +197,7 @@ HTML;
 });
 
 
-$this->shortcodes->addShortcode('?', function ($attributes, $content, $tagName) {
+$this->addShortcode('?', function ($attributes, $content, $tagName) {
 
     $var = $this->conf->value($attributes[0]);
 
@@ -228,7 +207,7 @@ $this->shortcodes->addShortcode('?', function ($attributes, $content, $tagName) 
     return $attributes[2] ?? '';
 });
 
-$this->shortcodes->addShortcode('dump', function ($attributes, $content, $tagName) {
+$this->addShortcode('dump', function ($attributes, $content, $tagName) {
 
     $var = $this->conf->value($attributes[0]);
     ob_start();
@@ -243,7 +222,7 @@ $this->shortcodes->addShortcode('dump', function ($attributes, $content, $tagNam
 html;
 });
 
-$this->shortcodes->addShortcode('.meta', function ($attributes, $content, $tagName) {
+$this->addShortcode('.meta', function ($attributes, $content, $tagName) {
 
     $meta = <<<META
     <meta name="description" content="{= page.description}" />
@@ -262,19 +241,19 @@ $this->shortcodes->addShortcode('.meta', function ($attributes, $content, $tagNa
     <meta name="twitter:image" content="{= page.description}" />
 
 META;
-    return $this->shortcodes->process($meta);
+    return $this->processShortcodes($meta);
 });
 
 // foreach item in LIST
 // foreach file in MASK (ex:foreach file in "logo/*.svg")
-$this->shortcodes->addShortcode('.foreach', function ($attributes, $content, $tagName) {
+$this->addShortcode('.foreach', function ($attributes, $content, $tagName) {
 
     $html = '';
     $varname = $attributes[0];
     $op = $attributes[1];
 
     if ($op !== 'in') {
-        die('foreach syntax is "foreach item/file in list/dir" ');
+        die ('foreach syntax is "foreach item/file in list/dir" ');
     }
 
     $content = trim($content);
@@ -301,7 +280,7 @@ $this->shortcodes->addShortcode('.foreach', function ($attributes, $content, $ta
         }
         //  end of folder scanning
 
-        return $this->shortcodes->process($html);
+        return $this->processShortcodes($html);
     }
 
     // foreach item in LIST
@@ -339,17 +318,17 @@ $this->shortcodes->addShortcode('.foreach', function ($attributes, $content, $ta
         }
     }
 
-    return $this->shortcodes->process($html);
+    return $this->processShortcodes($html);
 });
 
-$this->shortcodes->addShortcode('include', function ($attributes, $content, $tagName) {
+$this->addShortcode('include', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
-        die('recurtion spotted in include ' . $attributes[0]);
+        die ('recurtion spotted in include ' . $attributes[0]);
     }
 
-    if (!isset($attributes[0]) || $attributes[0] === 'ALL' || $attributes[0] === '.*') {
+    if (!isset ($attributes[0]) || $attributes[0] === 'ALL' || $attributes[0] === '.*') {
         $children = $this->mempad->getElementByPath(($this->conf)("page.path"))->children;
         $content = '';
         foreach ($children as $element) {
@@ -357,7 +336,7 @@ $this->shortcodes->addShortcode('include', function ($attributes, $content, $tag
                 $content .= $this->mempad->getContentById($element->id) . "\n";
             }
         }
-        return $this->shortcodes->process($content);
+        return $this->processShortcodes($content);
     }
     $path = ($this->conf)("page.path") . "/" . $attributes[0];
     $path = $this->get_absolute_mempad_path($path);
@@ -366,15 +345,15 @@ $this->shortcodes->addShortcode('include', function ($attributes, $content, $tag
         return "include not found : $attributes[0]";
     }
 
-    return $this->shortcodes->process($content);
+    return $this->processShortcodes($content);
     //return $content;
 });
 
-$this->shortcodes->addShortcode('.include', function ($attributes, $content, $tagName) {
+$this->addShortcode('.include', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
-        die('recurtion spotted in include ' . $attributes[0]);
+        die ('recurtion spotted in include ' . $attributes[0]);
     }
 
     $path = ($this->conf)("page.path") . "/" . $attributes[0];
@@ -384,11 +363,11 @@ $this->shortcodes->addShortcode('.include', function ($attributes, $content, $ta
         return "include not found : $attributes[0]";
     }
 
-    return $this->shortcodes->process($content);
+    return $this->processShortcodes($content);
     //return $content;
 });
 
-$this->shortcodes->addShortcode('featurette', function ($attributes, $content, $tagName) {
+$this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     static $even = true;
     $even = !$even;
 
@@ -412,7 +391,7 @@ $this->shortcodes->addShortcode('featurette', function ($attributes, $content, $
         $title = "<h2 class='featurette-heading'>$title<span class='text-muted'>$subtitle</span></h2>";
 
     $content = $this->renderBlock($content);
-    //$content = $this->shortcodes->process($content);
+    //$content = $this->processShortcodes($content);
 
     $astart = ($link) ? "<a href='$link'>" : '';
     $aend = ($link) ? '</a>' : '';
@@ -458,7 +437,7 @@ HTML;
 });
 
 
-$this->shortcodes->addShortcode('render', function ($attributes, $content, $tagName) {
+$this->addShortcode('render', function ($attributes, $content, $tagName) {
 
     $content = ($this->conf)($attributes[0]);
 
@@ -469,8 +448,9 @@ $this->shortcodes->addShortcode('render', function ($attributes, $content, $tagN
 });
 
 
-$this->shortcodes->addShortcode('code', function ($attributes, $content, $tagName) {
-    $language = $className = 'ini';
+$this->addShortcode('code', function ($attributes, $content, $tagName) {
+    $language = '';
+    $className = 'ini';
     $class = '';
 
     if (strlen($attributes[0] ?? '')) {
@@ -483,14 +463,19 @@ $this->shortcodes->addShortcode('code', function ($attributes, $content, $tagNam
     }
 
     $code = htmlspecialchars(trim($content));
-    //  $code = str_replace(['[', ']'], ['&#91;', '&#93;'], $code);
+
+    $code = str_replace(
+        ['[', ']', '{', '}', '%'],
+        ['&#91;', '&#93;', '&lcub;', '&rcub;', '&percnt;'],
+        $code
+    );
 
     $show = '';
-    if (isset($attributes[1])) {
+    if (isset ($attributes[1])) {
 
         if ($attributes[1] === 'html' && $attributes[0] === 'markdown') {
             $content = $this->markdownParser->transform($content);
-            $content = $this->shortcodes->process($content);
+            $content = $this->processShortcodes($content);
         }
 
         $show = <<<html
@@ -509,12 +494,12 @@ $this->shortcodes->addShortcode('code', function ($attributes, $content, $tagNam
             html;
 });
 
-$this->shortcodes->addShortcode('#', function ($attributes, $content, $tagName) {
+$this->addShortcode('#', function ($attributes, $content, $tagName) {
     return '';
 });
 
 
-$this->shortcodes->addShortcode('_all', function ($attributes, $content, $tagName) {
+$this->addShortcode('_all', function ($attributes, $content, $tagName) {
 
     $content = "\n";
     if ($attributes[0] === 'links') {
@@ -575,7 +560,7 @@ blep;
 
 
 
-$this->shortcodes->addShortcode('posts', function ($attributes, $content, $tagName) {
+$this->addShortcode('posts', function ($attributes, $content, $tagName) {
     //$url = $attributes[0] ?  ?? '.';
     $conf = $this->conf;
     $url = '.';
@@ -617,7 +602,7 @@ $this->shortcodes->addShortcode('posts', function ($attributes, $content, $tagNa
     $conf("page.posts", $items);
 
     $content = $this->renderBlock("{> post-summary-list}");
-    $content = $this->shortcodes->process($content);
+    $content = $this->processShortcodes($content);
 
 
 
@@ -625,22 +610,22 @@ $this->shortcodes->addShortcode('posts', function ($attributes, $content, $tagNa
 });
 
 // in a post, we use {...} to separate the summary from the rest of the post
-$this->shortcodes->addShortcode('...', function ($attributes, $content, $tagName) {
+$this->addShortcode('...', function ($attributes, $content, $tagName) {
     return "\n";
 });
 
-$this->shortcodes->addShortcode('title', function ($attributes, $content, $tagName) {
+$this->addShortcode('title', function ($attributes, $content, $tagName) {
 
     return '<h1>' . $this->conf->value('page.title') . '</h1>';
 });
 
-$this->shortcodes->addShortcode('=', function ($attributes, $content, $tagName) {
+$this->addShortcode('=', function ($attributes, $content, $tagName) {
 
     return ($this->conf)($attributes[0]);
 });
-$this->shortcodes->addShortcode('shortcodes', function ($attributes, $content, $tagName) {
+$this->addShortcode('shortcodes', function ($attributes, $content, $tagName) {
 
-    $shortcodes = $this->shortcodes->getShortcodes();
+    $shortcodes = $this->getShortcodes();
     $list = '';
     foreach ($shortcodes as $tag => $shortcode) {
         // shortcodes starting with '_' or '.' are for internal use.
@@ -653,7 +638,7 @@ $this->shortcodes->addShortcode('shortcodes', function ($attributes, $content, $
 
     return $list;
 });
-$this->shortcodes->addShortcode('link', function ($attributes, $content, $tagName) {
+$this->addShortcode('link', function ($attributes, $content, $tagName) {
     $href = $attributes[0];
 
     if ($href === '..') {
@@ -664,7 +649,7 @@ $this->shortcodes->addShortcode('link', function ($attributes, $content, $tagNam
         }
     }
     $absroot = ($this->conf)('absroot');
-    if (isset($attributes[1])) {
+    if (isset ($attributes[1])) {
         $text = $attributes[1];
     } else if ($content) {
         $text = $this->renderBlock($content);
@@ -683,7 +668,7 @@ $this->shortcodes->addShortcode('link', function ($attributes, $content, $tagNam
     return $html;
 });
 
-$this->shortcodes->addShortcode('img', function ($attributes, $content, $tagName) {
+$this->addShortcode('img', function ($attributes, $content, $tagName) {
     $path = $attributes[0];
     $zen = Kernel::service('ZenConfig');
     $media = $zen('media');
@@ -699,7 +684,7 @@ $this->shortcodes->addShortcode('img', function ($attributes, $content, $tagName
 
         MODAL;
 
-        $html = ($this->shortcodes->process($html));
+        $html = ($this->processShortcodes($html));
     }
 
     if ($caption) {
@@ -720,7 +705,7 @@ $this->shortcodes->addShortcode('img', function ($attributes, $content, $tagName
     return trim($html);
 });
 
-$this->shortcodes->addShortcode('region', function ($attributes, $content, $tagName) {
+$this->addShortcode('region', function ($attributes, $content, $tagName) {
 
     $region = $attributes[0];
 
@@ -788,7 +773,7 @@ $this->shortcodes->addShortcode('region', function ($attributes, $content, $tagN
     }
 
 
-    if (isset($attributes[1])) {
+    if (isset ($attributes[1])) {
         $template = $attributes[1];
     } else if ($content) {
         $html = $this->renderBlock($content);
@@ -801,7 +786,7 @@ $this->shortcodes->addShortcode('region', function ($attributes, $content, $tagN
     return "$start$html$end";
 });
 
-$this->shortcodes->addShortcode('background', function ($attributes, $content, $tagName) {
+$this->addShortcode('background', function ($attributes, $content, $tagName) {
     $path = $content ? $content : $attributes[0];
     $conf = ($this->conf);
 
@@ -830,7 +815,7 @@ $this->shortcodes->addShortcode('background', function ($attributes, $content, $
 
 
 
-$this->shortcodes->addShortcode('figure', function ($attributes, $content, $tagName) {
+$this->addShortcode('figure', function ($attributes, $content, $tagName) {
     $path = $attributes[0];
     $alt = $attributes[1] ?? $attributes[0];
     $str = $this->uAttr($attributes);
@@ -847,7 +832,7 @@ HTML;
     return trim($html);
 });
 
-$this->shortcodes->addShortcode(
+$this->addShortcode(
     'bg',
     function ($attributes, $content, $tagName) {
         $img = $attributes[0];
@@ -871,13 +856,13 @@ $this->shortcodes->addShortcode(
     }
 );
 
-$this->shortcodes->addShortcode('toc', function ($attributes, $content, $tagName) {
+$this->addShortcode('toc', function ($attributes, $content, $tagName) {
     $title = $attributes[0] ? $attributes[0] : "On This Page";
 
     return "\n<div id=\"table-of-contents\" data-toc-header=\"$title\"></div>";
 });
 
-$this->shortcodes->addShortcode('lorem', function ($attributes, $content, $tagName) {
+$this->addShortcode('lorem', function ($attributes, $content, $tagName) {
 
     $count = 1;
     $max = 20;
@@ -898,13 +883,13 @@ $this->shortcodes->addShortcode('lorem', function ($attributes, $content, $tagNa
     return $out;
 });
 
-$this->shortcodes->addShortcode('date', function ($attributes, $content, $tagName) {
+$this->addShortcode('date', function ($attributes, $content, $tagName) {
     $format = $attributes[0] ?? "Y-M-d H:i:s";
 
     return date($format);
 });
 
-$this->shortcodes->addShortcode('load-js', function ($attributes, $content, $tagName) {
+$this->addShortcode('load-js', function ($attributes, $content, $tagName) {
     $str = "";
 
     foreach ($attributes as $file) {
@@ -914,7 +899,7 @@ $this->shortcodes->addShortcode('load-js', function ($attributes, $content, $tag
     return $str;
 });
 
-$this->shortcodes->addShortcode('script', function ($attributes, $content, $tagName) {
+$this->addShortcode('script', function ($attributes, $content, $tagName) {
     $str = "";
 
     foreach ($attributes as $file) {
@@ -924,11 +909,11 @@ $this->shortcodes->addShortcode('script', function ($attributes, $content, $tagN
     return $str;
 });
 
-$this->shortcodes->addShortcode('encode', function ($attributes, $content, $tagName) {
+$this->addShortcode('encode', function ($attributes, $content, $tagName) {
 
     $character_set = "+-.0123456789@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
-    $this->shortcodes->process($content);
+    $this->processShortcodes($content);
     $content = $attributes[0] ?? strrev($content);
 
     $key = str_shuffle($character_set);
@@ -956,12 +941,12 @@ SCR;
     return trim($js);
 });
 
-$this->shortcodes->addShortcode('slides', function ($attributes, $content, $tagName) {
+$this->addShortcode('slides', function ($attributes, $content, $tagName) {
 
     $content = ($this->conf)('page.content');
     $slides = explode("\n<h2>", $content);
     $tmp = "";
-    die('toto');
+    die ('toto');
     foreach ($slides as $index2 => $slide) {
 
         //do we have vertical slides ?
@@ -981,47 +966,38 @@ $this->shortcodes->addShortcode('slides', function ($attributes, $content, $tagN
         }
     }
     $content = $tmp;
-    //$this->shortcodes->process($content);
+    //$this->processShortcodes($content);
     //$content = $this->markdownParser->transform($content);
 
     return $content;
 });
 
-$this->shortcodes->addShortcode('gallery', function ($attributes, $content, $tagName) {
-    static $id = 0;
-    $id++;
-    $elementId = $tagName . '_' . $id;
-    ($this->conf)("$elementId.id", $elementId);
-    if (isset($attributes['folder'])) {
-        $files = $this->scan($attributes['folder']);
-        $content = '';
-        foreach ($files as $key => $file) {
-            $file = substr($file, 10);
-            $content .= "img: \"$file\"";
-            if ($key < count($files) - 1) {
-                $content .= "\n---\n";
-            }
-        }
-    }
+$this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
-    $str = $this->formatSimpleArray($content, "$elementId.items");
+    $directory = ($this->conf)("media") . "/gallery/$attributes[folder]";
+    $items = glob($directory . "/*.*");
 
-    $this->conf->parseString($str);
+    $attributes['items'] = $items;
+    $attributes['items'] = ['TOTO.jpg'];
 
-    $attributes = array_merge($attributes, ['this' => "$elementId"]);
-    foreach ($attributes as $key => $attribute) {
-        if (is_integer($key)) {
-            $attributes[$attribute] = $attribute;
-            ($this->conf)("$elementId.$attribute", $attribute);
-        } else {
-            ($this->conf)("$elementId.$key", $attribute);
-        }
-    }
+    return "gaaaaallery";
+    return $this->renderTemplate($attributes, $content, 'gallery', false);
 
-    return ($this->templateHandler($attributes, null, $tagName, false));
 });
 
-$this->shortcodes->addShortcode('carousel', function ($attributes, $content, $tagName) {
+$this->addShortcode('__blep', function ($attributes, $content, $tagName) {
+
+    $directory = ($this->conf)("media") . "/gallery/$attributes[folder]";
+    $items = glob($directory . "/*.*");
+
+    $attributes['items'] = $items;
+    $attributes['items'] = ['TOTO.jpg'];
+
+    return $this->renderTemplate($attributes, $content, 'blep', false);
+
+});
+
+$this->addShortcode('carousel', function ($attributes, $content, $tagName) {
     static $id = 0;
     $id++;
 
@@ -1044,12 +1020,12 @@ $this->shortcodes->addShortcode('carousel', function ($attributes, $content, $ta
     return $this->templateHandler($attributes, null, $tagName, false);
 });
 
-$this->shortcodes->addShortcode('.lightboxModal', function ($attributes, $content, $tagName) {
+$this->addShortcode('.lightboxModal', function ($attributes, $content, $tagName) {
 
     return $this->templateHandler($attributes, null, $tagName, false);
 });
 
-$this->shortcodes->addShortcode('demo', function ($attributes, $content, $tagName) {
+$this->addShortcode('demo', function ($attributes, $content, $tagName) {
 
     //$content = trim($content);
     $showHTML = $attributes[0] === '+html' ?? false;
@@ -1061,6 +1037,11 @@ $this->shortcodes->addShortcode('demo', function ($attributes, $content, $tagNam
     $htmlCode = '';
     if ($showHTML) {
         $htmlCode = htmlspecialchars($html);
+        $htmlCode = str_replace(
+            ['[', ']', '{', '}', '%'],
+            ['&#91;', '&#93;', '&lcub;', '&rcub;', '&percnt;'],
+            $htmlCode
+        );
         $html = <<<html
         <div class="position-relative">
             <span class="badge rounded-pill bg-dark mypill" >html</span>
@@ -1085,23 +1066,65 @@ $this->shortcodes->addShortcode('demo', function ($attributes, $content, $tagNam
 
 });
 
-$this->shortcodes->addShortcode('content', function ($attributes, $content, $tagName) {
+$this->addShortcode('content', function ($attributes, $content, $tagName) {
 
     return ($this->conf)('page.content');
 
 });
 
 
-$this->shortcodes->addShortcode('scrolly', function ($attributes, $content, $tagName) {
+$this->addShortcode('scrolly', function ($attributes, $content, $tagName) {
 
     return "<div id=\"scrolly\" class=\"$attributes[0]\"/></div>";
 });
 
-$this->shortcodes->addShortcode('list', function ($attributes, $content, $tagName) {
+$this->addShortcode('list', function ($attributes, $content, $tagName) {
     $separtor = $attribute['separator'] ?? '---';
-    $id = $attribute['id'] ?? die("{list} id is missing");
+    $id = $attribute['id'] ?? die ("{list} id is missing");
 
     $str = $this->formatSimpleArray($content, "$id.items");
 });
+
+
+
+$this->addShortcode('submenu', function ($attributes, $content, $tagName) {
+
+    $attributes[1] ?? $attributes[1] = 'full';
+    $dynamic = $attributes[1] !== 'full';
+    $type = $dynamic ? 'dynamic' : 'full';
+    $attributes['type'] = $type;
+    $attributes['level'] = $type === 'full' ? 1000 : intval($attributes[1]);
+    $attributes['dynamic'] = $dynamic;
+    $attributes['full'] = !$dynamic;
+    $attributes['depth'] = 1;
+
+    $elts = null;
+    $url = $attributes[0];
+
+
+    if ($url === '//') {
+        $elts = $this->mempad->getRootElements();
+    } else if ($url === '/') {
+        $elts = $this->mempad->getHome()->children;
+    } else {
+        $elts = $this->mempad->getElementByUrl($attributes[0]);
+        if ($elts) {
+            $elts = $elts->children;
+        } else
+            die ("[submenu $url $attributes[1] ] no children for: $url");
+
+    }
+
+
+    $attributes['elts'] = $elts;
+
+    // die("submenu: not found elements:'$url'");
+
+
+    return $this->includeTemplate($attributes, $content, 'submenu', false);
+});
+
+
+
 
 
