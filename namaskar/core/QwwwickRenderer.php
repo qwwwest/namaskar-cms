@@ -492,8 +492,13 @@ class QwwwickRenderer
         $templateFile = "$theme/$templateName.html";
 
 
+        $vars = [];
+        foreach ($attributes as $key => $value) {
+            $vars[$key] = $value;
+        }
 
-        $vars = [...$attributes, 'content' => $content];
+        $vars['content'] = $content;
+        // $vars = [...$attributes, 'content' => $content];
 
         $html = $this->include($templateFile, $vars);
         // $html = $this->processMarkdown($html);
