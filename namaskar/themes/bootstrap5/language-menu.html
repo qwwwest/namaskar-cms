@@ -1,0 +1,12 @@
+{# language menu #}
+<ul class="navbar-nav navbar-expand ml-auto mb-2 mb-md-0 language-menu" id="language-menu">
+    {% for item in site.language.menu %}
+    <li class="nav-item">
+        <a href="{{ homepath }}/{{ item.url }}" class="nav-link{{ item.active ? ' active' : ''}}"> {{ item.label }}</a>
+    </li>
+    {% if ! loop.last %}
+    <li class="nav-item"><span class="nav-sep">|</span></li>
+    {% endif %}
+    {% endfor %}
+
+</ul>

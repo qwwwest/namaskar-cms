@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ page.language }}">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {{ site.meta }}
+  <title>{{ page.title }}</title>
+  <link rel="icon" href="{{ media }}/favicon.ico" />
+  <!-- not minified so you can check it. ^^ -->
+  <link href="{{ asset }}/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/css/lightgallery.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/css/lg-transitions.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/css/namaskar.css" rel="stylesheet" />
+  <link href="{{ asset }}/css/{{ site.domain }}.css" rel="stylesheet" />
+
+  <style></style>
+  {% if site.ajaxify %}
+  <script>
+    absroot = "{{ absroot }}"
+  </script>
+  <script src="{{ asset }}/js/ajaxify.min.js"></script>
+
+  {% endif %}
+</head>
+<body{% if page.body.class %} class="{{ page.body.class }}" {% endif %}>
+  {% include navbar.html %}
+
+
+
+  <main class="container{% if page.container.full%}-full{% endif %} ">
+
+
+
+    <div id="background">
+      <div id="backgrounds">
+        {% if page.background %}
+        {{ page.background }}
+        {% endif %}
+        {% if page.bg.img %}
+        <img src="{{media}}/img/{{ page.bg.img }}" class="{{ page.bg.class }}">
+        {% endif %}
+        {% if page.bg.color %}
+        <div id="bgcolor" style="background-color: {{ page.bgcolor }}"></div>
+        {% endif %}
+
+      </div>
+
+
+    </div>
+
+    <div id="content">{{ page.content }}</div>
+
+  </main>
+
+  <script src="{{ asset }}/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset }}/js/jquery.min.js"></script>
+  <script src="{{ asset }}/js/lightgallery-all.min.js"></script>
+  <script src="{{ asset }}/js/microlight.min.js"></script>
+  <script src="{{ asset }}/js/vivus.min.js"></script>
+  <script src="{{ asset }}/js/{{ site.domain }}.js"></script>
+  <script src="{{ asset }}/js/namaskar.js"></script>
+
+
+
+  </body>
+
+</html>

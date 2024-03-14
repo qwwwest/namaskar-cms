@@ -54,6 +54,9 @@ class PageDataBuilder
     /**
      * laConf
      * get the Language Aware Configuration settings, 
+     * [[ en ]]
+     * ...
+     * 
      * @param  string $value
      * @return mixed the value for the current page language
      * 
@@ -116,7 +119,7 @@ class PageDataBuilder
         $conf('homepath', "$absroot");
 
         // important vars
-        $this->qRenderer = new QwwwickRenderer(($this->conf)('folder.templates'));
+        $this->qRenderer = new QwwwickRenderer(($this->conf)('folder.themes'));
         $this->mempad = $conf('MemPad');
 
 
@@ -134,18 +137,27 @@ class PageDataBuilder
 
         $elt = $this->mempad->getElementByUrl($found);
 
-        // Languages in url
-        $languages = []; //will be something like ['fr', 'en', 'ru']
+        // Languages found in url
+        $languagesInUrl = []; //will be something like ['fr', 'en', 'ru']
         $languageMenu = $conf('site.language.menu');
         if ($languageMenu) {
             foreach ($languageMenu as $value) {
-                $language = $value['url'] ?? false;
-                if ($language) {
-                    $languages[$language] = $language;
+
+                $languageFound = $value['url'] ?? false;
+                if ($languageFound) {
+                    $languagesInUrl[$languageFound] = $languageFound;
                 }
             }
         }
-
+        // $languageMenu = $conf('site.menu.language');
+        // if ($languageMenu) {
+        //     foreach ($languageMenu as $value) {
+        //         $language = $value['url'] ?? false;
+        //         if ($language) {
+        //             $languages[$language] = $language;
+        //         }
+        //     }
+        // }
 
         // *BREADCRUMB*
         $parts = explode("/", trim($found, '/'));
@@ -153,7 +165,7 @@ class PageDataBuilder
         $breadcrumb = [
             [
                 'title' => null,
-                'url' => $languages[$slug] ?? '',
+                'url' => $languagesInUrl[$slug] ?? '',
             ]
         ];
 
@@ -162,9 +174,9 @@ class PageDataBuilder
         //HOME
         if (
             $found === '' || $found === "/"
-            || $found === ($languages[$slug] ?? null)
+            || $found === ($languagesInUrl[$slug] ?? null)
         ) {
-            $elt = $this->mempad->getElementByUrl($languages[$slug] ?? '');
+            $elt = $this->mempad->getElementByUrl($languagesInUrl[$slug] ?? '');
 
             $breadcrumb = null; // no breadcrumb on homepage
             $this->pagify($elt);
@@ -182,7 +194,7 @@ class PageDataBuilder
                 // we need to check if title is changed in frontmatter
 
                 $slug = array_shift($parts);
-                !in_array($elt->url, $languages)
+                !in_array($elt->url, $languagesInUrl)
                     && $elt && $breadcrumb[] = [
                         'title' => $elt->title,
                         'url' => $elt->url ?? '',
@@ -191,40 +203,36 @@ class PageDataBuilder
             }
         }
 
-        $menuLanguage = $conf('site.language.menu');
-        if ($menuLanguage) {
-            $language = $conf('site.language.default');
-            $languageId = null;
-            $languageDefaultId = null;
-            foreach ($menuLanguage as $key => $item) {
-                $languageUrl = $item['url'] ?? false; // url or main home
+        $languageMenu = $conf('site.language.menu');
+        $language = $conf('site.language.default');
+        $languageKey = 0;
+        if ($languageMenu) {
 
-                if ($languageUrl === '' || $languageUrl === '/') {
 
-                    $languageDefaultId = $key;
-                }
-                $menuLanguage[$key]['active'] = false;
-                if ($languageUrl && strpos($url, $languageUrl) === 0) {
 
-                    $language = $languageUrl;
-                    $languageId = $key;
+            foreach ($languageMenu as $key => $item) {
+
+                //ex:  "en" or "de" or "" for home
+                $languageSlug = $item['url'];
+
+                $languageMenu[$key]['active'] = false;
+                // $languageSlug != "" and url start with a language
+                if ($languageSlug && strpos($url, $languageSlug) === 0) {
+                    $language = $languageSlug;
+                    $languageKey = $key;
                     break;
                 }
             }
 
-            if ($languageId === null) {
-                $languageId = $languageDefaultId;
-            }
 
-            $menuLanguage[$languageId]['active'] = true;
-            $languageInUrl = $menuLanguage[$languageId]['url'];
-            $conf('site.language.menu', $menuLanguage);
+
+            $languageMenu[$languageKey]['active'] = true;
+            $languageInUrl = $languageMenu[$languageKey]['url']; // "" or "de" or "en"
+            $conf('site.language.menu', $languageMenu);
 
             // homepage for current language: 
-            $conf('site.homeURL', $menuLanguage[$languageId]['url']);
+            $conf('site.homeURL', $languageMenu[$languageKey]['url']);
             $conf('site.isAuthed', $this->isAuthed);
-        } else {
-            $language = $conf('site.language.default');
         }
 
         // hooks
@@ -244,10 +252,10 @@ class PageDataBuilder
 
         $conf('page', $elt);
         $conf('page.language', $language);
-        if ($languageId ?? false)
-            $conf('page.languageHome', $menuLanguage[$languageId]['url']);
-        else
-            $conf('page.languageHome', '/');
+        // if ($languageKey ?? false)
+        //     $conf('page.languageHome', $languageMenu[$languageKey]['url']);
+        // else
+        //     $conf('page.languageHome', '/');
 
         $conf('page.breadcrumb', $breadcrumb);
         $conf('page.url', $url);

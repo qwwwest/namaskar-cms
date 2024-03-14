@@ -84,7 +84,7 @@ class AssetController extends AbstractController
         $filenames[] = "/bootstrap5/asset/$rest";
         $filenames[] = "/4all/asset/$rest";
 
-        foreach (N('folder.templates') as $templateFolder) {
+        foreach (N('folder.themes') as $templateFolder) {
 
             foreach ($filenames as $filename) {
                 $filepath = $templateFolder . $filename;

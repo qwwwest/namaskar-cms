@@ -88,6 +88,7 @@ class Kernel extends EventDispatcher
         */
 
         $conf('absroot', rtrim($absroot, '/'));
+        $conf('media', trim($absroot . '/media'));
         $conf('url', $url);
         $conf('urlwithparams', $urlwithparams);
         $conf('urlparam', $urlparams);
@@ -126,11 +127,11 @@ class Kernel extends EventDispatcher
 
 
         // template folders are in projectDir & possibly in site folder
-        $conf('folder.templates', [$conf('folder.site') . "/templates", "$projectDir/templates"]);
+        $conf('folder.themes', [$conf('folder.site') . "/themes", "$projectDir/themes"]);
 
-        $ini = file_get_contents($conf('folder.sites') . '/config.ini');
-        if (strpos($ini, '::') != false)
-            $this->setSuperAdmin($ini);
+        // $ini = file_get_contents($conf('folder.sites') . '/config.ini');
+        // if (strpos($ini, '::') != false)
+        //     $this->setSuperAdmin($ini);
 
 
         $dataFolder = $conf('folder.sites'); // .../sites/
@@ -140,8 +141,8 @@ class Kernel extends EventDispatcher
 
         if (is_dir("$dataFolder/$project/"))
             $dataFolder = "$dataFolder/$project/";
-        elseif (is_dir("$publicFolder/media/#data"))
-            $dataFolder = "$publicFolder/media/#data";
+        elseif (is_dir("$publicFolder/media/_data"))
+            $dataFolder = "$publicFolder/media/_data";
         elseif (is_file("$publicFolder/media/$project.lst"))
             $dataFolder = "$publicFolder/media";
         elseif (is_file("$publicFolder/$project.lst"))

@@ -1,0 +1,12 @@
+<!-- languageMenu -->
+<div class="language-menu">
+  dzdzdz
+  {% for item in $attributes[1]}
+  {% if item.sep}
+  <span class="language-menu-sep">{= item.sep} </span>
+  {else}
+  <a class="nav-link {= item.active}" href="{= item.url}" title="{= item.title}">{= item.label}</a>
+  {/if}
+  {% endfor %}
+</div>
+<!-- /languageMenu -->

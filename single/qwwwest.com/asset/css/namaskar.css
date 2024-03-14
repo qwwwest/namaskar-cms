@@ -1,0 +1,331 @@
+html {
+  font-size: 62.5% !important;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+  -------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  margin-bottom: 4rem;
+}
+
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  bottom: 3rem;
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel-item {
+  height: 32rem;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+ol.breadcrumb > li.breadcrumb-item > a {
+  color: #333333;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+html {
+  font-size: 62.5% !important;
+}
+
+.container {
+  max-width: 1024px;
+}
+
+a {
+  color: inherit;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  font-size: 2.4rem;
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
+  border: 0 none;
+  margin: 0 20px 0 0;
+  background: transparent;
+  position: relative;
+  top: -18px;
+}
+
+.hamburger:focus {
+  outline: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 0.2em;
+  margin: 0 0 0.2em;
+  transition: transform 0.2s ease-in-out;
+  border-radius: 0.25em;
+}
+
+.sideMenuOpen .hamburger span:nth-of-type(1) {
+  transform: translateY(0.4em) rotate(135deg);
+}
+
+.sideMenuOpen .hamburger span:nth-of-type(2) {
+  transform: scale(0);
+}
+
+.sideMenuOpen .hamburger span:nth-of-type(3) {
+  transform: translateY(-0.4em) rotate(-135deg);
+}
+
+.navbar-light .navbar-toggler {
+  color: transparent;
+  border: 0px solid transparent;
+}
+
+.navbar.navbar-light.bg-light {
+  background-color: transparent;
+  height: 0px;
+}
+
+.navbar h1 {
+  position: relative;
+  top: -20px;
+  color: #000;
+  font-size: 48px;
+  text-align: left;
+}
+
+.hamburger {
+  position: relative;
+  top: -16px;
+  color: #000;
+  font-size: 32px;
+  text-align: left;
+}
+
+ul.main-menu * {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  list-style-type: none;
+  text-decoration: none;
+}
+
+div.home > ul.main-menu > li {
+  padding: 16px 0;
+}
+div.home > ul.main-menu > li > a {
+  font-weight: 700;
+  font-size: 4rem;
+  font-weight: 700;
+  color: black;
+  text-align: left;
+  line-height: 50%;
+  text-decoration: none;
+}
+
+ul.main-menu a:hover {
+  text-decoration: underline;
+}
+
+.featurette p.lead {
+  font-size: 2rem;
+}
+
+#backgrounds,
+#background,
+#bgcolor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+#backgrounds {
+  z-index: -2;
+}
+
+#backgrounds:empty {
+  display: none;
+}
+
+#backgrounds:empty {
+  display: none;
+}
+
+/* Dynamic Side Menu */
+
+nav.dynsubmenu {
+  font-size: 3rem;
+  margin: 0;
+  padding: 0;
+}
+nav.dynsubmenu li {
+  display: none;
+}
+nav.dynsubmenu > ul,
+nav.dynsubmenu > ul > li,
+nav.dynsubmenu li.dynamic ~ li,
+nav.dynsubmenu li.dynamic > ul > li {
+  padding-left: 0;
+
+  line-height: 1;
+  display: block;
+}
+
+nav.dynsubmenu > ul > li > a {
+  font-weight: bold;
+}
+
+nav.dynsubmenu ul {
+  font-size: 0.9em;
+  font-weight: normal;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+nav.dynsubmenu a {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+nav.dynsubmenu a:hover {
+  text-decoration: none;
+}
+
+nav.dynsubmenu ul ul.dynamic {
+  border-left: 1px solid rgba(128, 128, 128, 0.199);
+}
+
+nav.dynsubmenu .hasChildren > a:before {
+  content: "►";
+  opacity: 0.25;
+  font-size: 2rem;
+  font-weight: bold; /* If you want it to be bold */
+  display: inline-block;
+  width: 2rem;
+  margin-left: -2.1rem;
+  text-decoration: none;
+}
+
+nav.dynsubmenu .dynamic.hasChildren > a:before {
+  content: "▼";
+  opacity: 0.15;
+}
+
+nav.sidemenu li {
+  padding-left: 0;
+  line-height: 1;
+  list-style-type: none;
+  display: block;
+  color: white;
+}
+nav.sidemenu a {
+  text-decoration: none;
+  color: white;
+}
+
+.video-responsive {
+  overflow: hidden;
+  padding-bottom: 56.25%;
+  position: relative;
+  height: 0;
+  width: 100%;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  margin: auto;
+}
+
+@media (min-width: 768px) {
+  .video-responsive {
+    overflow: auto;
+    padding-bottom: 0;
+    position: static;
+    height: 100%;
+    width: 100%;
+  }
+
+  .video-responsive iframe {
+    width: 640px;
+    height: 360px;
+    padding-bottom: 0;
+    position: static;
+    margin: auto;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.9, 0.9);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.1, 1.1);
+    opacity: 0.1;
+  }
+}
+
+.zoomIn {
+  animation: zoomIn 0.5s forwards;
+}
+
+.zoomOut {
+  animation: zoomOut 0.5s forwards;
+}
+
+.fadeIn {
+  animation: fadeIn 0.5s forwards;
+}
+
+.fadeOut {
+  animation: fadeOut 0.5s forwards;
+}

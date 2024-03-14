@@ -45,7 +45,7 @@ class QwwwickRenderer
 
         $this->setTokens();
 
-        require_once 'NamaskarShortcodes.php';
+        require_once __DIR__ . '/NamaskarShortcodes.php';
         $this->markdownParser = new MarkdownExtra;
         $this->markdownParser->hard_wrap = true;
     }
@@ -462,6 +462,16 @@ class QwwwickRenderer
         foreach ($this->tfolders as $tfolder) {
 
             $file = "$tfolder/$theme/$basename";
+
+            if (\file_exists($file)) {
+                return $file;
+            }
+
+
+        }
+        foreach ($this->tfolders as $tfolder) {
+
+            $file = "$tfolder/bootstrap5/$basename";
 
             if (\file_exists($file)) {
                 return $file;
@@ -980,19 +990,10 @@ class QwwwickRenderer
 
         return true;
 
-        // if (!$elt)
-        //     return false;
-        // if (strpos($elt->title, '.') === 0)
-        //     return false;
-        // if (strpos($elt->title, '!') === 0)
-        //     return $this->isAuthed;
-        // if (strpos($elt->path, '/!') !== false)
-        //     return $this->isAuthed;
-        // if (strpos($elt->path, '!') !== false)
-        //     return $this->isAuthed;
 
-        // return true;
     }
+
+
 
     /**
      * shortCode2Template
@@ -1052,6 +1053,9 @@ class QwwwickRenderer
      * uAttr
      * create universal attributes for shortcodes 
      * which are id, class, style, title, lang.
+     * class="toto titi" id="plop" title="blep" lang="fr"
+     * also supported:
+     *  .toto .titi #plop
      * @param  array $attributes
  
      * @return string
@@ -1082,10 +1086,16 @@ class QwwwickRenderer
         $classes = '';
         $id = '';
         foreach ($attributes as $key => $value) {
-            if (is_numeric($key) && strpos($value, '.') === 0)
-                $classes .= substr($value, 1) . ' ';
-            if (is_numeric($key) && strpos($value, 'id') === 0)
-                $id .= substr($id, 1);
+            if (is_numeric($key) && preg_match('/^([.#])([_a-zA-Z][_a-zA-Z0-9-])*$/', $value, $matches)) {
+                if ($matches[1] === '.') {
+                    $classes = ($classes ? ' ' : '') . $matches[2];
+                }
+                if ($matches[1] === '#') {
+                    $id = $matches[2];
+                }
+            }
+            ;
+
         }
 
         if ($classes !== '')
@@ -1096,6 +1106,50 @@ class QwwwickRenderer
     }
 
 
+
+    public function id($attributes): string
+    {
+
+        if (isset($attributes['id'])) {
+            return $attributes['id'];
+        }
+
+        foreach ($attributes as $key => $value) {
+            if (is_numeric($key) && preg_match('/^([.#])([_a-zA-Z][_a-zA-Z0-9-])*$/', $value, $matches)) {
+
+                if ($matches[1] === '#') {
+                    return $matches[2];
+                }
+            }
+
+        }
+
+        return '';
+    }
+
+    public function getCssClasses($attributes): string
+    {
+
+        if (isset($attributes['class'])) {
+            return $attributes['class'];
+        }
+
+
+        $classes = '';
+        foreach ($attributes as $key => $value) {
+            if (
+                is_numeric($key)
+                && preg_match('/^\.([_a-zA-Z][_a-zA-Z0-9-]*)$/', $value, $matches) === 1
+            ) {
+
+
+                $classes .= " $matches[1]";
+            }
+
+        }
+
+        return $classes;
+    }
 
 
 }

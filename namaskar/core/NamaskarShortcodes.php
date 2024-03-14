@@ -1,15 +1,7 @@
 <?php
 use Qwwwest\Namaskar\Kernel;
 
-//$this->registerComponent('offcanvas');
-//$this->registerComponent('sidebar');
-//$this->registerComponent('breadcrumb', false);
 
-
-//$this->registerHtmlElement('p');
-//$this->registerHtmlElement('div');
-
-//$this->shortCode2Template('alert');
 $this->shortCode2Template('quote');
 $this->shortCode2Template('highlight', 'alert', true, ['type' => 'highlight']);
 $this->shortCode2Template('info', 'alert', true, ['type' => 'info']);
@@ -42,8 +34,10 @@ $this->addShortcode('youtube', function ($attributes, $content, $tagName) {
         return "<img src=\"https://img.youtube.com/vi/$id/hqdefault.jpg\" />";
     }
     return <<<HTML
-    <div class="ratio ratio-$ratio" style="margin: 8px 0">
-    <iframe src="https://www.youtube.com/embed/$id" title="YouTube video"  frameborder="0"  allowfullscreen></iframe>
+    <div class="youtube" style="margin: 8px auto">
+    <div class="ratio ratio-$ratio" >
+    <iframe src="https://www.youtube.com/embed/$id" title="YouTube video"  frameborder="0"  allowfullscreen ></iframe>
+    </div>
     </div>
     HTML;
 });
@@ -165,7 +159,7 @@ $this->addShortcode('.vimeo', function ($attributes, $content, $tagName) {
     $ratio = $attributes[1] ?? '16x9';
 
     return <<<HTML
-<div class="ratio ratio-$ratio" style="margin: 8px 0">
+<div class="ratio ratio-$ratio" style="margin: 8px auto">
 <iframe src="https://player.vimeo.com/video/$id" 
     width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen>
 </iframe>
@@ -175,6 +169,7 @@ HTML;
 
 $this->addShortcode('====', function ($attributes, $content, $tagName) {
     $content = explode("\n[==]", $content);
+    $class = $attributes['class'] ?? "";
     $nb = count($content);
     $cols = '';
     foreach ($content as $key => $value) {
@@ -189,7 +184,7 @@ COL;
 
     return <<<HTML
 
-  <div class="row row-cols-1 row-cols-lg-$nb">
+  <div class="row row-cols-1 row-cols-lg-$nb $class">
   $cols
   </div>
 
@@ -368,15 +363,18 @@ $this->addShortcode('.include', function ($attributes, $content, $tagName) {
 });
 
 $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
-    static $even = true;
-    $even = !$even;
+    static $order = true;
+    $order = !$order;
+    if (isset ($attributes['order'])) {
+        $order = $order !== 'left';
+    }
 
     $order1 = $order2 = '';
 
-    if ($even) {
+    if ($order) {
 
-        $order1 = ' order-md-2';
-        $order2 = ' order-md-1';
+        $order1 = 'order-md-2';
+        $order2 = 'order-md-1';
     }
     $title = $attributes['title'] ?? '';
     $subtitle = $attributes['subtitle'] ?? false;
@@ -384,6 +382,17 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     $video = $attributes['video'] ?? false;
     $link = $attributes['link'] ?? '';
     $loop = $attributes['loop'] ?? '';
+    $id = $this->id($attributes);
+    if ($id)
+        $id = " id='$id'";
+    $class = $this->getCssClasses($attributes);
+    $ratio1 = intval($attributes['ratio'] ?? '7');
+
+    if ($ratio1 < 1 || $ratio1 > 11)
+        die ("featurette: ratio invalid: " . $ratio1 . "<br>" . $title . "<br>" . $content);
+    $ratio2 = 12 - $ratio1;
+
+    $size = '500';
 
     if ($link)
         $content = trim($content) . "   [...]";
@@ -398,30 +407,32 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     if ($link)
         $content = "<a href='$link'>$content</a> ";
 
+
+    $media = ($this->conf)('media');
     if ($img)
         $media = <<<HTML
  
           <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" 
-          width="500" height="500" src="media/img/$img" />
+          width="$size" height="$size" src="{$media}/img/$img" />
           
     HTML;
 
     if ($video)
         $media = <<<HTML
     <video class="video-bg-fullscreen" src="media/video/$video" playsinline autoplay $loop
-    width="500" height="500"></video>
+    width="$size" height="$size"></video>
     
 HTML;
 
     $content = <<<HTML
-<div class="row featurette">
-    <div class="col-md-7$order1">
+<div class="row featurette$class">
+    <div class="col-md-$ratio1 $order1">
     $astart
       $title
       <p class="lead">$content</p>
       $aend
     </div>
-    <div class="col-md-5$order2">
+    <div class="col-md-$ratio2 $order2 featurette-media ">
     $astart
       $media
       $aend
@@ -784,6 +795,63 @@ $this->addShortcode('region', function ($attributes, $content, $tagName) {
 
 
     return "$start$html$end";
+});
+
+// foreach item in LIST
+// foreach file in MASK (ex:foreach file in "logo/*.svg") 
+$this->addShortcode('for', function ($attributes, $content, $tagName) {
+
+    $html = '';
+    $varname = $attributes[0];
+    $op = $attributes[1];
+
+    if ($op !== 'in')
+        die ('foreach syntax is "foreach item/file in list/dir" ');
+
+    $content = trim($content);
+    if (strpos('..', $attributes[2]) != false)
+        die (" '..' not allowed in for");
+    if ($varname === "file") {
+        foreach (glob('media/' . $attributes[2] . '/*') as $filename) {
+
+            $file = pathinfo($filename);
+            $file['size'] = filesize($filename);
+            $file['url'] = $filename;
+            $html .= preg_replace_callback(
+                "|\{\{ $varname\.(.+?) \}\}|",
+                function ($matches) use ($file) {
+                    $tmp = $file[$matches[1]];
+                    return $tmp;
+                },
+
+                $content
+            );
+        }
+        if ($html === '') {
+            $html = "nothing found :media/" . $attributes[2];
+        }
+        //  end of folder scanning
+        return $this->processShortcodes($html);
+    }
+
+
+    $list = ($this->conf)($attributes[2]);
+    $html = '';
+
+    if (is_array($list))
+        foreach ($list as $item) {
+            $html .= preg_replace_callback(
+                "|\{\{ item\.(.+?) \}\}|",
+                function ($matches) use ($item) {
+                    $tmp = $item[$matches[1]] ?? '';
+                    return $tmp;
+                },
+                $content
+            );
+
+        }
+
+    return $this->processShortcodes($html);
 });
 
 $this->addShortcode('background', function ($attributes, $content, $tagName) {
