@@ -1,0 +1,9 @@
+.language-menu {
+
+    display: flex;
+    order: 10;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-right: 30px;
+
+}

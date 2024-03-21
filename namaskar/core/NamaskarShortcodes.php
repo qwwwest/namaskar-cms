@@ -366,7 +366,7 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     static $order = true;
     $order = !$order;
     if (isset ($attributes['order'])) {
-        $order = $order !== 'left';
+        $order = $attributes['order'] === 'left';
     }
 
     $order1 = $order2 = '';
@@ -379,9 +379,12 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     $title = $attributes['title'] ?? '';
     $subtitle = $attributes['subtitle'] ?? false;
     $img = $attributes['img'] ?? false;
+    $size = $attributes['size'] ?? '500';
     $video = $attributes['video'] ?? false;
     $link = $attributes['link'] ?? '';
     $loop = $attributes['loop'] ?? '';
+    $hr = isset ($attributes['hr']) ? '<hr class="featurette-divider">' : '';
+    $caption = $attributes['caption'] ?? '';
     $id = $this->id($attributes);
     if ($id)
         $id = " id='$id'";
@@ -392,7 +395,7 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
         die ("featurette: ratio invalid: " . $ratio1 . "<br>" . $title . "<br>" . $content);
     $ratio2 = 12 - $ratio1;
 
-    $size = '500';
+
 
     if ($link)
         $content = trim($content) . "   [...]";
@@ -409,20 +412,30 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
 
 
     $media = ($this->conf)('media');
-    if ($img)
+    if (!$caption && $img)
         $media = <<<HTML
  
           <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" 
           width="$size" height="$size" src="{$media}/img/$img" />
           
     HTML;
-
+    if ($caption && $img) {
+        $media = <<<IMG
+    <figure class="figure">
+    <img src="{$media}/img/$img" class="figure-img featurette-image img-fluid mx-auto " 
+    width="$size" height="$size" alt="$caption" />
+    <figcaption class="figure-caption text-center">$caption</figcaption>
+    </figure>
+    IMG;
+    }
     if ($video)
         $media = <<<HTML
     <video class="video-bg-fullscreen" src="media/video/$video" playsinline autoplay $loop
     width="$size" height="$size"></video>
     
 HTML;
+
+
 
     $content = <<<HTML
 <div class="row featurette$class">
@@ -438,7 +451,7 @@ HTML;
       $aend
     </div>
   </div>
- <hr class="featurette-divider">
+  $hr
 HTML;
 
 

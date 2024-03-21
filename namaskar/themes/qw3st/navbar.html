@@ -1,24 +1,14 @@
 <header>
-  <nav id="mainnavbar" class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
+  <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="{{ absroot }}/">
-        <img src="{{media}}/img/{{ site.logo }}" id="logo" alt="" class="d-inline-block align-top" />{{ site.noname
-        }}</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          {% for item in site.menu.main %}
-          <a class="nav-link {{ item.active ? 'active' : '' }}" href="{{ absroot }}/{{ item.url }}">{{ item.label }}
-          </a>
-          {% endfor %}
-        </div>
-      </div>
-      {% include language-menu.html %}
+        <img src="{{media}}/img/{{ site.logo }}" id="logo" alt="" class="d-inline-block align-top" />{{ site.noname }}
+      </a>
 
-    </div>
+
+      {% include menu-main.html %}
+      {% include menu-language.html %}
+      {% include hamburger.html %}
   </nav>
 
 </header>

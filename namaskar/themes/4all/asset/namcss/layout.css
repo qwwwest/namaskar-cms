@@ -1,0 +1,78 @@
+ /* LAYOUT */
+ @media (min-width: 768px) {
+     .nmskr-layout {
+         display: grid;
+         gap: 1.5rem;
+         grid-template-areas: "sidebar main";
+         grid-template-columns: 1fr 3fr;
+     }
+ }
+
+ @media (min-width: 992px) {
+     .nmskr-layout {
+         grid-template-columns: 1fr 5fr;
+     }
+ }
+
+ .nmskr-sidebar {
+     grid-area: sidebar;
+ }
+
+ .nmskr-main {
+     grid-area: main;
+ }
+
+ @media (min-width: 768px) {
+     .nmskr-main {
+         display: grid;
+         gap: inherit;
+         grid-template-areas: "intro" "toc" "content";
+         grid-template-rows: auto auto 1fr;
+     }
+ }
+
+ @media (min-width: 992px) {
+     .nmskr-main {
+         grid-template-areas: "intro   toc" "content toc";
+         grid-template-columns: 4fr 1fr;
+         grid-template-rows: auto 1fr;
+     }
+ }
+
+ .nmskr-intro {
+     grid-area: intro;
+ }
+
+ .nmskr-toc {
+     grid-area: toc;
+ }
+
+ .nmskr-content {
+     grid-area: content;
+     min-width: 1px;
+ }
+
+ @media (min-width: 992px) {
+     .nmskr-toc {
+         position: -webkit-sticky;
+         position: sticky;
+         top: 5rem;
+         right: 0;
+         z-index: 2;
+         height: calc(100vh - 7rem);
+         overflow-y: auto;
+     }
+ }
+
+ /* Demo namaskar */
+ .namaskar-demo .mypill {
+     position: absolute;
+     right: 0;
+     top: -8px;
+     background-color: #000 !important;
+
+ }
+
+ .namaskar-demo {
+     margin: 2rem;
+ }

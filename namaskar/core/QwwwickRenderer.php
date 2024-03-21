@@ -378,10 +378,9 @@ class QwwwickRenderer
     /*
      * Render To html
      */
-    public function render($template)
-    {
 
-        $this->theme = $template;
+    public function renderPage($template)
+    {
 
         $file = $this->resolveTemplate("$template/index.html");
         if (!$file) {
@@ -392,13 +391,17 @@ class QwwwickRenderer
 
         $template = file_get_contents($file);
 
+        $content = trim(($this->conf)('page.content'));
+        $content = $this->renderBlock($content);
+        $html = $this->processShortcodes($content);
+        ($this->conf)('page.content', trim($content));
+
         $html = $this->processTokens($template);
+        $html = $this->processShortcodes($html);
         $this->oldContext();
 
         return $html;
     }
-
-
 
     /*
      * include and render template file in new context with only local variables

@@ -1,0 +1,228 @@
+html {
+    font-size: 62.5% !important;
+}
+
+body {
+    font-size: 2rem !important;
+
+}
+
+
+
+.container {
+    max-width: 1024px;
+}
+
+a {
+    color: inherit;
+}
+
+
+@media (min-width: 768px) {
+
+    .twoCols {
+        column-gap: 40px;
+        column-count: 2;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.9, 0.9);
+        opacity: 0.3;
+    }
+
+    100% {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomOut {
+    0% {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.1, 1.1);
+        opacity: 0.1;
+    }
+}
+
+.zoomIn {
+    animation: zoomIn 0.5s forwards;
+}
+
+.zoomOut {
+    animation: zoomOut 0.5s forwards;
+}
+
+.fadeIn {
+    animation: fadeIn 0.5s forwards;
+}
+
+.fadeOut {
+    animation: fadeOut 0.5s forwards;
+}
+
+
+
+body.h2numbered {
+    counter-reset: h2counter;
+}
+
+body.h2numbered h1 {
+    counter-reset: h2counter;
+}
+
+body.h2numbered h2:after {
+    content: " " counter(h2counter) ".\0000a0\0000a0";
+    counter-increment: h2counter;
+    counter-reset: h3counter;
+}
+
+body.h2numbered h3:before {
+    content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
+    counter-increment: h3counter;
+}
+
+body.show-regions .regions {
+    background-color: #ffff88;
+    border: 2px #ff0 dotted;
+    color: #000;
+}
+
+
+
+
+
+/* CODE */
+
+
+code {
+    font-family: monospace;
+    white-space: pre;
+    background-color: #263238;
+    color: #AABBC3 ! important;
+
+
+
+
+}
+
+pre code {
+    padding: 15px;
+    text-align: left;
+    overflow-x: auto;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 0.2em;
+    display: inline-block;
+
+}
+
+code:not(:last-child) {
+    margin-bottom: 15px;
+}
+
+code span[data_microlight_type=not-formatted] {
+    color: #B2CCD6;
+}
+
+code span[data_microlight_type=keywords] {
+    color: #F1E655;
+}
+
+code span[data_microlight_type=punctuation] {
+    color: #d9f5dd;
+}
+
+code span[data_microlight_type=strings-regex] {
+    color: #C3E88D;
+}
+
+code span[data_microlight_type=comments] {
+    color: #49656f;
+}
+
+.show.rendered {
+    background-color: #22334422;
+    border-radius: 4px;
+    padding: 8px;
+    border: #22334433 4px solid;
+
+}
+
+/* 404 */
+
+h1.page404 {
+    font-size: 12rem;
+    display: block;
+}
+
+h1 {
+    font-size: 5rem;
+    font-weight: 900;
+}
+
+h2 {
+    font-size: 4rem;
+
+}
+
+h3 {
+    font-size: 3rem;
+
+}
+
+
+h2 a:hover::after {
+    content: ' #';
+    opacity: .5;
+}
+
+main h2,
+main h3 {
+
+    margin-bottom: .5em;
+    margin-top: 30px;
+
+}
+
+h2 a,
+h3 a,
+h4 a,
+h5 a {
+    text-decoration: none;
+
+}
+
+
+
+main a {
+    color: inherit;
+}
+
+main img {
+    max-width: 100%;
+}

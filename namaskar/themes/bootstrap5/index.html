@@ -6,7 +6,6 @@
     <script src="{{asset}}/coloor-mode.js"></script>
     {% endif %}
 
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -22,8 +21,9 @@
 
     {% endif %}
     <link href="{{asset}}/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="{{asset}}/namaskar.css" rel="stylesheet">
-    <link href="{{asset}}/styles.css" rel="stylesheet">
+
+    <link href="{{asset}}/namaskar.min.css" rel="stylesheet">
+
 
 
 
@@ -31,7 +31,6 @@
 
 <body class="navbar-{{ theme.navbar.position ?? 'normal' }} 
 {{ page.show.regions ? 'show-regions' : ''}}" data-bs-theme="{{ theme.colormode ? theme.colormode : 'auto' }}">
-    {# https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb {% include color-mode.html %} #}
 
 
     [region header.top ]

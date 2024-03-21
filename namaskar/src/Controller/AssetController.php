@@ -13,7 +13,7 @@ class AssetController extends AbstractController
 {
 
 
-    #[Route('/sites/{domain}/asset/{asset*}')]
+    #[Rooooute('/sites/{domain}/asset/{asset*}')]
     public function assetManager($domain, $asset = '/'): ?Response
     {
 
@@ -21,7 +21,7 @@ class AssetController extends AbstractController
         $pageEntity = new PageEntity();
 
         if (!$pageEntity->init($domain)) {
-            die("blep $domain");
+            die ("blep $domain");
 
         }
 
@@ -38,7 +38,7 @@ class AssetController extends AbstractController
 
 
 
-    #[Route('/{domain?}/asset/{asset*}')]
+    #[Ruuuuuoute('/{domain?}/asset/{asset*}')]
     public function domainAssetManager($domain = null, $asset = null): ?Response
     {
 
@@ -56,15 +56,57 @@ class AssetController extends AbstractController
 
     }
 
+    #[Route('/asset/namaskar.min.css')]
+    public function namaskarAssetManager(): ?Response
+    {
+        $cssFiles = [
+            'base',
+            'alert',
+            'carousel',
+            'breadcrumb',
+            // 'hamburger',
+            'hamburger-anim',
+            'navbar',
+            'backgrounds',
+            'sidemenu',
+            'toc',
+            'featurette',
+            'language-menu',
+            'layout',
+        ];
+
+        $css = '';
+
+        $conf = Kernel::service('ZenConfig');
+
+        $templateFolder = $conf('folder.app')
+            . '/themes/4all/asset/namcss/';
+
+        foreach ($cssFiles as $key => $file) {
+
+            $filename = "$templateFolder/$file.css";
+            if (!is_file($filename)) {
+                return $this->response('css not found: ' . $filename);
+            }
+
+            $css .= file_get_contents($filename) . "\n\n";
+        }
+
+
+
+        $response = new Response($css);
+        $response->setContentType('css');
+        return $response;
+
+    }
+
     #[Route('/asset/{asset*}')]
     public function singleAssetManager($asset = null): ?Response
     {
 
         if ($asset === null || $asset === '')
             return null;
-        // if domain is null, we use from global
 
-        $domain = $GLOBALS['mempad'];
 
 
 
@@ -97,7 +139,7 @@ class AssetController extends AbstractController
 
             }
         }
-        return $this->response('asset not found' . $filename);
+        return $this->response('AssetController: asset not found' . $filename);
 
 
 

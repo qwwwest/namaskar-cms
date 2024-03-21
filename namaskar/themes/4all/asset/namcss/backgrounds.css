@@ -1,0 +1,23 @@
+#backgrounds,
+#background,
+#bgcolor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+#backgrounds {
+    z-index: -2;
+}
+
+#backgrounds:empty {
+    display: none;
+}
+
+#backgrounds:empty {
+    display: none;
+}

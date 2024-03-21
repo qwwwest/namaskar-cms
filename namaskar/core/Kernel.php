@@ -5,7 +5,7 @@ namespace Qwwwest\Namaskar;
 use App\Entity\UserEntity;
 use Qwwwest\Namaskar\Router;
 
-class Kernel extends EventDispatcher
+class Kernel
 {
 
     private $zconf;
@@ -98,8 +98,6 @@ class Kernel extends EventDispatcher
         $conf('query', $_GET);
         $conf('cookies', $_COOKIE);
         $conf('files', $_FILES);
-
-
 
         $conf('folder.app', "$projectDir"); //  abc/namaskar
 

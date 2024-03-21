@@ -18,28 +18,9 @@
 
         {% endif %}
         <strong>{{ site.name }}</strong></a>
-      {% include language-menu.html if site.language.menu %}
+      {% include menu-language.html if site.language.menu %}
 
-      {%# if site.menu.main || page.regions.sidebar.first #%}
-      <div class=" collapse navbar-collapse h-100 bg-{{ theme.navbar.bg }}" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0 ">
-          {% for item in site.menu.main %}
-          <li class="nav-item">
-
-            {% if item.active %}
-            <span class="nav-link active" aria-current="page">{{ item.label }}
-            </span>
-            {% else %}
-            <a href="{{ homepath }}/{{ item.url }}" class="nav-link">{{ item.label }}
-            </a>
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ul>
-        <div id="submenus" class="d-block d-md-none"></div>
-      </div>
-
-      {%# endif %}
+      {% include menu-main.html %}
 
     </div>
   </nav>

@@ -1,0 +1,170 @@
+/**** SIDEMENU  ***/
+
+.sidemenu.show {
+
+    z-index: 5000 !important;
+    margin-top: 60px;
+
+}
+
+.sidemenu * {
+    padding: 0;
+    margin: 0;
+    list-style: none !important;
+    outline: 0;
+    cooolor: var(--bs-heading-color);
+
+
+}
+
+.sidemenu a {
+
+    color: var(--bs-heading-color);
+
+
+}
+
+#submenus .submenu * {
+
+    color: #ffffff !important;
+
+
+}
+
+.dropdown-toggle {
+    outline: 0;
+}
+
+.nav-flush .nav-link {
+    border-radius: 0;
+}
+
+.sidemenu .btn-toggle {
+    display: inline-flex;
+    align-items: center;
+    position: absolute;
+
+    fill: none !important;
+
+    opacity: .4;
+    background-color: transparent;
+    outline: 0 !important;
+    border-width: 0 ! important;
+
+
+    transition: transform .35s ease;
+    transform-origin: .5em 50%;
+    transform: scale(.8);
+    outline: 0;
+
+    top: .1em;
+    left: -14px;
+    width: 2em;
+    height: 2em;
+
+}
+
+.sidemenu .btn-toggle[aria-expanded="true"] {
+    transform: scale(.8) rotate(90deg);
+    outline: 0;
+}
+
+.sidemenu button.btn-toggle:hover,
+.sidemenu .btn:first-child:active {
+    outline: 0 !important;
+    border-width: 0px;
+
+}
+
+
+.scrollarea {
+    overflow-y: auto;
+}
+
+.sidemenu {
+    font-size: 1.8rem !important;
+}
+
+.sidemenu a.level1 {
+    font-size: 1em !important;
+    font-weight: normal;
+}
+
+.sidemenu a.level2 {
+    font-size: 1em !important;
+    font-weight: normal;
+}
+
+.sidemenu a.level3 {
+    font-size: 1em !important;
+    font-weight: normal;
+
+}
+
+.sidemenu ul {
+    margin-left: 6px ! important;
+
+}
+
+#submenus>ul.submenu {
+    padding-bottom: 60px;
+
+}
+
+.sidemenu li.submenu {
+    margin-left: 0 ! important;
+    position: relative;
+
+}
+
+.sidemenu ul,
+.submenu li {
+    list-style: "";
+}
+
+.sidemenu a {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+.submenu a {
+
+    text-decoration: none;
+
+}
+
+.submenu a.current {
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+
+hr {
+    color: #fff;
+
+}
+
+.offcanvasbutton {
+    color: #234;
+
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    top: 60px;
+    left: 5px;
+    z-index: 1029;
+
+}
+
+
+nav ul li a {
+    text-decoration: none;
+    font-weight: normal;
+}
+
+aside .offcanvas-header ul li a {
+    font-weight: bold;
+}

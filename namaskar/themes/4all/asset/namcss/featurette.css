@@ -1,0 +1,34 @@
+/* Featurettes
+  ------------------------- */
+
+.featurette-divider {
+    margin: 5rem 0;
+    /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+/* rtl:begin:remove */
+.featurette-heading {
+    letter-spacing: -.05rem;
+}
+
+/* rtl:end:remove */
+
+.featurette p.lead {
+    font-size: 2rem;
+}
+
+
+@media (min-width: 40em) {
+
+
+    .featurette-heading {
+        font-size: 50px;
+    }
+}
+
+@media (min-width: 62em) {
+    .featurette-heading {
+        margin-top: 7rem;
+    }
+}

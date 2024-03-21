@@ -8,10 +8,9 @@ use Qwwwest\Namaskar\ZenConfig;
 
 class AbstractController
 {
-    protected $response;
+    //protected $response;
     protected $conf;
     protected $currentUser;
-    protected $pageBuilder = null;
 
 
 
@@ -20,18 +19,22 @@ class AbstractController
         $domain = $GLOBALS['mempad'];
         $domain = basename($domain);
 
-        debug('page.type', N('page.type'));
+        $this->conf = Kernel::service('ZenConfig');
 
+        $pageModel = new PageModel();
 
-        $this->pageBuilder = new PageDataBuilder();
+        $pageModel->buildModel($url);
+        $qRenderer = new QwwwickRenderer(($this->conf)('folder.themes'));
 
-        $html = $this->pageBuilder->renderWholePage($url);
+        $theme = N('page.theme') ?? N('site.theme') ?? 'bootstrap5';
+
+        $html = $qRenderer->renderPage($theme);
 
         $time = intval((microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"]) * 1000);
         $html .= "<!-- $time ms -->";
 
 
-        return $this->response($html, $this->pageBuilder->codeStatus);
+        return $this->response($html, $pageModel->codeStatus);
     }
 
     public function response($content, $code = 200, $headers = []): Response

@@ -1,25 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ page.language }}">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  {{ site.meta }}
+  {{ page.meta }}
   <title>{{ page.title }}</title>
   <link rel="icon" href="{{ media }}/favicon.ico" />
   <!-- not minified so you can check it. ^^ -->
-  <link href="{{ asset }}/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="{{ asset }}/css/lightgallery.min.css" rel="stylesheet" />
-  <link href="{{ asset }}/css/lg-transitions.min.css" rel="stylesheet" />
-  <link href="{{ asset }}/css/namaskar.css" rel="stylesheet" />
-  <link href="{{ asset }}/css/{{ site.domain }}.css" rel="stylesheet" />
+  <link href="{{ asset }}/lib/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/lib/lightgallery.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/lib/lg-transitions.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/namaskar.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/{{ site.domain }}.css" rel="stylesheet" />
 
   <style></style>
   {% if site.ajaxify %}
   <script>
     absroot = "{{ absroot }}"
   </script>
-  <script src="{{ asset }}/js/ajaxify.min.js"></script>
+  <script src="{{ asset }}/lib/ajaxify.min.js"></script>
 
   {% endif %}
 </head>
@@ -28,7 +28,7 @@
 
 
 
-  <main class="container{% if page.container.full%}-full{% endif %} ">
+  <main class="{{ page.container.full ? 'container-full' : 'container' }}">
 
 
 
@@ -45,23 +45,18 @@
         {% endif %}
 
       </div>
-
-
     </div>
 
     <div id="content">{{ page.content }}</div>
 
   </main>
 
-  <script src="{{ asset }}/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ asset }}/js/jquery.min.js"></script>
-  <script src="{{ asset }}/js/lightgallery-all.min.js"></script>
-  <script src="{{ asset }}/js/microlight.min.js"></script>
-  <script src="{{ asset }}/js/vivus.min.js"></script>
-  <script src="{{ asset }}/js/{{ site.domain }}.js"></script>
-  <script src="{{ asset }}/js/namaskar.js"></script>
-
-
+  <script src="{{ asset }}/lib/bootstrap.bundle.min.js"></script>
+  <script src="{{ asset }}/lib/jquery.min.js"></script>
+  <script src="{{ asset }}/lib/lightgallery-all.min.js"></script>
+  <script src="{{ asset }}/lib/vivus.min.js"></script>
+  <script src="{{ asset }}/{{ site.domain }}.js"></script>
+  <script src="{{ asset }}/namaskar.js"></script>
 
   </body>
 
