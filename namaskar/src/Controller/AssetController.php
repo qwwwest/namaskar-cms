@@ -64,7 +64,7 @@ class AssetController extends AbstractController
             'alert',
             'carousel',
             'breadcrumb',
-            // 'hamburger',
+            'lightbox',
             'hamburger-anim',
             'navbar',
             'backgrounds',

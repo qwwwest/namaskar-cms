@@ -39,7 +39,7 @@ class QwwwickRenderer
         $this->conf = Kernel::service('ZenConfig');
         $this->mempad = ($this->conf)('MemPad');
         if ($this->mempad === null)
-            die('MemPad is NOT set');
+            die ('MemPad is NOT set');
         $this->context = [$this->conf];
         $this->currentTemplate = [];
 
@@ -151,7 +151,7 @@ class QwwwickRenderer
 
     private function isToken($tag)
     {
-        return isset($this->tokens[$tag]);
+        return isset ($this->tokens[$tag]);
     }
 
     /**
@@ -163,7 +163,7 @@ class QwwwickRenderer
     }
     public function processShortcodes($content)
     {
-        if (empty($this->shortcodes)) {
+        if (empty ($this->shortcodes)) {
             return $content;
         }
 
@@ -180,7 +180,7 @@ class QwwwickRenderer
         $tagName = $tag[2];
         $attr = $this->parseAttributes($tag[3]);
 
-        if (isset($tag[5])) {
+        if (isset ($tag[5])) {
             // enclosing tag - extra parameter
             return $tag[1] . call_user_func($this->shortcodes[$tagName], $attr, $tag[5], $tagName) . $tag[6];
         } else {
@@ -191,7 +191,7 @@ class QwwwickRenderer
 
     public function processTokens($content)
     {
-        if (empty($this->tokens)) {
+        if (empty ($this->tokens)) {
             return $content;
         }
 
@@ -279,15 +279,15 @@ class QwwwickRenderer
         $attr = array();
 
         foreach ($matches as $match) {
-            if (!empty($match[1])) {
+            if (!empty ($match[1])) {
                 $attr[strtolower($match[1])] = stripcslashes($match[2]);
-            } elseif (!empty($match[3])) {
+            } elseif (!empty ($match[3])) {
                 $attr[strtolower($match[3])] = stripcslashes($match[4]);
-            } elseif (!empty($match[5])) {
+            } elseif (!empty ($match[5])) {
                 $attr[strtolower($match[5])] = stripcslashes($match[6]);
-            } elseif (isset($match[7]) && strlen($match[7])) {
+            } elseif (isset ($match[7]) && strlen($match[7])) {
                 $attr[] = stripcslashes($match[7]);
-            } elseif (isset($match[8])) {
+            } elseif (isset ($match[8])) {
                 $attr[] = stripcslashes($match[8]);
             }
         }
@@ -306,15 +306,15 @@ class QwwwickRenderer
         $attr = array();
 
         foreach ($matches as $match) {
-            if (!empty($match[1])) {
+            if (!empty ($match[1])) {
                 $attr[strtolower($match[1])] = stripcslashes($match[2]);
-            } elseif (!empty($match[3])) {
+            } elseif (!empty ($match[3])) {
                 $attr[strtolower($match[3])] = stripcslashes($match[4]);
-            } elseif (!empty($match[5])) {
+            } elseif (!empty ($match[5])) {
                 $attr[strtolower($match[5])] = stripcslashes($match[6]);
-            } elseif (isset($match[7]) && strlen($match[7])) {
+            } elseif (isset ($match[7]) && strlen($match[7])) {
                 $attr[] = stripcslashes($match[7]);
-            } elseif (isset($match[8])) {
+            } elseif (isset ($match[8])) {
                 $attr[] = stripcslashes($match[8]);
             }
         }
@@ -384,7 +384,7 @@ class QwwwickRenderer
 
         $file = $this->resolveTemplate("$template/index.html");
         if (!$file) {
-            die("template : '$file' not found in Renderer::render");
+            die ("template : '$file' not found in Renderer::render");
         }
 
         $this->newContext('index.html');
@@ -411,14 +411,14 @@ class QwwwickRenderer
         static $__depth = 0;
         $__depth++;
         if ($__depth > 20)
-            die('infinite recursivity in ' . $__template); // to avoid infinite recursivity
+            die ('infinite recursivity in ' . $__template); // to avoid infinite recursivity
 
 
 
         $__file = $this->resolveTemplate($__template);
         if (!$__file) {
 
-            die("template : '$this->theme/$__template' not found in Renderer::include");
+            die ("template : '$this->theme/$__template' not found in Renderer::include");
         }
 
         $this->newContext($__template);
@@ -427,8 +427,11 @@ class QwwwickRenderer
             foreach ($__vars as $key => $var) {
                 if (is_string($key))
                     $this->setContextValue($key, $var);
-                if (is_int($key))
+                if (is_int($key)) {
                     $this->setContextValue("_$key", $var);
+                    $this->setContextValue("attribute$key", $var);
+                }
+
 
             }
 
@@ -498,7 +501,7 @@ class QwwwickRenderer
         $rec++;
 
         if ($rec > 20) {
-            die('recurtion spotted in ' . $templateName);
+            die ('recurtion spotted in ' . $templateName);
         }
         //   $templateFile = $this->resolve_template($tagName);
         $theme = ($this->conf)('site.theme');
@@ -1113,7 +1116,7 @@ class QwwwickRenderer
     public function id($attributes): string
     {
 
-        if (isset($attributes['id'])) {
+        if (isset ($attributes['id'])) {
             return $attributes['id'];
         }
 
@@ -1133,7 +1136,7 @@ class QwwwickRenderer
     public function getCssClasses($attributes): string
     {
 
-        if (isset($attributes['class'])) {
+        if (isset ($attributes['class'])) {
             return $attributes['class'];
         }
 

@@ -1,0 +1,16 @@
+<section class="photo-gallery">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 gallery-grid">
+
+            {% for item in items %}
+            <div class="col  {{ item.class }}">
+                <a class="no-ajaxy gallery-item" href="{{ media }}/img/{{ item.img }}">
+                    <img src="{{ media }}/img/{{ item.img }}" class="img-fluid" alt="{{ item.text }} {{ item.link }}"
+                        data-title="{{ item.title }}" data-desc="{{ item.desc }}" data-link="🔗 {{ item.link }}">
+                </a>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>

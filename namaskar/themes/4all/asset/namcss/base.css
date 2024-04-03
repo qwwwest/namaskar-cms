@@ -1,4 +1,4 @@
-html {
+heetml {
     font-size: 62.5% !important;
 }
 
@@ -218,11 +218,10 @@ h5 a {
 }
 
 
-
 main a {
     color: inherit;
 }
 
-main img {
+main>img {
     max-width: 100%;
 }

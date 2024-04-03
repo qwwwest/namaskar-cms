@@ -18,7 +18,7 @@ a.navbar-brand svg.logo {
     padding: 0;
     margin: 0;
 
-    color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
 }
 
 
@@ -69,7 +69,7 @@ a.navbar-brand strong:hover {
 
 nav.navbar {
 
-    z-index: 5000 !important;
+    zzz-index: 5000 !important;
     margin: 0px !important;
     height: 60px !important;
 }

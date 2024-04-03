@@ -6,10 +6,10 @@
     /* Space out the Bootstrap <hr> more */
 }
 
-/* Thin out the marketing headings */
-/* rtl:begin:remove */
+
 .featurette-heading {
     letter-spacing: -.05rem;
+    margin-top: 0;
 }
 
 /* rtl:end:remove */
@@ -20,7 +20,10 @@
 
 
 @media (min-width: 40em) {
-
+    .featurette-media {
+        display: flex;
+        align-items: center;
+    }
 
     .featurette-heading {
         font-size: 50px;
@@ -29,6 +32,6 @@
 
 @media (min-width: 62em) {
     .featurette-heading {
-        margin-top: 7rem;
+        margin-top: 0rem;
     }
 }

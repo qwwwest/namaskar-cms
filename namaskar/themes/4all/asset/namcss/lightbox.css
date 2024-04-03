@@ -1,0 +1,155 @@
+:root {
+    --lightbox: #000;
+    --caption: #00000033;
+    --carousel-text: #fff;
+}
+
+
+.gallery-item {
+    display: block;
+}
+
+.gallery-item img {
+    box-shadow: 0 1rem 1rem #00000033;
+    transition: all 0.2s;
+}
+
+.gallery-item:hover img {
+    box-shadow: 0 1rem 1rem #00000066;
+}
+
+.lightbox-modal .modal-content {
+    background-color: var(--lightbox);
+}
+
+.lightbox-modal .btn-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-size: 1.25rem;
+    z-index: 10;
+    filter: invert(1) grayscale(100);
+}
+
+.lightbox-modal .modal-body {
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.lightbox-modal .lightbox-content {
+    width: 100%;
+}
+
+.lightbox-modal .carousel-caption {
+    display: block;
+    position: fixed;
+    bottom: 100px;
+    right: 0;
+    left: 0;
+    padding-bottom: 1rem;
+    background-color: var(--caption);
+    color: var(--carousel-text) !important;
+
+}
+
+.lightbox-modal .carousel-caption h4 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.lightbox-modal .carousel-caption p {
+    font-size: 1.6rem;
+    font-weight: normal;
+}
+
+
+.lightbox-modal .carousel-indicators.images {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: unset;
+    justify-content: start;
+
+    transition: left 1s;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #000;
+}
+
+.lightbox-modal .carousel-indicators.images.center {
+
+    left: 0;
+    right: 0;
+    justify-content: center;
+
+    width: 100%;
+}
+
+.lightbox-modal .carousel-inner {
+    width: 75%;
+}
+
+
+
+.lightbox-modal .carousel-control-prev {
+    left: 1.25rem;
+    width: auto;
+}
+
+.lightbox-modal .carousel-control-next {
+    right: 1.25rem;
+    width: auto;
+}
+
+
+.lightbox-modal .carousel-indicators.images>div.thumb {
+
+    display: flex;
+    align-items: flex-end;
+    justify-items: flex-start;
+    width: 120px;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+    z-index: 0;
+    background-color: #000 !important;
+    opacity: 1 !important;
+    border-width: 0px;
+    -webkit-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
+
+
+}
+
+.lightbox-modal .carousel-indicators.images>div.thumb>img {
+
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border: 3px solid black;
+}
+
+.lightbox-modal .carousel-indicators.images>div.thumb.active>img {
+
+    border: 3px solid white;
+    z-index: 1000;
+    opacity: 1;
+
+
+}
+
+
+@media (min-width: 1400px) {
+    .lightbox-modal .carousel-inner {
+        max-width: 60%;
+    }
+
+
+}
+
+[data-bs-theme="dark"] .lightbox-modal .carousel-control-next-icon,
+[data-bs-theme="dark"] .lightbox-modal .carousel-control-prev-icon {
+    filter: none;
+}

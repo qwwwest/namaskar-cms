@@ -8,9 +8,7 @@
   <title>{{ page.title }}</title>
   <link rel="icon" href="{{ media }}/favicon.ico" />
   <!-- not minified so you can check it. ^^ -->
-  <link href="{{ asset }}/lib/bootstrap.min.css" rel="stylesheet" />
-  <link href="{{ asset }}/lib/lightgallery.min.css" rel="stylesheet" />
-  <link href="{{ asset }}/lib/lg-transitions.min.css" rel="stylesheet" />
+  <link href="{{ asset }}/lib/bs/bootstrap/bootstrap.min.css" rel="stylesheet" />
   <link href="{{ asset }}/namaskar.min.css" rel="stylesheet" />
   <link href="{{ asset }}/{{ site.domain }}.css" rel="stylesheet" />
 
@@ -51,10 +49,13 @@
 
   </main>
 
-  <script src="{{ asset }}/lib/bootstrap.bundle.min.js"></script>
+
+  {% include modal.html %}
+
+  <script src="{{ asset }}/lib/bs/bootstrap/bootstrap.bundle.min.js"></script>
   <script src="{{ asset }}/lib/jquery.min.js"></script>
-  <script src="{{ asset }}/lib/lightgallery-all.min.js"></script>
   <script src="{{ asset }}/lib/vivus.min.js"></script>
+  <script src="{{ asset }}/lib/namaskarLightbox.js"></script>
   <script src="{{ asset }}/{{ site.domain }}.js"></script>
   <script src="{{ asset }}/namaskar.js"></script>
 

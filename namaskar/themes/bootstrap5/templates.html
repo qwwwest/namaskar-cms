@@ -1,0 +1,18 @@
+{% if tagname === 'img2' && caption %}
+<figure class="figure">
+  <img src="$media/img/{{ _0 }}" class="figure-img img-fluid rounded" alt="{{ caption }}" data-toggle="lightbox">
+  <figcaption class="figure-caption text-center">{{ caption }}</figcaption>
+</figure>
+{% endif %}
+
+{% if tagname === 'img2' && !caption %}
+<img src="$media/img/{{ _0 }}" alt="{{ _1 }}" title="{{ title ? title : alt }}" {{ uAttr}} data-toggle="lightbox" />
+{% endif %}
+
+{% if tagname === 'youtube' %}
+
+<div class="embed-responsive embed-responsive-{{ ratio ?? '16by9' }}">
+  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ id }}" frameborder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+{% endif %}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{page.language}}" data-bs-theme="{{ theme.colormode ? theme.colormode : 'auto'}}">
+<html lang="{{page.language}}">
 
 <head>
     {% if theme.colormodee %}
@@ -14,12 +14,8 @@
     <title>{{page.title}} :: {{site.name}}</title>
 
 
-    {% if theme.bootswatch %}
-    <link href="{{asset}}/vendor/bootswatch/{{theme.bootswatch}}/bootstrap.min.css" rel="stylesheet">
-    {% else %}
-    <link href="{{asset}}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{asset}}/lib/bs/{{theme.bs ?? 'bootstrap'}}/bootstrap.min.css" rel="stylesheet">
 
-    {% endif %}
     <link href="{{asset}}/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
 
     <link href="{{asset}}/namaskar.min.css" rel="stylesheet">
@@ -30,7 +26,7 @@
 </head>
 
 <body class="navbar-{{ theme.navbar.position ?? 'normal' }} 
-{{ page.show.regions ? 'show-regions' : ''}}" data-bs-theme="{{ theme.colormode ? theme.colormode : 'auto' }}">
+{{ page.show.regions ? 'show-regions' : ''}}" data-bs-theeeme="{{ theme.colormode ? theme.colormode : 'auto' }}">
 
 
     [region header.top ]
@@ -74,11 +70,14 @@
     </footer>
     {% endif %}
 
-    <script src="{{asset}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    {% include modal.html %}
+
+    <script src="{{asset}}/lib/bs/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset }}/lib/namaskarLightbox.js"></script>
     {% if site.load.highlight.js %}
-    <link rel="stylesheet" href="{{asset}}/vendor/highlight/{{ site.load.highlight.js.theme }}.min.css">
-    <script src="{{asset}}/vendor/highlight/highlight.min.js"></script>
+    <link rel="stylesheet" href="{{asset}}/lib/{{ site.load.highlight.js.theme }}.min.css">
+    <script src="{{asset}}/lib/highlight.min.js"></script>
     <script>//hljs.highlightAll();
         document.addEventListener('DOMContentLoaded', (event) => {
             document.querySelectorAll('pre code').forEach((el) => {
@@ -91,12 +90,12 @@
 
     {% endif %}
     {% if site.microlight %}
-    <script src="{{asset}}/vendor/js/microlight.js"></script>
+    <script src="{{asset}}/microlight.js"></script>
     <script>microlight.reset();</script>
     {% endif %}
 
     {% if site.jquery %}
-    <script src="{{asset}}/vendor/js/jquery.js"></script>
+    <script src="{{asset}}/lib/jquery.js"></script>
     {% endif %}
 
     <script src="{{asset}}/namaskar.js"></script>

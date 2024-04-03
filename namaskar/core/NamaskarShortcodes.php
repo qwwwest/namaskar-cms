@@ -7,6 +7,7 @@ $this->shortCode2Template('highlight', 'alert', true, ['type' => 'highlight']);
 $this->shortCode2Template('info', 'alert', true, ['type' => 'info']);
 $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
 $this->shortCode2Template('warning', 'alert', true, ['type' => 'warning']);
+$this->shortCode2Template('img2', 'templates', false);
 
 
 
@@ -416,14 +417,14 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
         $media = <<<HTML
  
           <img class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" 
-          width="$size" height="$size" src="{$media}/img/$img" />
+          width="$size" height="$size" src="{$media}/img/$img" data-toggle="lightbox"  />
           
     HTML;
     if ($caption && $img) {
         $media = <<<IMG
     <figure class="figure">
     <img src="{$media}/img/$img" class="figure-img featurette-image img-fluid mx-auto " 
-    width="$size" height="$size" alt="$caption" />
+    width="$size" height="$size" alt="$caption" data-toggle="lightbox"  />
     <figcaption class="figure-caption text-center">$caption</figcaption>
     </figure>
     IMG;
@@ -715,14 +716,14 @@ $this->addShortcode('img', function ($attributes, $content, $tagName) {
 
         $html = <<<IMG
         <figure class="figure">
-        <img src="$media/img/$path" class="figure-img img-fluid rounded" alt="$caption">
+        <img src="$media/img/$path" class="figure-img img-fluid rounded" alt="$caption" data-toggle="lightbox" >
         <figcaption class="figure-caption text-center">$caption</figcaption>
         </figure>
         IMG;
     } else {
         $title = $title ?? $alt;
         $html = <<<IMG
-        <img src="$media/img/$path" $caption $uAttr>
+        <img src="$media/img/$path" class="img-fluid" alt="$alt" title="$title" $uAttr data-toggle="lightbox" />
         IMG;
     }
 
@@ -1055,6 +1056,28 @@ $this->addShortcode('slides', function ($attributes, $content, $tagName) {
 
 $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
+    if (isset ($attributes['items'])) {
+
+        $items = ($this->conf)($attributes['items']);
+        //dd($items);
+        $attributes['items'] = $items;
+        return $this->includeTemplate($attributes, $content, 'gallery', false);
+
+        //return $this->renderTemplate($attributes, $content, 'gallery', false);
+    }
+
+    die ('rr');
+
+    $type = $attributes[0];
+    if (isset ($attributes[1])) {
+        $title = $attributes[1];
+        return $this->renderTemplate($attributes, $content, 'alert-with-title', false);
+    }
+
+
+
+    ($this->conf)("media") . "/gallery/$attributes[folder]";
+
     $directory = ($this->conf)("media") . "/gallery/$attributes[folder]";
     $items = glob($directory . "/*.*");
 
@@ -1198,9 +1221,6 @@ $this->addShortcode('submenu', function ($attributes, $content, $tagName) {
 
 
     $attributes['elts'] = $elts;
-
-    // die("submenu: not found elements:'$url'");
-
 
     return $this->includeTemplate($attributes, $content, 'submenu', false);
 });

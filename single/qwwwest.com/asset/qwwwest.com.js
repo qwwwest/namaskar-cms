@@ -64,7 +64,6 @@ function puzzle(init) {
 			.attr('id', 'skill_' + i)
 			.animate({ opacity: 1 }, 500);
 
-
 	}
 
 	setTimeout(loopskills, 2000);
@@ -334,18 +333,7 @@ function initPortfolio() {
 
 	};
 
-	$('#pfGallery').lightGallery({
-		mode: 'lg-zoom-in-out',
-		thumbnail: true,
-		animateThumb: true,
-		loop: false,
-		download: false,
-		counter: false,
-		autoplayControls: false,
-		zoom: false,
-		share: false,
-		fullScreen: false,
-	})
+
 
 };
 

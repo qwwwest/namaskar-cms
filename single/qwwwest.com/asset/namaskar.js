@@ -20,6 +20,8 @@ function renderPage() {
 
 	}
 
+	namaskarLightbox.createAll();
+
 
 }
 
