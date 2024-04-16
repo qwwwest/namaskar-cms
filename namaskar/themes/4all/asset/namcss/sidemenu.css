@@ -81,25 +81,7 @@
     overflow-y: auto;
 }
 
-.sidemenu {
-    font-size: 1.8rem !important;
-}
 
-.sidemenu a.level1 {
-    font-size: 1em !important;
-    font-weight: normal;
-}
-
-.sidemenu a.level2 {
-    font-size: 1em !important;
-    font-weight: normal;
-}
-
-.sidemenu a.level3 {
-    font-size: 1em !important;
-    font-weight: normal;
-
-}
 
 .sidemenu ul {
     margin-left: 6px ! important;
@@ -148,7 +130,6 @@ hr {
 
 .offcanvasbutton {
     color: #234;
-
     background-color: transparent;
     width: 40px;
     height: 40px;
@@ -163,8 +144,4 @@ hr {
 nav ul li a {
     text-decoration: none;
     font-weight: normal;
-}
-
-aside .offcanvas-header ul li a {
-    font-weight: bold;
 }

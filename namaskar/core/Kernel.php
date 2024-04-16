@@ -26,7 +26,7 @@ class Kernel
     {
 
         if (self::$kernel)
-            die('one instance only');
+            die ('one instance only');
 
         self::$kernel = $this;
 
@@ -53,7 +53,7 @@ class Kernel
         // else if (is_file("$absroot/default.lst"))
         //     $prj_folder = 'default';
         else
-            die('mempad file not found');
+            die ('mempad file not found');
 
         //php developpement server serve app as root...
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'PHP ') === 0)
@@ -89,6 +89,7 @@ class Kernel
 
         $conf('absroot', rtrim($absroot, '/'));
         $conf('media', trim($absroot . '/media'));
+        $conf('asset', trim($absroot . '/asset'));
         $conf('url', $url);
         $conf('urlwithparams', $urlwithparams);
         $conf('urlparam', $urlparams);
@@ -115,6 +116,7 @@ class Kernel
         $conf('folder.data', "$projectDir/../data");
         $conf('folder.sites', $conf('folder.data') . '/sites');
         $conf('folder.site', $conf('folder.sites') . "/$prj_folder");
+        $conf('folder.asset', $conf('folder.public') . "/asset");
 
         $conf('folder.var', $conf('folder.data') . '/var');
         $conf('folder.logs', $conf('folder.var') . '/logs');
@@ -125,7 +127,7 @@ class Kernel
 
 
         // template folders are in projectDir & possibly in site folder
-        $conf('folder.themes', [$conf('folder.site') . "/themes", "$projectDir/themes"]);
+        $conf('folder.themes', [$conf('folder.asset') . "/themes", $conf('folder.site') . "/themes", "$projectDir/themes"]);
 
         // $ini = file_get_contents($conf('folder.sites') . '/config.ini');
         // if (strpos($ini, '::') != false)
@@ -148,7 +150,7 @@ class Kernel
         elseif (is_file("$dataFolder/$project/default.lst"))
             $dataFolder = "$dataFolder/$project";
         else
-            die('Oops, dataFolder not found for: ' . $project);
+            die ('Oops, dataFolder not found for: ' . $project);
 
 
         if (is_file(realpath("$dataFolder/../$project.lst")))
@@ -160,7 +162,7 @@ class Kernel
         elseif (is_file("$dataFolder/mempad.lst"))
             $mempadFile = "$dataFolder/mempad.lst";
         else
-            die('Oops, MemPad file not found for: ' . $project);
+            die ('Oops, MemPad file not found for: ' . $project);
 
 
         $conf('mempadFile', $mempadFile);
@@ -256,7 +258,7 @@ auto.title: 'yes'
         if ($service === 'Logger')
             return self::getKernel()->zconf;
 
-        die("Unknown service : $service");
+        die ("Unknown service : $service");
     }
 
     public static function debug($key = null, $val = null)

@@ -13,16 +13,7 @@
     <meta name="generator" content="Namaskar">
     <title>{{page.title}} :: {{site.name}}</title>
 
-
-    <link href="{{asset}}/lib/bs/{{theme.bs ?? 'bootstrap'}}/bootstrap.min.css" rel="stylesheet">
-
-    <link href="{{asset}}/vendor/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
-
     <link href="{{asset}}/namaskar.min.css" rel="stylesheet">
-
-
-
-
 </head>
 
 <body class="navbar-{{ theme.navbar.position ?? 'normal' }} 
@@ -99,6 +90,7 @@
     {% endif %}
 
     <script src="{{asset}}/namaskar.js"></script>
+    <script srec="{{asset}}/namaskar.{{site.name}}.js"></script>
 
 </body>
 

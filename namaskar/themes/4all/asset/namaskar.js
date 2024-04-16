@@ -1,21 +1,91 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  function renderPage() {
+    document.getElementById("backgrounds").classList.remove('zoomOut');
+    document.getElementById("content").classList.remove('fadeOut');
+
+    document.getElementById("backgrounds").classList.add('ZoomIn');
+    document.getElementById("content").classList.add('fadeIn');
+    setTimeout(removeClasses, 900);
+    console.log("absroot=" + absroot);
+
+
+    let init = document.querySelectorAll('[data-namaskar-init]');
+
+    for (let i = 0; i < init.length; i++) {
+      const element = init[i];
+      let fn = window[element.dataset.namaskarInit];
+      if (typeof fn === 'function') fn(true);
+      else { console.log(element.dataset.namaskarInit + " function not found.") }
+
+    }
+
+    namaskarLightbox.createAll();
+
+
+  }
+
+  function leavePage() {
+    document.getElementById("backgrounds").classList.add('zoomOut');
+    document.getElementById("content").classList.add('fadeOut');
+
+    let init = document.querySelectorAll('[data-namaskar-init]');
+
+    for (let i = 0; i < init.length; i++) {
+      const element = init[i];
+      let fn = window[element.dataset.namaskarInit];
+      if (typeof fn === 'function') fn(false);
+      else { console.log(element.dataset.namaskarInit + " function not found.") }
+
+    }
+
+  }
+
+  function removeClasses() {
+
+    document.getElementById("backgrounds").classList.remove('ZoomIn');
+    document.getElementById("content").classList.remove('fadeIn');
+
+  }
+
+  window.onresize = () => {
+    if (document.body.classList.contains("sideMenuOpen")) toggleSideMenu();
+  };
+
   function ajaxified() {
+
     let ajaxify = new Ajaxify({
-      elements: "#background, #content, #mainnavbar",
+      elements: '#background, #content, #navbarCollapse, #language-menu',
       requestDelay: 500,
-      bodyClasses: true,
+      bodyClasses: true
     });
 
     window.addEventListener("pronto.request", leavePage);
     window.addEventListener("pronto.render", renderPage);
+    window.addEventListener("pronto.request", function (e) {
+      //close menu programatically...
+
+      bootstrap.Collapse.getOrCreateInstance(
+        document.getElementById('navbarCollapse'), {
+        toggle: false
+      });
+
+
+      document.getElementById('burger').classList.add('collapsed');
+      document.getElementById('burger').attributes.item('aria-expanded', 'false');
+    });
+
+    let timeoutID = null;
+    // first time when reaching the site.
+    renderPage();
   }
+
 
   // if (Ajaxify)
   if (typeof Ajaxify === "function") ajaxified();
-
-  slugify = (text) => {
-
-  };
+  else {
+    namaskarLightbox.createAll();
+  }
 
   //TOC
   (function TOC() {
@@ -55,57 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
       scrolly.style.width = p + "vw";
     });
 
-  // let elts = document.querySelectorAll("table");
-  // if (elts)
-  //   elts.forEach((elt) => {
-  //     elt.classList.add("table", "table-striped", "table-bordered");
-  //   });
 
-  // elts = document.querySelectorAll("thead");
-  // if (elts)
-  //   elts.forEach((elt) => {
-  //     elt.classList.add("table-dark");
-  //   });
-
-  const modal = document.getElementById("lightboxModal");
-  if (modal) {
-    modal.addEventListener("show.bs.modal", (event) => {
-      let t = event.relatedTarget; // what triggered the modal
-
-      modal.querySelector(".lightboxContent").innerHTML = t.innerHTML;
-    });
-
-    modal.addEventListener("hide.bs.modal", (event) => {
-      modal.querySelector(".lightboxContent").innerHTML = "";
-    });
-    const galleries = document.querySelectorAll("[data-namaskar-gallery]");
-    if (modal && galleries)
-      galleries.forEach((gallery) => {
-        modal.classList.add("gallery");
-        console.log;
-        let items = gallery.querySelectorAll("[data-namaskar-gallery-item]");
-        Namaskar.items = [...items];
-        Namaskar.index = 0;
-        // items.forEach((item) => {});
-      });
-    ///// moved from here if(modal)
-
-    modal.querySelector(".arrow.left").addEventListener("click", (e) => {
-      e.preventDefault();
-      if (Namaskar.index === 0) Namaskar.index = Namaskar.items.length;
-      Namaskar.index--;
-      modal.querySelector(".lightboxContent").innerHTML =
-        Namaskar.items[Namaskar.index].innerHTML;
-    });
-    modal.querySelector(".arrow.right").addEventListener("click", (e) => {
-      e.preventDefault();
-      Namaskar.index++;
-      if (Namaskar.index === Namaskar.items.length) Namaskar.index = 0;
-
-      modal.querySelector(".lightboxContent").innerHTML =
-        Namaskar.items[Namaskar.index].innerHTML;
-    });
-  }
 });
 
 
@@ -126,7 +146,7 @@ const navSlide = () => {
 
 }
 
-navSlide()
+//navSlide();
 
 
 

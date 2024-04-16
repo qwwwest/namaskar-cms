@@ -14,14 +14,7 @@ $this->shortCode2Template('img2', 'templates', false);
 $this->addShortcode('alert', function ($attributes, $content, $tagName) {
 
 
-
-    $type = $attributes[0];
-    if (isset ($attributes[1])) {
-        $title = $attributes[1];
-        return $this->renderTemplate($attributes, $content, 'alert-with-title', false);
-    }
-
-    return $this->renderTemplate($attributes, $content, 'alert', false);
+    return $this->includeTemplate($attributes, $content, 'alert', false);
 
 
 });
@@ -193,6 +186,41 @@ HTML;
 });
 
 
+$this->addShortcode('cols', function ($attributes, $content, $tagName) {
+
+    $content = explode("\n[col]", $content);
+    $class = $attributes['class'] ?? "";
+    $sm = $attributes['sm'] ?? 1;
+    $md = $attributes['md'] ?? 2;
+    $lg = $attributes['lg'] ?? $md;
+
+    $bsClass = "row row-cols-$sm";
+    if ($md && $md != $sm)
+        $bsClass .= " row-cols-md-$md";
+    if ($lg && $md != $lg)
+        $bsClass .= " row-cols-lg-$lg";
+
+    $nb = count($content);
+    $cols = '';
+    foreach ($content as $key => $value) {
+
+        $value = $this->renderBlock($value);
+        $cols .= <<<COL
+<div class="col">
+        $value
+</div>
+COL;
+    }
+
+    return <<<HTML
+
+  <div class="$bsClass $class">
+  $cols
+  </div>
+
+HTML;
+});
+
 $this->addShortcode('?', function ($attributes, $content, $tagName) {
 
     $var = $this->conf->value($attributes[0]);
@@ -325,27 +353,33 @@ $this->addShortcode('include', function ($attributes, $content, $tagName) {
     }
 
     if (!isset ($attributes[0]) || $attributes[0] === 'ALL' || $attributes[0] === '.*') {
-        $children = $this->mempad->getElementByPath(($this->conf)("page.path"))->children;
+        $path = ($this->conf)("page.path");
+        //$path = $this->get_absolute_mempad_path($path);
+        $elem = $this->mempad->getElementByPath($path);
+        $children = $elem->children;
         $content = '';
+
         foreach ($children as $element) {
-            if (strpos($element->title, '.') === 0) {
+
+            if (strpos($element->title, '.') === 0 && strpos($element->title, '!') !== 1) {
                 $content .= $this->mempad->getContentById($element->id) . "\n";
             }
         }
         return $this->processShortcodes($content);
     }
+
     $path = ($this->conf)("page.path") . "/" . $attributes[0];
-    $path = $this->get_absolute_mempad_path($path);
+    //$path = $this->get_absolute_mempad_path($path);
     $content = $this->mempad->getContentByPath($path);
     if ($content === null) {
-        return "include not found : $attributes[0]";
+        return "include not found : $path";
     }
 
     return $this->processShortcodes($content);
     //return $content;
 });
 
-$this->addShortcode('.include', function ($attributes, $content, $tagName) {
+$this->addShortcode('...inc', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
@@ -437,13 +471,12 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
 HTML;
 
 
-
     $content = <<<HTML
 <div class="row featurette$class">
     <div class="col-md-$ratio1 $order1">
     $astart
       $title
-      <p class="lead">$content</p>
+      <p>$content</p>
       $aend
     </div>
     <div class="col-md-$ratio2 $order2 featurette-media ">
@@ -1056,9 +1089,27 @@ $this->addShortcode('slides', function ($attributes, $content, $tagName) {
 
 $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
+    $sm = $attributes['sm'] ?? 1;
+    $md = $attributes['md'] ?? 2;
+    $lg = $attributes['lg'] ?? $md;
+
+    $bsClass = "row row-cols-$sm";
+    if ($md && $md != $sm)
+        $bsClass .= " row-cols-md-$md";
+    if ($lg && $md != $lg)
+        $bsClass .= " row-cols-lg-$lg";
+
+    $attributes['bs5cols'] = $bsClass;
     if (isset ($attributes['items'])) {
 
         $items = ($this->conf)($attributes['items']);
+        foreach ($items as $key => $item) {
+
+            if (isset ($item['caption']) && !isset ($item['title']))
+                $item['title'] = $item['caption'];
+
+            # code...
+        }
         //dd($items);
         $attributes['items'] = $items;
         return $this->includeTemplate($attributes, $content, 'gallery', false);
@@ -1066,7 +1117,7 @@ $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
         //return $this->renderTemplate($attributes, $content, 'gallery', false);
     }
 
-    die ('rr');
+
 
     $type = $attributes[0];
     if (isset ($attributes[1])) {

@@ -1,9 +1,5 @@
-heetml {
-    font-size: 62.5% !important;
-}
-
 body {
-    font-size: 2rem !important;
+    foont-size: 2rem !important;
 
 }
 
@@ -176,24 +172,17 @@ code span[data_microlight_type=comments] {
 /* 404 */
 
 h1.page404 {
-    font-size: 12rem;
+
     display: block;
 }
 
-h1 {
-    font-size: 5rem;
-    font-weight: 900;
-}
-
-h2 {
-    font-size: 4rem;
-
-}
-
+h1,
+h2,
 h3 {
-    font-size: 3rem;
 
+    font-weight: 800;
 }
+
 
 
 h2 a:hover::after {

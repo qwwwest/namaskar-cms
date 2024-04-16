@@ -60,6 +60,7 @@ class AssetController extends AbstractController
     public function namaskarAssetManager(): ?Response
     {
         $cssFiles = [
+            'bootstrap.min',
             'base',
             'alert',
             'carousel',
@@ -89,10 +90,23 @@ class AssetController extends AbstractController
                 return $this->response('css not found: ' . $filename);
             }
 
-            $css .= file_get_contents($filename) . "\n\n";
+            $css .= file_get_contents($filename) . "\n";
         }
 
+        $templateFolder = $conf('folder.asset');
+        $domain = $conf('site.domain');
 
+        //   . '/themes/4all/asset/namcss/';
+
+        $filename = "$templateFolder/$domain.css";
+        if (is_file($filename)) {
+            $css .= "\n/*** $domain.css ***/\n" . file_get_contents($filename) . "\n";
+        }
+
+        $filename = "$templateFolder/styles.css";
+        if (is_file($filename)) {
+            $css .= "\n/*** styles.css ***/\n" . file_get_contents($filename) . "\n";
+        }
 
         $response = new Response($css);
         $response->setContentType('css');

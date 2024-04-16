@@ -5,7 +5,7 @@
         <a href="{{ homepath }}/{{ item.url }}" class="nav-link{{ item.active ? ' active' : ''}}"> {{ item.label }}</a>
     </li>
     {% if ! loop.last %}
-    <li class="nav-item"><span class="nav-sep">|</span></li>
+    <li class="nav-item"><span class="nav-link nav-sep">|</span></li>
     {% endif %}
     {% endfor %}
 
