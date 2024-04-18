@@ -42,7 +42,8 @@ class Model
 
     public function file($file)
     {
-        if($file != basename($file, $this->extension))die('no extentions and no path');
+        if ($file != basename($file, $this->extension))
+            die('no extentions and no path');
         //$file =
         if (is_file("$this->folder/$file.$this->extension")) {
             // load the json data

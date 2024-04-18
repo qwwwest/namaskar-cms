@@ -1,6 +1,6 @@
 <?php
 
-function ___loadClass($className)
+function blep___loadClass($className)
 {
     $fileName = '';
     $namespace = '';
@@ -55,16 +55,18 @@ function debug($key = null, $val = null)
     return Qwwwest\Namaskar\Kernel::debug($key, $val);
 }
 
-function logger($message)
-{
-    file_put_contents("LOG_FILE", date("Y-n-j h:i:s") . " $message\n", FILE_APPEND);
-}
 
 function wlog($code, $message)
 {
-    $logFolder = N('folder.sitelogs');
-    @mkdir($logFolder, 0755, true);
-    $filename = "$logFolder/log$code.txt";
+    // $logFolder = N('folder.sitelogs');
+    //@mkdir($logFolder, 0755, true);
+
+    //data/var/logs/qwwwest.com
+    $baseName = N('folder.sitelogs');
+
+
+    $filename = "{$baseName}$code.txt";
+
     $ip = $_SERVER['REMOTE_ADDR'];
     $date = date('Y-m-d H:i:s');
     $time = round(microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"], 3);

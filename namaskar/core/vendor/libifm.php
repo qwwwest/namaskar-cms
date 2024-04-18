@@ -4234,7 +4234,8 @@ f00bar;
 		$dir = $dir ?? '.';
 
 		foreach (glob($this->pathCombine($dir, $pattern)) as $result)
-			array_push($items, $this->getItemInformation($result)); foreach (glob($this->pathCombine($dir, '*'), GLOB_ONLYDIR) as $subdir)
+			array_push($items, $this->getItemInformation($result));
+		foreach (glob($this->pathCombine($dir, '*'), GLOB_ONLYDIR) as $subdir)
 			$items = array_merge($items, $this->searchItemsRecursive($pattern, $subdir));
 
 		return $items;

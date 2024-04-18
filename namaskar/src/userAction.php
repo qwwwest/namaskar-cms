@@ -2,14 +2,15 @@
 
 $redirectURL = 'index.php';
 
-if ($form->isSubmited() ) {
-    if ($form->isValid()) echo 'YES';
-    else 
-    var_dump($form->errors);
+if ($form->isSubmited()) {
+    if ($form->isValid())
+        echo 'YES';
+    else
+        var_dump($form->errors);
 }
 
 
-die('plop'); 
+die('plop');
 
 if (isset($_POST['userSubmit'])) {
     // Get form fields value 

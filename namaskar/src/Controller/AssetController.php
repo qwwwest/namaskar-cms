@@ -21,7 +21,7 @@ class AssetController extends AbstractController
         $pageEntity = new PageEntity();
 
         if (!$pageEntity->init($domain)) {
-            die ("blep $domain");
+            die("blep $domain");
 
         }
 

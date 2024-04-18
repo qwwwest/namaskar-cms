@@ -30,7 +30,7 @@ spl_autoload_register(function ($class) {
     }
 
 
-    die($file . " not found.'$class' Me so sorry.");
+    die ($file . " not found.'$class' Me so sorry.");
 
 });
 

@@ -78,7 +78,7 @@ if ($action === 'edit') {
 }
 
 if (isset($_POST['submit'])) {
-    include('userAction.php');
+    include ('userAction.php');
 }
 
 if ($action == 'delete' && $idInUrl) {

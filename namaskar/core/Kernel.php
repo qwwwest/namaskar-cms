@@ -26,7 +26,7 @@ class Kernel
     {
 
         if (self::$kernel)
-            die ('one instance only');
+            die('one instance only');
 
         self::$kernel = $this;
 
@@ -53,7 +53,7 @@ class Kernel
         // else if (is_file("$absroot/default.lst"))
         //     $prj_folder = 'default';
         else
-            die ('mempad file not found');
+            die('mempad file not found');
 
         //php developpement server serve app as root...
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'PHP ') === 0)
@@ -150,7 +150,7 @@ class Kernel
         elseif (is_file("$dataFolder/$project/default.lst"))
             $dataFolder = "$dataFolder/$project";
         else
-            die ('Oops, dataFolder not found for: ' . $project);
+            die('Oops, dataFolder not found for: ' . $project);
 
 
         if (is_file(realpath("$dataFolder/../$project.lst")))
@@ -162,7 +162,7 @@ class Kernel
         elseif (is_file("$dataFolder/mempad.lst"))
             $mempadFile = "$dataFolder/mempad.lst";
         else
-            die ('Oops, MemPad file not found for: ' . $project);
+            die('Oops, MemPad file not found for: ' . $project);
 
 
         $conf('mempadFile', $mempadFile);
@@ -258,7 +258,7 @@ auto.title: 'yes'
         if ($service === 'Logger')
             return self::getKernel()->zconf;
 
-        die ("Unknown service : $service");
+        die("Unknown service : $service");
     }
 
     public static function debug($key = null, $val = null)

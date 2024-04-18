@@ -13,7 +13,8 @@ namespace Michelf;
 /**
  * Markdown Parser Interface
  */
-interface MarkdownInterface {
+interface MarkdownInterface
+{
 	/**
 	 * Initialize the parser and return the result of its transform method.
 	 * This will work fine for derived classes too.
