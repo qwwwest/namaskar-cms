@@ -26,7 +26,7 @@ class AdminController extends AbstractController
 
 
     #[Route('/admin', methods: ['GET'])]
-    public function showAdmin(): Response
+    public function showAdmin(): ?Response
     {
 
 
@@ -71,7 +71,7 @@ class AdminController extends AbstractController
         }
 
         // file is encoded.  
-
+        return null;
         $index = file_get_contents(N('folder.core') . '/admin/index.html');
         $admin = str_replace("=\"/", "=\"./admin/", $index);
 

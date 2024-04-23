@@ -109,6 +109,7 @@ class Kernel
         $conf('folder.entities', "$projectDir/src/Entity");
         $conf('folder.core', __DIR__);
 
+        // the folder where index.php is to be  found.
         $publicFolder = substr($_SERVER['SCRIPT_FILENAME'], 0, -10);
         $conf('folder.public', $publicFolder);
 
@@ -147,10 +148,12 @@ class Kernel
             $dataFolder = "$publicFolder/media";
         elseif (is_file("$publicFolder/$project.lst"))
             $dataFolder = "$publicFolder";
+        elseif (is_file("$publicFolder/../$project.lst"))
+            $dataFolder = dirname("$publicFolder");
         elseif (is_file("$dataFolder/$project/default.lst"))
             $dataFolder = "$dataFolder/$project";
         else
-            die('Oops, dataFolder not found for: ' . $project);
+            die('Oops, lst dataFolder not found for: ' . $project);
 
 
         if (is_file(realpath("$dataFolder/../$project.lst")))
@@ -302,6 +305,15 @@ auto.title: 'yes'
         $ini = file_put_contents(
             ($this->zconf)('folder.data') . '/config.ini',
             "$salt\n$hash"
+        );
+    }
+
+    public function isLocalhost()
+    {
+        return in_array(
+            $_SERVER['REMOTE_ADDR'],
+            ['127.0.0.1', '::1'],
+            true
         );
     }
 }

@@ -32,7 +32,7 @@ class PageModel
 
         $content = (($this->conf)('site.404')
             ?? '# 404 page not found 
-**[= page.url]**');
+## [= page.url] ');
 
 
         $this->codeStatus = 404;
