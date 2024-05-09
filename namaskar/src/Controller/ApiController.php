@@ -6,7 +6,7 @@ use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\AbstractController;
 use Qwwwest\Namaskar\MemPad;
 
-
+#[IsGranted('DEMO')]
 class ApiController extends AbstractController
 {
 
@@ -17,63 +17,19 @@ class ApiController extends AbstractController
     private $m;
 
 
-    private function isAdmin()
-    {
 
-        return isset($_SESSION['valid']);
-
-    }
-
-    private function isAuthed()
-    {
-
-        return isset($_SESSION['valid']);
-
-    }
-
-    #[Route('/api/login', methods: ['POST'])]
+    #[Roooooute('/api/login', methods: ['POST'])]
     public function login(): ?Response
     {
 
-        sleep(1);
+        return $this->statusError('nope');
 
-        $data = file_get_contents("php://input");
-        $json = json_decode($data, true);
-        $login = $json['glop'] ?? '';
-        $pwd = $json['plop'] ?? '';
-
-        $zen = Kernel::service('ZenConfig');
-        $hash = '';
-
-        $superini = $zen('folder.data') . '/super.ini';
-        if (is_file($superini))
-            $hash = file_get_contents($superini);
-
-
-
-
-        $pwdOk = $hash && password_verify("$login::$pwd", $hash);
-
-
-        if ($pwdOk) {
-
-            $_SESSION['valid'] = true;
-            $_SESSION['timeout'] = time();
-            $_SESSION['login'] = $login;
-            $_SESSION['role'] = 'SUPER_ADMIN';
-            $_SESSION['readOnly'] = false;
-
-            $_SESSION['currentUser'] = [
-                'login' => $login,
-                'role' => 'ROLE_SUPER_ADMIN',
-                'domain' => '*',
-            ];
-
-            return $this->statusOK();
-
-        }
-
-        return $this->statusError('Wrong username or password');
+        // not used anymore...
+        // $data = file_get_contents("php://input");
+        // $json = json_decode($data, true);
+        // $login = $json['glop'] ?? '';
+        // $pwd = $json['plop'] ?? '';
+        // return $this->statusOK();
 
     }
 
@@ -82,18 +38,14 @@ class ApiController extends AbstractController
     {
 
 
-        if (!$this->isAdmin()) {
+        if (!$this->currentUser->isGranted('ADMIN')) {
             return $this->statusError('User must be Admin');
         }
 
 
-        $domain = $GLOBALS['mempad'];
+        //$domain = $GLOBALS['mempad'];
         $this->m = new MemPad(N('mempadFile'), "", true);
 
-        // if ($_SESSION['login'] === "demo") {
-        //             echo json_encode(["status" => "error", "message" => "could not saved data"]);
-        //             exit();
-        //         }
         $data = file_get_contents("php://input");
         return $this->response($this->m->reactSortableTreeSave($data));
     }
@@ -103,8 +55,8 @@ class ApiController extends AbstractController
     public function logout(): Response
     {
 
-        session_destroy();
-        $_SESSION = [];
+        $this->currentUser->logout();
+
 
         return $this->statusOK();
 
@@ -122,11 +74,9 @@ class ApiController extends AbstractController
     {
 
 
-        $domain = $GLOBALS['mempad'];
 
-
-        if (!$this->isAuthed())
-            return $this->statusError('no user');
+        if (!$this->currentUser->isGranted('DEMO'))
+            return $this->statusError('currentUser is not granted access');
 
         $this->m = new MemPad(N('mempadFile'), '', true);
         $response = new Response($this->m->getStructureAsJson());
@@ -140,6 +90,9 @@ class ApiController extends AbstractController
     public function page($id = 0): Response
     {
 
+
+        if (!$this->currentUser->isGranted('DEMO'))
+            return $this->statusError('currentUser is not granted access');
 
         $this->m = new MemPad(N('mempadFile'), '', true);
 
@@ -155,9 +108,9 @@ class ApiController extends AbstractController
     {
         if ($action === null)
             return null;
-        $user = ($this->isAuthed()) ? 'authed ' : 'no user ';
+        $user = $this->currentUser->getRole();
         $url = N('url');
-        $message = "ERROR: $user $action $url  $_SERVER[REQUEST_METHOD]";
+        $message = "ERROR: $user user $action $url  $_SERVER[REQUEST_METHOD]";
         return $this->statusError($message);
 
     }

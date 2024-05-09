@@ -1,28 +1,15 @@
 <?php
 namespace App\Controller;
 
+use Qwwwest\Namaskar\Kernel;
 use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\AbstractController;
 
-//#[IsGranted('ROLE_ADMIN')]
 
 
+#[IsGranted('DEMO')]
 class AdminController extends AbstractController
 {
-    private $adminZone = null;
-    private $isGranted = 'admin';
-    private $superfile = '';
-
-
-    public function __construct()
-    {
-
-        $this->superfile = N('folder.data') . '/super.ini';
-
-
-    }
-
-
 
 
     #[Route('/admin', methods: ['GET'])]
@@ -30,48 +17,6 @@ class AdminController extends AbstractController
     {
 
 
-        $initialize = "login\npassword";
-
-        $superfile = N('folder.data') . '/super.ini';
-
-        if (!is_file($superfile) || filesize($superfile) === 0) {
-            file_put_contents($superfile, $initialize);
-        }
-
-        $superini = trim(file_get_contents($superfile));
-
-
-        $superadmin = explode("\n", $superini);
-        $initialize = explode("\n", $initialize);
-
-        // file is not encoded. Let's do it
-        if (count($superadmin) === 2) {
-
-
-            $login = trim($superadmin[0]);
-            $password = trim($superadmin[1]);
-
-            if ($login === $initialize[0] || $password === $initialize[1]) {
-                return $this->response("set the SuperAdmin account in data/super.ini");
-            }
-
-            // check login and password and encode them...
-
-
-            if (strlen($login) < 3)
-                die("login is too short");
-            if (strlen($password) < 8)
-                die("password is too short");
-
-
-            $encoded = password_hash("$login::$password", PASSWORD_BCRYPT);
-            file_put_contents($superfile, "$encoded");
-
-
-        }
-
-        // file is encoded.  
-        return null;
         $index = file_get_contents(N('folder.core') . '/admin/index.html');
         $admin = str_replace("=\"/", "=\"./admin/", $index);
 
@@ -80,31 +25,56 @@ class AdminController extends AbstractController
     }
 
 
+    //logs
+    #[Route('/admin/logs', methods: ['GET'])]
+    public function listLogs(): ?Response
+    {
+
+        $files = glob(N('folder.logs') . '/*.txt');
+
+        $html = '';
+        foreach ($files as $file) {
+
+            $basename = basename($file);
+            $date = date("Y-m-d H:i:s", filemtime($file));
+
+
+            $html .= "<a href=\"./logs/$basename\">$basename</a> $date <br>\n";
+        }
+        return $this->response($html);
+
+    }
+    #[Route('/admin/logs/{file}', methods: ['GET'])]
+    public function showLogs($file): ?Response
+    {
+
+
+        $directories = glob(N('folder.logs') . '/*.txt');
+
+        $html = '';
+        foreach ($directories as $dir) {
+
+            $basename = basename($dir);
+
+
+            $html .= "<a href=\"./$basename\">$basename</a><br>\n";
+        }
+        return $this->response($html);
+
+    }
+
+
+
     #[Route('/admin/media', methods: ['GET', 'POST'])]
     public function showMediaManager(): ?Response
     {
 
-        if (!isset($_SESSION['valid'])) {
-            // $parent = "http" . (!empty($_SERVER['HTTPS']) ? "s" : "")
-            //     . "://" . $_SERVER['SERVER_NAME']
-            //     . substr($_SERVER['PHP_SELF'], 0, -10)
-            //     . "/admin";
-            // header("Location: $parent");
-            // exit();
-            return null; //
-        }
-
-        if ($_SESSION["readOnly"] ?? false) {
-            echo "<h1>no File Manager in demo mode</h1>";
+        if (!$this->currentUser->isGranted('ADMIN')) {
+            echo "<h1>Truly your forgiveness I implore, but the current user is not granted access to the Asset Manager.</h1>";
             exit();
         }
-        ;
-
-
 
         $this->loadIFM();
-
-
         return $this->response('');
 
     }
@@ -113,9 +83,7 @@ class AdminController extends AbstractController
     public function adminAssetManager($asset = '/'): ?Response
     {
 
-        // if domain is null, we use from global
-        if (!$asset)
-            $domain = $GLOBALS['mempad'];
+
 
         return $this->adminStaticAssetManager($asset);
 
@@ -131,9 +99,6 @@ class AdminController extends AbstractController
             $response->file($filename);
             return $response;
         }
-
-
-        // return new Response('// not found: ' . $asset);
 
         return null;
 

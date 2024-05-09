@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 
-use Qwwwest\Namaskar\PageDataBuilder;
+
 use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\AbstractController;
 
@@ -13,8 +13,6 @@ class SiteController extends AbstractController
 {
 
     private $mempad = null;
-
-
 
 
     #[Route('/{url*}')]

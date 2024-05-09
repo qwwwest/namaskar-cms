@@ -38,16 +38,31 @@ class Router
         if (!is_dir($folder))
             die('invalid Controller folder=' . $folder);
 
+
+
         foreach (glob("$folder/*Controller.php") as $filename) {
 
             $controllers[] = $filename;
+
             $this->controllers[] = basename($filename);
         }
+
+        $currentUser = Kernel::service('CurrentUser');
+
+
 
         foreach ($controllers as $controllerFile) {
 
 
             $code = file_get_contents($controllerFile);
+            preg_match("/#\[IsGranted\('(.*?)'\)\]\s*?\n\s*?class /s", $code, $isGranted);
+            $role = $isGranted ? $isGranted[1] : '';
+
+            // for controllers with the IsGranted attribute above the class
+            //this class will be added only if user has the right priviledge
+            if ($isGranted && !$currentUser->isGranted($role))
+                continue;
+
             preg_match("/#\[Route\('(.*?)'\)\]\s*?\n\s*?class /s", $code, $globalRoute);
             $globalRoute = $globalRoute ? $globalRoute[1] : '';
 
@@ -150,7 +165,7 @@ class Router
         return $this->allRoutes;
     }
 
-    function findRoute(): Response
+    public function findRoute(): Response
     {
         $controllers = [];
 
@@ -179,25 +194,8 @@ class Router
     }
 
 
-    function set_csrf()
-    {
 
-        if (!isset($_SESSION["ctoken"])) {
-            $_SESSION["ctoken"] = bin2hex(random_bytes(50));
-        }
-        echo '<input type="hidden" name="ctoken" value="' . $_SESSION["ctoken"] . '">';
-    }
-
-    function is_csrf_valid()
-    {
-        return $_SESSION['ctoken'] === $_POST['ctoken'] ?? false;
-
-        // return  isset($_SESSION['ctoken'])
-        // && isset($_POST['ctoken'])
-        // && $_SESSION['ctoken'] === $_POST['ctoken'];
-    }
-
-    public static function isRouteMatch($route, $url)
+    private static function isRouteMatch($route, $url)
     {
 
         $arr = [];
@@ -208,30 +206,11 @@ class Router
         $arr['regex'] = preg_replace('#/{[a-zA-Z0-9]+\*}#', '/?(?:([' . $allowedCharsInURLParam . '//]+))?', $arr['regex']);
         $arr['regex'] = '#^' . $arr['regex'] . '[/]?$#';
 
-
-        //dump($arr['regex']);
-        //dump($url);
         preg_match($arr['regex'], $url . "", $matches);
-        //  $validRequestmethod = in_array($_SERVER['REQUEST_METHOD'], $arr['methods']);
-        //if ($matches && $validRequestmethod) {
 
         return $matches != null;
 
-        if ($matches) {
-            echo ('YES');
-            // preg_match_all('#{([a-zA-Z0-9_]+)[?*+]?}#', $route, $keyparams);
-            // $keyparams = $keyparams[1];
-            // $values = array_slice($matches, 1);
-            // $paramValues = [];
-            // foreach ($keyparams as $keyp => $keyparam) {
-            //     $paramValues[$keyparam] = $values[$keyp] ?? null;
-            // }
-            // $arr['url-params'] = $paramValues;
-            // $arr['function-params'] = [];
-            // if (trim($params[$key]) !== '') {
-            //     $functionParams = explode(',', $params[$key]);
-            // }
-        }
+
 
 
     }

@@ -9,6 +9,7 @@ class Kernel
 {
 
     private $zconf;
+    private $zadmin;
 
     private static $kernel = null;
     private $currentUser = null;
@@ -69,12 +70,7 @@ class Kernel
         $conf = new ZenConfig();
         $this->zconf = $conf;
 
-        // Start session
-        session_start();
-        $this->setUser();
 
-        // Root of index.php
-        $conf('app.user', $this->currentUser);
         $conf('app.domain', $_SERVER['SERVER_NAME']);
 
         /*
@@ -114,7 +110,8 @@ class Kernel
         $conf('folder.public', $publicFolder);
 
         $conf('folder.webroot', $_SERVER['DOCUMENT_ROOT']);
-        $conf('folder.data', "$projectDir/../data");
+        $conf('folder.data', dirname("$projectDir/") . "/data");
+
         $conf('folder.sites', $conf('folder.data') . '/sites');
         $conf('folder.site', $conf('folder.sites') . "/$prj_folder");
         $conf('folder.asset', $conf('folder.public') . "/asset");
@@ -124,22 +121,16 @@ class Kernel
         $conf('folder.sitelogs', $conf('folder.logs') . "/$prj_folder");
 
         wlog('Start', $urlwithparams);
-        // dd($conf('folder'));
-
 
         // template folders are in projectDir & possibly in site folder
         $conf('folder.themes', [$conf('folder.asset') . "/themes", $conf('folder.site') . "/themes", "$projectDir/themes"]);
-
-        // $ini = file_get_contents($conf('folder.sites') . '/config.ini');
-        // if (strpos($ini, '::') != false)
-        //     $this->setSuperAdmin($ini);
 
 
         $dataFolder = $conf('folder.sites'); // .../sites/
         $publicFolder = $conf('folder.public');
         $project = $conf('folder.project');
 
-
+        //  $dataFolder is the folder containing the mempad file
         if (is_dir("$dataFolder/$project/"))
             $dataFolder = "$dataFolder/$project/";
         elseif (is_dir("$publicFolder/media/_data"))
@@ -169,7 +160,17 @@ class Kernel
 
 
         $conf('mempadFile', $mempadFile);
+        $this->zadmin = $z = new ZenConfig();
+        $z->addFile($conf('folder.data') . "/namaskar.ini", false);
+        $z->addFile(substr($mempadFile, 0, -4) . '.ini', true);
 
+
+
+        // Start session
+        session_start();
+        $this->currentUser = new UserEntity();
+
+        $conf('app.user', $this->currentUser);
 
         if ($configIni = MemPad::getConfig($mempadFile)) {
 
@@ -214,24 +215,8 @@ auto.title: 'yes'
     {
         return self::$kernel;
     }
-    public function getUser()
-    {
-        return $this->currentUser;
-    }
-    public function setUser()
-    {
-        //session_destroy();
-        if ($_SESSION['currentUser'] ?? false) {
-            $login = $_SESSION['currentUser']['login'];
-            $role = $_SESSION['currentUser']['role'];
-            $domain = $_SESSION['currentUser']['domain'];
 
-            $this->currentUser = new UserEntity($login, $role, $domain);
-        } else {
-            $this->currentUser = new UserEntity('user');
-        }
-        return $this->currentUser;
-    }
+
     public function zenConfig($val)
     {
         $conf = $this->zconf;
@@ -251,8 +236,9 @@ auto.title: 'yes'
     {
         if ($service === 'ZenConfig')
             return self::getKernel()->zconf;
+        if ($service === 'ZenAdmin')
+            return self::getKernel()->zadmin;
         if ($service === 'CurrentUser') {
-
             return self::getKernel()->currentUser;
         }
         //  return self::getKernel()->zconf;
@@ -294,26 +280,5 @@ auto.title: 'yes'
         }
     }
 
-    public function setSuperAdmin($credit)
-    {
 
-
-        //to generate a salt.
-        $salt = hash('sha256', random_bytes(64));
-        $hash = password_hash($salt . trim($credit), PASSWORD_BCRYPT);
-
-        $ini = file_put_contents(
-            ($this->zconf)('folder.data') . '/config.ini',
-            "$salt\n$hash"
-        );
-    }
-
-    public function isLocalhost()
-    {
-        return in_array(
-            $_SERVER['REMOTE_ADDR'],
-            ['127.0.0.1', '::1'],
-            true
-        );
-    }
 }

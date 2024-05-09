@@ -13,6 +13,14 @@ class AbstractController
     protected $currentUser;
 
 
+    public function __construct()
+    {
+
+
+        $this->currentUser = Kernel::service('CurrentUser');
+
+
+    }
 
     public function render($url)
     {
@@ -20,7 +28,7 @@ class AbstractController
         $domain = basename($domain);
 
         $this->conf = Kernel::service('ZenConfig');
-
+        $this->currentUser = Kernel::service('CurrentUser');
         $pageModel = new PageModel();
 
         $pageModel->buildModel($url);
@@ -36,6 +44,8 @@ class AbstractController
 
         return $this->response($html, $pageModel->codeStatus);
     }
+
+
 
     public function response($content, $code = 200, $headers = []): Response
     {
@@ -65,20 +75,12 @@ class AbstractController
         $response = $obj->{$method}(...$params);
         return $response;
     }
-    public function isGranted($role): bool
-    {
-        $user = Kernel::service('CurrentUser');
-        return $user && $user->isGranted($role);
-    }
-    public function addFlash($type, $message, $icon, $close): bool
-    {
-        $flashMessage = Kernel::service('FlashMessage');
-        return $flashMessage->addFlash($type, $message);
-    }
 
-    public function getUser(): UserEntity
-    {
-        $response = new Response();
-        return $response->redirect($location);
-    }
+    // public function addFlash($type, $message, $icon, $close): bool
+    // {
+    //     $flashMessage = Kernel::service('FlashMessage');
+    //     return $flashMessage->addFlash($type, $message);
+    // }
+
+
 }

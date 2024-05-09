@@ -27,7 +27,6 @@ class QwwwickRenderer
     private $config;
     private $currentExp = '';
     private $currentTemplate;
-    private $isAuthed = false;
 
 
     public function __construct($templateFolders)
@@ -38,8 +37,8 @@ class QwwwickRenderer
 
         $this->conf = Kernel::service('ZenConfig');
         $this->mempad = ($this->conf)('MemPad');
-        if ($this->mempad === null)
-            die('MemPad is NOT set');
+        // if ($this->mempad === null)
+        //     die('MemPad is NOT set');
         $this->context = [$this->conf];
         $this->currentTemplate = [];
 
@@ -395,6 +394,30 @@ class QwwwickRenderer
         $content = $this->renderBlock($content);
         $html = $this->processShortcodes($content);
         ($this->conf)('page.content', trim($content));
+
+        $html = $this->processTokens($template);
+        $html = $this->processShortcodes($html);
+        $this->oldContext();
+
+        return $html;
+    }
+
+    public function renderLoginPage()
+    {
+
+        $file = $this->resolveTemplate("bootstrap5/login.html");
+        if (!$file) {
+            die("template : '$file' not found in Renderer::render");
+        }
+
+        $this->newContext('login.html');
+
+        $template = file_get_contents($file);
+
+        // $content = trim(($this->conf)('page.content'));
+        // $content = $this->renderBlock($content);
+        // $html = $this->processShortcodes($content);
+        // ($this->conf)('page.content', trim($content));
 
         $html = $this->processTokens($template);
         $html = $this->processShortcodes($html);
