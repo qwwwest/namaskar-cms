@@ -34,21 +34,28 @@ class LoginController extends AbstractController
         while (isset($users[$i])) {
             $user = $users[$i];
 
-            $found = $user['url'] === $url;
+            $found = $user['url'] === $url && $user['password'] !== null;
+
             if ($found) {
+
+                $_SESSION['token'] = bin2hex(random_bytes(32));
+
+                $conf('page.uid', $i);
+                $conf('page.token', $_SESSION['token']);
 
                 if ($user['password'] === true) {
                     $conf('page.create', true);
                     $conf('page.title', "First Time");
-                    $conf('page.uid', $i);
                     $conf('page.message', "To create your account, enter your username and chose your password carefully");
+                    wlog('admin', "show create password for $user[username]");
                 } else {
                     $conf('page.create', false);
-                    $conf('page.uid', $i);
                     $conf('page.title', "Welcome");
+                    wlog('admin', "show login for $user[username]");
                 }
                 $qRenderer = new QwwwickRenderer($conf('folder.themes'));
                 $html = $qRenderer->renderLoginPage();
+
                 return new Response($html);
             }
             $i++;
@@ -71,25 +78,38 @@ class LoginController extends AbstractController
         $username = $_POST['username'] ?? null;
         $password = $_POST['password'] ?? null;
         $password2 = $_POST['password2'] ?? null;
+        $token = $_POST['token'] ?? null;
         $uid = $_POST['uid'] ?? null;
 
+        if ($_SESSION['token'] !== $token) {
+            die('invalid token');
+        }
 
         $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+
+        $_SESSION['token'] = bin2hex(random_bytes(32));
+
         if (isset($users[$uid])) {
             $user = $users[$uid];
-
+            // 
+            if ($user['password'] === null)
+                return null;
+            $conf('page.uid', $uid);
+            $conf('page.token', $_SESSION['token']);
             if ($user['url'] !== $url || $user['username'] !== $username) {
                 //die("Computer says no.");
                 $conf('page.title', "Nope");
-                $conf('page.message', "Who do you think you are?");
+
+                wlog('error', "error $username for $url");
             } else
                 if ($user['password'] === true) {
                     //save password
                     $currentUser->savePassword($uid, $username, $password, $password2);
                     $conf('page.title', "First Login");
+
                     $conf('page.message', "Your password was saved. Please login for the first time");
-                    //header("Refresh: 1");
-                    //die('after savePassword was saved');
+                    wlog('admin', "password was saved for $username");
+
                 } else {
                     // login user if username and password are valid
                     if ($currentUser->login($uid, $username, $password)) {

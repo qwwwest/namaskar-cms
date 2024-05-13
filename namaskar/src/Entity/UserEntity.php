@@ -21,6 +21,7 @@ class UserEntity
 
     private $roles = [];
 
+    private $anomymous = ['username' => null, 'email' => null, 'role' => 'ANONYMOUS'];
     private $currentUser;
 
 
@@ -46,8 +47,8 @@ class UserEntity
         $zadmin = Kernel::service('ZenAdmin');
         $ip = $_SERVER['REMOTE_ADDR'];
         $isLocalhost = in_array($ip, ['127.0.0.1', '::1'], true);
-
         $localhostAutologin = $isLocalhost && $zadmin('localhost.autologin');
+
 
 
 
@@ -56,7 +57,11 @@ class UserEntity
         } else if ($localhostAutologin) {
             $this->currentUser = ['username' => 'localhost', 'email' => null, 'role' => 'LOCALHOST'];
         } else {
-            $this->currentUser = ['username' => null, 'email' => null, 'role' => 'ANONYMOUS'];
+            $this->currentUser = $this->anomymous;
+        }
+
+        if (!$localhostAutologin && $this->needsLogout()) {
+            $this->logout();
         }
 
     }
@@ -113,7 +118,7 @@ class UserEntity
     {
         $zadmin = Kernel::service('ZenAdmin');
         $conf = Kernel::service('ZenConfig');
-        $currentUser = Kernel::service('CurrentUser');
+
         $url = $conf('url');
 
         $users = $zadmin('users');
@@ -127,19 +132,25 @@ class UserEntity
             $this->currentUser = array('username' => $username, 'email' => null, 'role' => 'DEMO');
 
             $_SESSION['currentuser'] = serialize($this->currentUser);
+
+            wlog('admin', "login user: $username with role DEMO");
             return true;
 
         }
 
 
-        if ($user === null || $user['url'] !== $url || $user['username'] !== $username || strlen(trim($password)) < 8)
+        if ($user === null || $user['url'] !== $url || $user['username'] !== $username || strlen(trim($password)) < 8) {
+            strlen(trim($password));
+            wlog('error', "login user failed: $username");
             return false;
+        }
+
 
 
         if (password_verify($password, $user['password'])) {
 
             $this->currentUser = array('username' => $username, 'email' => null, 'role' => $user['role']);
-
+            wlog('admin', "login user: $username with role $user[role]");
             $_SESSION['currentuser'] = serialize($this->currentUser);
             return true;
 
@@ -150,7 +161,7 @@ class UserEntity
     public function savePassword($uid, $username, $password, $password2): bool
     {
         $conf = Kernel::service('ZenConfig');
-        $superIniFile = $conf('folder.data') . "/namaskar.ini";
+        $superIniFile = $conf('folder.data') . "/super.ini";
         $mempadIniFile = substr($conf('mempadFile'), 0, -4) . '.ini';
 
         $content = file_get_contents($superIniFile);
@@ -159,32 +170,35 @@ class UserEntity
 
         $numUserInSuperIniFile = count($users) - 1;
         if ($uid < count($users) - 1) {
-            // the user is in namaskar.ini
+            // the user is in super.ini
             $userStr = $users[$uid + 1];
             if (strpos($userStr, "username: \"$username\"") !== false) {
                 $hash = password_hash($password, PASSWORD_BCRYPT);
                 $users[$uid + 1] = str_replace("password: true", "password: \"$hash\"", $userStr);
                 file_put_contents($superIniFile, implode('[users[]]', $users));
+                wlog('admin', "save new password: $username");
                 return true;
             }
+            wlog('error', "cannot save password for $username");
             die('cannot save password.');
-        } else {
-            // the user is maybe in $mempadIniFile ini file
-            $content = file_get_contents($mempadIniFile);
-            $users = explode("[users[]]", $content);
-            $uid = $uid - $numUserInSuperIniFile;
-            $userStr = $users[$uid + 1] ?? null;
-
-            if ($userStr && strpos($userStr, "username: \"$username\"") !== false) {
-                $hash = password_hash($password, PASSWORD_BCRYPT);
-                $users[$uid + 1] = str_replace("password: true", "password: \"$hash\"", $userStr);
-                file_put_contents($mempadIniFile, implode('[users[]]', $users));
-                return true;
-            }
-            die('cannot save password.');
-
         }
-        return false;
+        // the user is maybe in $mempadIniFile ini file
+        $content = file_get_contents($mempadIniFile);
+        $users = explode("[users[]]", $content);
+        $uid = $uid - $numUserInSuperIniFile;
+        $userStr = $users[$uid + 1] ?? null;
+
+        if ($userStr && strpos($userStr, "username: \"$username\"") !== false) {
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+            $users[$uid + 1] = str_replace("password: true", "password: \"$hash\"", $userStr);
+            file_put_contents($mempadIniFile, implode('[users[]]', $users));
+            wlog('admin', "save new password: $username");
+            return true;
+        }
+        wlog('error', "cannot save password for $username");
+        die('cannot save password.');
+
+
     }
     /**
 
@@ -192,9 +206,25 @@ class UserEntity
      */
     public function logout(): void
     {
-        $this->currentUser = array('username' => null, 'email' => null, 'role' => 'ANONYMOUS');
+        $username = $this->currentUser['username'];
+        wlog('admin', "logout: $username");
+        $this->currentUser = $this->anomymous;
         session_destroy();
+
         $_SESSION = [];
     }
+    public function needsLogout(): bool
+    {
+        $username = $this->currentUser['username'];
 
+        $zadmin = Kernel::service('ZenAdmin');
+        $users = $zadmin('users');
+        $id = 0;
+        while (isset($users[$id]) && $users[$id]['username'] != $username)
+            $id++;
+
+        return isset($users[$id]) && $users[$id]['password'] === null;
+
+
+    }
 }

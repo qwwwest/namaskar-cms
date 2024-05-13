@@ -433,7 +433,7 @@ class QwwwickRenderer
     {
         static $__depth = 0;
         $__depth++;
-        if ($__depth > 20)
+        if ($__depth > 12)
             die('infinite recursivity in ' . $__template); // to avoid infinite recursivity
 
 
@@ -457,7 +457,8 @@ class QwwwickRenderer
 
 
             }
-
+        // if ($__template === 'bootstrap5/alert.html')
+        //     dump($__template);
         $__html = file_get_contents($__file);
         $__html = $this->processTokens($__html);
         $__html = $this->processShortcodes($__html);
@@ -536,7 +537,9 @@ class QwwwickRenderer
             $vars[$key] = $value;
         }
 
-        $vars['content'] = $content;
+        // $vars['content'] = $content;
+        $vars['content'] = $this->renderBlock($content);
+        ;
         // $vars = [...$attributes, 'content' => $content];
 
         $html = $this->include($templateFile, $vars);

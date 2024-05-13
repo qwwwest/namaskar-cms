@@ -68,6 +68,15 @@ a.navbar-brand {
 
 }
 
+body.navbar-fixed-top .navbar-collapse.collapse.show,
+body.navbar-fixed-top .navbar-collapse.collapsing {
+
+    top: 60px;
+    height: calc(100vh - 60px) !important;
+    padding: 0px 30px 30px 30px;
+
+
+}
 
 .mainlinks {
 

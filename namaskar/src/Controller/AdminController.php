@@ -6,7 +6,6 @@ use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\AbstractController;
 
 
-
 #[IsGranted('DEMO')]
 class AdminController extends AbstractController
 {
@@ -24,13 +23,33 @@ class AdminController extends AbstractController
 
     }
 
+    #[Route('/admin/user', methods: ['GET'])]
+    public function showUser(): ?Response
+    {
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
 
+        $html = $this->currentUser->getUsername()
+            . ' is '
+            . $this->currentUser->getRole();
+        return $this->response($html);
+    }
     //logs
     #[Route('/admin/logs', methods: ['GET'])]
     public function listLogs(): ?Response
     {
 
-        $files = glob(N('folder.logs') . '/*.txt');
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $filter = "";
+
+        if ($this->currentUser->isGranted('SUPERADMIN')) {
+            $filter = N('folder.project');
+        }
+
+
+        $files = glob(N('folder.logs') . "/$filter*.txt");
 
         $html = '';
         foreach ($files as $file) {
@@ -48,17 +67,22 @@ class AdminController extends AbstractController
     public function showLogs($file): ?Response
     {
 
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
 
-        $directories = glob(N('folder.logs') . '/*.txt');
+        $project = N('folder.project');
 
-        $html = '';
-        foreach ($directories as $dir) {
-
-            $basename = basename($dir);
-
-
-            $html .= "<a href=\"./$basename\">$basename</a><br>\n";
+        if (!$this->currentUser->isGranted('SUPERADMIN') && strpos($file, $project) !== 0) {
+            return null;
         }
+
+
+        $content = file_get_contents(N('folder.logs') . "/$file");
+
+        $content = str_replace("\n", '<br>', $content);
+
+        $html = "<h1> $project </h1> $content";
+
         return $this->response($html);
 
     }
@@ -109,6 +133,8 @@ class AdminController extends AbstractController
     {
 
         $root_public_url = N('absroot') . '/media';
+        if (!is_dir(N('folder.public') . '/media'))
+            die('No media folder for this project');
 
         $ifmconfig = [
             // general config

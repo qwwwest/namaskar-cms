@@ -65,7 +65,7 @@ function wlog($code, $message)
     $baseName = N('folder.sitelogs');
 
 
-    $filename = "{$baseName}$code.txt";
+    $filename = "{$baseName}.$code.txt";
 
     $ip = $_SERVER['REMOTE_ADDR'];
     $date = date('Y-m-d H:i:s');

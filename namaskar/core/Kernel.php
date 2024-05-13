@@ -120,7 +120,7 @@ class Kernel
         $conf('folder.logs', $conf('folder.var') . '/logs');
         $conf('folder.sitelogs', $conf('folder.logs') . "/$prj_folder");
 
-        wlog('Start', $urlwithparams);
+        //wlog('Start', $urlwithparams);
 
         // template folders are in projectDir & possibly in site folder
         $conf('folder.themes', [$conf('folder.asset') . "/themes", $conf('folder.site') . "/themes", "$projectDir/themes"]);
@@ -130,11 +130,11 @@ class Kernel
         $publicFolder = $conf('folder.public');
         $project = $conf('folder.project');
 
-        //  $dataFolder is the folder containing the mempad file
-        if (is_dir("$dataFolder/$project/"))
+        //  $dataFolder is the folder containing the mempad file and optional config files
+        if (is_file("$publicFolder/mempad.lst"))
+            $dataFolder = "$publicFolder";
+        elseif (is_dir("$dataFolder/$project/"))
             $dataFolder = "$dataFolder/$project/";
-        elseif (is_dir("$publicFolder/media/_data"))
-            $dataFolder = "$publicFolder/media/_data";
         elseif (is_file("$publicFolder/media/$project.lst"))
             $dataFolder = "$publicFolder/media";
         elseif (is_file("$publicFolder/$project.lst"))
@@ -161,13 +161,27 @@ class Kernel
 
         $conf('mempadFile', $mempadFile);
         $this->zadmin = $z = new ZenConfig();
-        $z->addFile($conf('folder.data') . "/namaskar.ini", false);
+        $superFile = $conf('folder.data') . "/super.ini";
+        if (!file_exists($superFile)) {
+            $superFileContent = <<<plop
+            [superadmin]
+            env: "auto"
+
+            [localhost]
+            autologin: false
+            debug: true
+
+            [users[]]
+            url: "/admin/login/secretadminslug"
+            role: "SUPERADMIN"
+            username: "super"
+            password: null
+            plop;
+            file_put_contents($superFile, $superFileContent);
+        }
+        $z->addFile($superFile, false);
         $z->addFile(substr($mempadFile, 0, -4) . '.ini', true);
 
-
-
-        // Start session
-        session_start();
         $this->currentUser = new UserEntity();
 
         $conf('app.user', $this->currentUser);
@@ -207,8 +221,18 @@ auto.title: 'yes'
         //  dd(($conf('routes')));
         $response = $router->findRoute();
         $code = $response->getStatusCode();
+        $urlwithparams = $conf('urlwithparams');
+        if ($code === 404)
+            wlog($code, $urlwithparams);
 
-        wlog($code, $conf('urlwithparams'));
+        if (
+            $code === 200
+            && strpos($urlwithparams, '/asset') !== 0
+            && strpos($urlwithparams, '/admin') !== 0
+            && strpos($urlwithparams, '/api') !== 0
+        )
+            wlog('page', $urlwithparams);
+
         return $response; // $router->findRoute()?? new Response('404 sigh...');
     }
     public static function getKernel()

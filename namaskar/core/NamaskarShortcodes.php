@@ -13,6 +13,13 @@ $this->shortCode2Template('img2', 'templates', false);
 
 $this->addShortcode('alert', function ($attributes, $content, $tagName) {
 
+    if (!isset ($attributes['type'])) {
+        $attributes['type'] = array_shift($attributes);
+    }
+
+    if (isset ($attributes[0])) {
+        $attributes['title'] = array_shift($attributes);
+    }
 
     return $this->includeTemplate($attributes, $content, 'alert', false);
 
