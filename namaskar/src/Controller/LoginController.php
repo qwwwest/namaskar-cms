@@ -46,7 +46,7 @@ class LoginController extends AbstractController
                 if ($user['password'] === true) {
                     $conf('page.create', true);
                     $conf('page.title', "First Time");
-                    $conf('page.message', "To create your account, enter your username and chose your password carefully");
+                    $conf('page.message', "Enter your username and choose your password carefully.");
                     wlog('admin', "show create password for $user[username]");
                 } else {
                     $conf('page.create', false);
@@ -107,7 +107,7 @@ class LoginController extends AbstractController
                     $currentUser->savePassword($uid, $username, $password, $password2);
                     $conf('page.title', "First Login");
 
-                    $conf('page.message', "Your password was saved. Please login for the first time");
+                    $conf('page.message', "Your password has been saved. Please, login in.");
                     wlog('admin', "password was saved for $username");
 
                 } else {
