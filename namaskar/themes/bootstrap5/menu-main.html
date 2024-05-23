@@ -4,14 +4,10 @@
     {% for item in site.menu.main %}
     <li class="nav-item">
 
-      {% if item.active %}
-      <span class="nav-link active" aria-current="page">{{ item.label }}
-      </span>
-      {% else %}
-      <a href="{{ homepath }}/{{ item.url }}" class="nav-link">{{
+      <a href="{{ homepath }}/{{ item.url }}" class="nav-link{{ item.active ? ' active' : '' }}">{{
         item.label }}
       </a>
-      {% endif %}
+
     </li>
     {% endfor %}
   </ul>

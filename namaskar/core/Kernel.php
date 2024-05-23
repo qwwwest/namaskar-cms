@@ -34,6 +34,8 @@ class Kernel
         // absroot is the folder in which we find the index.php
         $absroot = explode('/index.php', $_SERVER['SCRIPT_NAME'])[0];
 
+        //dd($_GET);
+
         // projectDir that is "namaskar" source folder
         $projectDir = \dirname(__DIR__);
 
@@ -61,6 +63,7 @@ class Kernel
             $absroot = '';
 
         $urlwithparams = $url = substr($_SERVER['REQUEST_URI'], strlen($absroot));
+
 
         $urlparams = '';
         if (strpos($url, '?') !== false)
@@ -126,23 +129,23 @@ class Kernel
         $conf('folder.themes', [$conf('folder.asset') . "/themes", $conf('folder.site') . "/themes", "$projectDir/themes"]);
 
 
-        $dataFolder = $conf('folder.sites'); // .../sites/
+        $sitesFolder = $conf('folder.sites'); // .../sites/
         $publicFolder = $conf('folder.public');
         $project = $conf('folder.project');
 
         //  $dataFolder is the folder containing the mempad file and optional config files
         if (is_file("$publicFolder/mempad.lst"))
             $dataFolder = "$publicFolder";
-        elseif (is_dir("$dataFolder/$project/"))
-            $dataFolder = "$dataFolder/$project/";
+        elseif (is_dir("$sitesFolder/$project/"))
+            $dataFolder = "$sitesFolder/$project/";
         elseif (is_file("$publicFolder/media/$project.lst"))
             $dataFolder = "$publicFolder/media";
         elseif (is_file("$publicFolder/$project.lst"))
             $dataFolder = "$publicFolder";
         elseif (is_file("$publicFolder/../$project.lst"))
             $dataFolder = dirname("$publicFolder");
-        elseif (is_file("$dataFolder/$project/default.lst"))
-            $dataFolder = "$dataFolder/$project";
+        elseif (is_file("$sitesFolder/$project/default.lst"))
+            $dataFolder = "$sitesFolder/$project";
         else
             die('Oops, lst dataFolder not found for: ' . $project);
 

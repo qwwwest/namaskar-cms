@@ -27,6 +27,27 @@ $this->addShortcode('alert', function ($attributes, $content, $tagName) {
 });
 
 
+
+
+$this->addShortcode('video', function ($attributes, $content, $tagName) {
+    $url = $attributes[0];
+    // poster="https://wallpapercave.com/wp/wp3305861.jpg"
+
+    $media = ($this->conf)('media');
+    if (!preg_match("@^https?://@", $url)) {
+        $url = "$media/video/" . $attributes[0];
+    }
+
+
+
+    return <<<HTML
+    <video controls width="600" src="$url" type="video/mp4">
+
+    </video>
+    
+    HTML;
+});
+
 $this->addShortcode('youtube', function ($attributes, $content, $tagName) {
     $id = $attributes[0];
     $ratio = $attributes[1] ?? '16x9';
@@ -1117,47 +1138,41 @@ $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
             # code...
         }
-        //dd($items);
+
         $attributes['items'] = $items;
         return $this->includeTemplate($attributes, $content, 'gallery', false);
 
-        //return $this->renderTemplate($attributes, $content, 'gallery', false);
+
+    }
+
+    if (!isset ($attributes['folder'])) {
+        die ('[gallery] are either folder or items.');
+    }
+
+    $directory = ($this->conf)("folder.public") . "/media/img/$attributes[folder]/*.*";
+    $items = [];
+
+    foreach (glob($directory) as $filename) {
+
+        $item = [];
+        $file = basename($filename);
+        $item['title'] = $file;
+        $item['thumb'] = "$attributes[folder]/$file";
+        $item['img'] = "$attributes[folder]/$file";
+
+        $items[] = $item;
+
     }
 
 
-
-    $type = $attributes[0];
-    if (isset ($attributes[1])) {
-        $title = $attributes[1];
-        return $this->renderTemplate($attributes, $content, 'alert-with-title', false);
-    }
-
-
-
-    ($this->conf)("media") . "/gallery/$attributes[folder]";
-
-    $directory = ($this->conf)("media") . "/gallery/$attributes[folder]";
-    $items = glob($directory . "/*.*");
-
     $attributes['items'] = $items;
-    $attributes['items'] = ['TOTO.jpg'];
+    // $attributes['items'] = ['TOTO.jpg'];
 
-    return "gaaaaallery";
-    return $this->renderTemplate($attributes, $content, 'gallery', false);
+    return $this->includeTemplate($attributes, $content, 'gallery', false);
 
 });
 
-$this->addShortcode('__blep', function ($attributes, $content, $tagName) {
 
-    $directory = ($this->conf)("media") . "/gallery/$attributes[folder]";
-    $items = glob($directory . "/*.*");
-
-    $attributes['items'] = $items;
-    $attributes['items'] = ['TOTO.jpg'];
-
-    return $this->renderTemplate($attributes, $content, 'blep', false);
-
-});
 
 $this->addShortcode('carousel', function ($attributes, $content, $tagName) {
     static $id = 0;

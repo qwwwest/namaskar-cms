@@ -169,6 +169,7 @@ class PageModel
             }
         }
 
+        $conf('page', $elt);
         $languageMenu = $conf('site.language.menu');
         $language = $conf('site.language.default');
         $languageKey = 0;
@@ -191,13 +192,14 @@ class PageModel
             }
 
 
-
             $languageMenu[$languageKey]['active'] = true;
             $languageInUrl = $languageMenu[$languageKey]['url']; // "" or "de" or "en"
             $conf('site.language.menu', $languageMenu);
 
             // homepage for current language: 
             $conf('site.homeURL', $languageMenu[$languageKey]['url']);
+            $conf('page.homeURL', $languageMenu[$languageKey]['url']);
+
             $conf('site.isAuthed', $this->isAuthed);
         }
 
@@ -216,8 +218,9 @@ class PageModel
         //     }
         // }
 
-        $conf('page', $elt);
+        //        $conf('page', $elt);
         $conf('page.language', $language);
+
         // if ($languageKey ?? false)
         //     $conf('page.languageHome', $languageMenu[$languageKey]['url']);
         // else
@@ -241,7 +244,7 @@ class PageModel
             foreach ($menu as $key => &$item) {
                 if (!$this->isPageAccessible($item['url']))
                     continue;
-                $item['label'];
+                // $item['label'];
 
                 $item['label'] = str_replace(' ', '&nbsp;', $item['label']);
                 $tmpElt = $this->mempad->getElementByUrl($item['url']);
@@ -250,11 +253,13 @@ class PageModel
 
                 $item['active'] = ($url === $item['url'])
                     || $item['url'] && strpos($url, $item['url']) === 0
-                    && $conf('page.languageHome') !== $item['url'] && $item['url'] !== ''
+                    && $conf('page.homeURL') !== $item['url'] && $item['url'] !== ''
                     ? true : false;
 
                 $menu2[] = $item;
             }
+
+
             //$conf("site.menu.main", null);
             //if($this->isAuthed) $menu2[] =['label'=>'! Admin', 'url'=>$GLOBALS['USER']['adminPage']];
             if ($this->isPageAccessible('help'))
@@ -480,16 +485,19 @@ class PageModel
     {
         $elt = $this->mempad->getElementByUrl($url);
 
+
         if (!$elt)
             return false;
+
         if (strpos($elt->title, '.') === 0)
             return false;
         if (strpos($elt->title, '!') === 0)
             return $this->isAuthed;
         if (strpos($elt->path, '/!') !== false)
             return $this->isAuthed;
-        if (strpos($elt->path, '!') !== false)
-            return $this->isAuthed;
+        if (strpos($elt->path, '/.') !== false)
+            return false;
+
 
         return true;
     }
