@@ -405,7 +405,7 @@ class QwwwickRenderer
     public function renderLoginPage()
     {
 
-        $file = $this->resolveTemplate("bootstrap5/login.html");
+        $file = $this->resolveTemplate("admin/login.html");
         if (!$file) {
             die("template : '$file' not found in Renderer::render");
         }
@@ -426,6 +426,29 @@ class QwwwickRenderer
         return $html;
     }
 
+    public function renderAdminPage()
+    {
+
+        $file = $this->resolveTemplate("admin/dashboard.html");
+        if (!$file) {
+            die("template : admin/dashboard.html not found in Renderer::render");
+        }
+
+        $this->newContext('dashboard.html');
+
+        $template = file_get_contents($file);
+
+        // $content = trim(($this->conf)('page.content'));
+        // $content = $this->renderBlock($content);
+        // $html = $this->processShortcodes($content);
+        // ($this->conf)('page.content', trim($content));
+
+        $html = $this->processTokens($template);
+        $html = $this->processShortcodes($html);
+        $this->oldContext();
+
+        return $html;
+    }
     /*
      * include and render template file in new context with only local variables
      */

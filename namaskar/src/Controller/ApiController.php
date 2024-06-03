@@ -18,11 +18,11 @@ class ApiController extends AbstractController
 
 
 
-    #[Roooooute('/api/login', methods: ['POST'])]
+    #[Roooooute('/admin/mempad/api/login', methods: ['POST'])]
     public function login(): ?Response
     {
 
-        return $this->statusError('nope');
+        return $this->statusError('you should use your secret URL');
 
         // not used anymore...
         // $data = file_get_contents("php://input");
@@ -33,7 +33,7 @@ class ApiController extends AbstractController
 
     }
 
-    #[Route('/api/save', methods: ['POST'])]
+    #[Route('/admin/mempad/api/save', methods: ['POST'])]
     public function save(): Response
     {
 
@@ -51,7 +51,7 @@ class ApiController extends AbstractController
     }
 
 
-    #[Route('/api/logout')]
+    #[Route('/admin/mempad/api/logout')]
     public function logout(): Response
     {
 
@@ -61,7 +61,7 @@ class ApiController extends AbstractController
         return $this->statusOK();
 
     }
-    #[Route('/api/check')]
+    #[Route('/admin/mempad/api/check')]
     public function check(): Response
     {
         return $this->statusOK();
@@ -69,7 +69,7 @@ class ApiController extends AbstractController
     }
 
 
-    #[Route('/api/tree')]
+    #[Route('/admin/mempad/api/tree')]
     public function tree(): Response
     {
 
@@ -86,7 +86,7 @@ class ApiController extends AbstractController
 
 
 
-    #[Route('/api/page/{id?}')]
+    #[Route('/admin/mempad/api/page/{id?}')]
     public function page($id = 0): Response
     {
 
@@ -103,7 +103,7 @@ class ApiController extends AbstractController
     }
 
 
-    #[Route('/api/{action*}')]
+    #[Route('/admin/mempad/api/{action*}')]
     public function default($action = null): ?Response
     {
         if ($action === null)

@@ -16,8 +16,6 @@ class LoginController extends AbstractController
     private $mempad = null;
 
 
-
-
     #[Route('/{url*}', methods: ['GET'])]
     public function showLoginPage($url = '/'): ?Response
     {

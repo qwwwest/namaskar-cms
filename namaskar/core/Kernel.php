@@ -73,8 +73,13 @@ class Kernel
         $conf = new ZenConfig();
         $this->zconf = $conf;
 
+        $isHttps = $_SERVER['HTTPS'] ?? false === 'on' || $_SERVER['SERVER_PORT'] == 443;
+        // $conf('app.domain', $_SERVER['SERVER_NAME']);
+        $conf('app.domain', $_SERVER['HTTP_HOST']);
+        $conf('app.protocol', $isHttps ? "https" : "http");
 
-        $conf('app.domain', $_SERVER['SERVER_NAME']);
+
+
 
         /*
 
@@ -118,6 +123,7 @@ class Kernel
         $conf('folder.sites', $conf('folder.data') . '/sites');
         $conf('folder.site', $conf('folder.sites') . "/$prj_folder");
         $conf('folder.asset', $conf('folder.public') . "/asset");
+        $conf('folder.media', $conf('folder.public') . "/media");
 
         $conf('folder.var', $conf('folder.data') . '/var');
         $conf('folder.logs', $conf('folder.var') . '/logs');

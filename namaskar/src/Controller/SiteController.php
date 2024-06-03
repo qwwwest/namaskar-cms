@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use Qwwwest\Namaskar\Response;
 use Qwwwest\Namaskar\AbstractController;
+use Qwwwest\Namaskar\MemPad;
+use Qwwwest\Namaskar\Kernel;
 
 
 
@@ -14,7 +16,87 @@ class SiteController extends AbstractController
 
     private $mempad = null;
 
+    #[Route('/robot.txt')]
+    public function showRobotTxt(): ?Response
+    {
+        $conf = $this->conf;
 
+        $protocol = $conf('app.protocol');
+        $domain = $conf('app.domain');
+
+        $robotTxt = <<<TXT
+        User-agent: *
+        Allow: /
+        
+        Sitemap: $protocol://$domain/sitemap.xml
+        TXT;
+
+        return $this->response($robotTxt, 200);
+
+    }
+    #[Route('/sitemap.xml')]
+    public function showSitemapXml(): ?Response
+    {
+        $conf = $this->conf;
+
+        $protocol = $conf('app.protocol');
+        $domain = $conf('app.domain');
+
+
+
+        $mempadFile = $conf('mempadFile');
+        $absroot = $conf('absroot');
+        $mempad = new MemPad($mempadFile, '');
+
+        $urls = '';
+        foreach ($mempad->elts as $v) {
+
+            if (
+                strpos($v->url, '/.') === false
+                && strpos($v->url, '.') !== 0
+                && strpos($v->url, '/!') === false
+                && strpos($v->url, '!') !== 0
+            ) {
+
+                $pattern = "/\nlastmod:[ ]+(\d\d\d\d-\d\d-\d\d)/";
+
+                $lastmod = '';
+
+                $rawContent = $mempad->getContentById($v->id);
+
+                $success = preg_match($pattern, $rawContent, $match);
+                if ($success) {
+
+
+                    $lastmod = <<<MOD
+
+                        <lastmod>$match[1]</lastmod>
+                    
+                    MOD;
+
+
+
+                }
+
+
+
+                $urls .= <<<URL
+            <url>
+                <loc>$protocol://$domain/$v->url</loc>$lastmod</url>
+
+            URL;
+            }
+
+        }
+        $xml = <<<XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+         $urls
+        </urlset> 
+        XML;
+
+        return $this->response($xml)->setContentType('xml');
+    }
     #[Route('/{url*}')]
     public function showPage($url = '/'): ?Response
     {

@@ -18,6 +18,7 @@ class AbstractController
 
 
         $this->currentUser = Kernel::service('CurrentUser');
+        $this->conf = Kernel::service('ZenConfig');
 
 
     }
@@ -27,8 +28,8 @@ class AbstractController
         $domain = $GLOBALS['mempad'];
         $domain = basename($domain);
 
-        $this->conf = Kernel::service('ZenConfig');
-        $this->currentUser = Kernel::service('CurrentUser');
+        //$this->conf = Kernel::service('ZenConfig');
+        //$this->currentUser = Kernel::service('CurrentUser');
         $pageModel = new PageModel();
 
         $pageModel->buildModel($url);

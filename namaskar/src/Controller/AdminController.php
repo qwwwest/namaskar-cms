@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use Qwwwest\Namaskar\Kernel;
 use Qwwwest\Namaskar\Response;
+use Qwwwest\Namaskar\AdminModel;
+use Qwwwest\Namaskar\QwwwickRenderer;
 use Qwwwest\Namaskar\AbstractController;
 
 
@@ -10,14 +12,65 @@ use Qwwwest\Namaskar\AbstractController;
 class AdminController extends AbstractController
 {
 
-
     #[Route('/admin', methods: ['GET'])]
+    public function showDashboard(): ?Response
+    {
+
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $project = N('folder.project');
+
+
+        $adminModel = new AdminModel();
+
+        $ip = $_SERVER['REMOTE_ADDR'];
+
+        $conf = Kernel::service('ZenConfig');
+        $conf('page.title', "Welcome Home");
+
+        $conf('page.content', 'Your IP address is: ' . $ip);
+
+        $ip = str_replace(':', '-', $ip);
+
+        if ($this->currentUser->isGranted('ADMIN'))
+            file_put_contents($conf('folder.logs') . "/admin.$ip.txt", '');
+
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $html = $qRenderer->renderAdminPage();
+
+        return $this->response($html);
+
+    }
+
+    #[Route('/admin/mempad/{url*}', methods: ['GET'])]
+    public function redirect2url($url = ''): ?Response
+    {
+
+        if (strpos($url, 'static/') === 0)
+            return null;
+        if (strpos($url, 'admin') === 0)
+            return null;
+        if (strpos($url, 'api/') === 0)
+            return null;
+
+
+
+        header("Location: " . N('absroot') . '/' . $url);
+        exit();
+        // return $this->response($admin);
+
+    }
+
+
+    #[Route('/admin/mempad/admin', methods: ['GET'])]
     public function showAdmin(): ?Response
     {
 
 
         $index = file_get_contents(N('folder.core') . '/admin/index.html');
-        $admin = str_replace("=\"/", "=\"./admin/", $index);
+
+        $admin = str_replace("=\"/", "=\"./", $index);
 
         return $this->response($admin);
 
@@ -44,27 +97,122 @@ class AdminController extends AbstractController
 
         $filter = "";
 
-        if ($this->currentUser->isGranted('SUPERADMIN')) {
-            $filter = N('folder.project');
-        }
+        // if (!$this->currentUser->isGranted('SUPERADMIN')) {
+        //     $filter = N('folder.project');
+        // }
+        $filter = N('folder.project');
+        $adminModel = new AdminModel();
+        $content = $adminModel->listlogs($filter);
 
 
-        $files = glob(N('folder.logs') . "/$filter*.txt");
+        $conf = Kernel::service('ZenConfig');
 
-        $html = '';
-        foreach ($files as $file) {
+        $conf('page.title', "Logs for $filter");
+        $conf('page.content', $content);
 
-            $basename = basename($file);
-            $date = date("Y-m-d H:i:s", filemtime($file));
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $html = $qRenderer->renderAdminPage();
+
+        return new Response($html);
+
+    }
+
+    #[Route('/admin/links', methods: ['GET'])]
+    public function getLinks(): ?Response
+    {
+
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $conf = Kernel::service('ZenConfig');
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $adminModel = new AdminModel();
+        $content = $adminModel->getAllPages();
+        $images = $adminModel->getAllMedia();
 
 
-            $html .= "<a href=\"./logs/$basename\">$basename</a> $date <br>\n";
-        }
+        $conf('page.title', "Links");
+        $conf('page.content', $content . $images);
+
+
+        $html = $qRenderer->renderAdminPage();
+
         return $this->response($html);
 
     }
+
+
+    #[Route('/admin/links/pages', methods: ['GET'])]
+    public function getLinksPages(): ?Response
+    {
+
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $conf = Kernel::service('ZenConfig');
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $adminModel = new AdminModel();
+        $content = $adminModel->getAllPages();
+
+
+
+        $conf('page.title', "Links for pages");
+        $conf('page.content', $content);
+
+
+        $html = $qRenderer->renderAdminPage();
+
+        return $this->response($html);
+
+    }
+
+
+    #[Route('/admin/links/media', methods: ['GET'])]
+    public function getLinksMedia(): ?Response
+    {
+
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $conf = Kernel::service('ZenConfig');
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $adminModel = new AdminModel();
+        $content = $adminModel->getAllMedia();
+
+        $conf('page.title', "Media files links");
+        $conf('page.content', $content);
+
+
+        $html = $qRenderer->renderAdminPage();
+
+        return $this->response($html);
+
+    }
+    #[Route('/admin/links/images', methods: ['GET'])]
+    public function getLinksImages(): ?Response
+    {
+
+        if (!$this->currentUser->isGranted('ADMIN'))
+            return null;
+
+        $conf = Kernel::service('ZenConfig');
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $adminModel = new AdminModel();
+        $content = $adminModel->getAllImagesByFolders();
+
+        $conf('page.title', "Images");
+        $conf('page.content', $content);
+
+
+        $html = $qRenderer->renderAdminPage();
+
+        return $this->response($html);
+
+    }
+
+
     #[Route('/admin/logs/{file}', methods: ['GET'])]
-    public function showLogs($file): ?Response
+    public function readLogFile($file): ?Response
     {
 
         if (!$this->currentUser->isGranted('ADMIN'))
@@ -76,12 +224,23 @@ class AdminController extends AbstractController
             return null;
         }
 
+        $content = "File not found. Are you kidding me ?";
 
-        $content = file_get_contents(N('folder.logs') . "/$file");
+        if (strpos($file, $project) === 0) {
+            $adminModel = new AdminModel();
+            $content = $adminModel->readLogFile($file . '.txt');
+        }
 
-        $content = str_replace("\n", '<br>', $content);
 
-        $html = "<h1> $project </h1> $content";
+
+
+        $conf = Kernel::service('ZenConfig');
+        $conf('page.title', "Logs for $file");
+
+        $conf('page.content', $content);
+
+        $qRenderer = new QwwwickRenderer($conf('folder.themes'));
+        $html = $qRenderer->renderAdminPage();
 
         return $this->response($html);
 
@@ -89,7 +248,7 @@ class AdminController extends AbstractController
 
 
 
-    #[Route('/admin/media', methods: ['GET', 'POST'])]
+    #[Route('/admin/mempad/admin/media', methods: ['GET', 'POST'])]
     public function showMediaManager(): ?Response
     {
 
@@ -103,7 +262,7 @@ class AdminController extends AbstractController
 
     }
 
-    #[Route('/admin/static/{asset*}', methods: ['GET'])]
+    #[Route('/admin/mempad/static/{asset*}', methods: ['GET'])]
     public function adminAssetManager($asset = '/'): ?Response
     {
 
@@ -125,6 +284,16 @@ class AdminController extends AbstractController
         }
 
         return null;
+
+    }
+
+    #[Route('/admin/logout', methods: ['GET'])]
+    public function logout(): ?Response
+    {
+
+        $this->currentUser->logout();
+
+        return $this->redirect('../');
 
     }
 
