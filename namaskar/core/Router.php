@@ -93,7 +93,7 @@ class Router
                 $arr = json_decode('{' . $str . '}', true);
 
                 if (!isset($arr['methods']))
-                    $arr['methods'] = ['GET'];
+                    $arr['methods'] = ['GET', 'POST'];
 
                 $arr['route'] = $globalRoute . $arr['route'];
                 $arr['route'] = rtrim($arr['route'], '/');

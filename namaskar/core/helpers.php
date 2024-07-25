@@ -78,7 +78,7 @@ function wlog($code, $message)
     file_put_contents("$filename", $message, FILE_APPEND);
 }
 
-function dump($var, $name = '')
+function dump($var, $name = '', $return = false)
 {
 
     ini_set("highlight.comment", "#008000");
@@ -108,6 +108,8 @@ function dump($var, $name = '')
     $text = preg_replace('|=&gt;&nbsp;<br />&nbsp;&nbsp;array&nbsp;\(<br />|', " = [", $text, 1);
 
     $text = "<style> div.code {background-color:#eee}</style>\n<h2>DEBUG $name:</h2><div class='code'>$text</div>";
+    if ($return)
+        return $text;
     echo $text;
 }
 

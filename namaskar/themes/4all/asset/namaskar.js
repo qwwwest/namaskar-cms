@@ -149,8 +149,37 @@ const navSlide = () => {
 //navSlide();
 
 
-
 let Namaskar = { items: [], index: 0 };
+
+
+if (document.getElementsByClassName('bgcover')) {
+  document.body.onscroll = function myFunction() {
+    const factor = .5;
+    const scrolltotop = document.scrollingElement.scrollTop;
+    const bgcover = document.getElementsByClassName('bgcover')
+    const bgcontent = document.getElementsByClassName('bgcontent')
+    const scollY = scrolltotop * factor | 0;
+    const nav = document.querySelector('nav.navbar');
+
+    for (let i = 0; i < bgcover.length; i++) {
+      bgcover[i].style.backgroundPosition = "center " + scollY + "px";
+      bgcontent[i].style.top = scollY / 10 + "px";
+    }
+
+    if (document.body.scrollTop >= 200 || document.documentElement.scrollTop >= 200) {
+      nav.classList.add("nav-colored");
+      console.log(document.documentElement.scrollTop)
+
+    }
+    else {
+
+      nav.classList.remove("nav-colored");
+    }
+  }
+
+
+}
+
 
 
 

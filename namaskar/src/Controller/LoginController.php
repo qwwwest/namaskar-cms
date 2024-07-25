@@ -73,6 +73,25 @@ class LoginController extends AbstractController
         $url = $conf('url');
         $users = $zadmin('users');
 
+        $users = $zadmin('users');
+        $i = 0;
+        $found = false;
+        while (isset($users[$i])) {
+            $user = $users[$i];
+
+            $found = $user['url'] === $url && $user['password'] !== null;
+            if ($found)
+                break;
+            $i++;
+        }
+
+        if (!$found)
+            return null;
+
+
+
+        /////
+
         $username = $_POST['username'] ?? null;
         $password = $_POST['password'] ?? null;
         $password2 = $_POST['password2'] ?? null;

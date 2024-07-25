@@ -39,16 +39,19 @@ class UserEntity
         $this->roles['SUPERADMIN'] = ($b *= 2);
         $this->roles['LOCALHOST'] = ($b *= 2);
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
 
+
+
+        if (session_status() === PHP_SESSION_NONE) {
+
+            session_start();
+
+        }
 
         $zadmin = Kernel::service('ZenAdmin');
         $ip = $_SERVER['REMOTE_ADDR'];
         $isLocalhost = in_array($ip, ['127.0.0.1', '::1'], true);
         $localhostAutologin = $isLocalhost && $zadmin('localhost.autologin');
-
 
 
 

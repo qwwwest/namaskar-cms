@@ -51,12 +51,13 @@ class Kernel
         if ($matches)
             $prj_folder = $matches[1];
         //single site not in "sites" folder or subsites 
-        else if ($GLOBALS['mempad'])
+        else if (isset($GLOBALS['mempad']))
             $prj_folder = $GLOBALS['mempad'];
         // else if (is_file("$absroot/default.lst"))
         //     $prj_folder = 'default';
-        else
-            die('mempad file not found');
+        else if (is_file('mempad.lst'))
+            $prj_folder = $GLOBALS['mempad'] = 'mempad';
+        // die('mempad file not found');
 
         //php developpement server serve app as root...
         if (strpos($_SERVER['SERVER_SOFTWARE'], 'PHP ') === 0)
@@ -190,6 +191,8 @@ class Kernel
         }
         $z->addFile($superFile, false);
         $z->addFile(substr($mempadFile, 0, -4) . '.ini', true);
+
+
 
         $this->currentUser = new UserEntity();
 

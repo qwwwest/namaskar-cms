@@ -1,5 +1,7 @@
 <?php
+use Qwwwest\Namaskar\Form;
 use Qwwwest\Namaskar\Kernel;
+
 
 
 $this->shortCode2Template('quote');
@@ -9,15 +11,125 @@ $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
 $this->shortCode2Template('warning', 'alert', true, ['type' => 'warning']);
 $this->shortCode2Template('img2', 'templates', false);
 
+//$this->shortCode2Template('hero');
+
+new Form($this);
+
+$this->addShortcode('___form', function ($attributes, $content, $tagName) {
+
+    $countPost1 = count($_POST);
+
+    $id = $attributes['id'] ?? $tagName;
+
+    ($this->conf)('form.id', $id);
 
 
+    $content = $this->renderBlock($content);
+    $countPost2 = count($_POST);
+    $classes = $this->getCssClasses($attributes);
+    $classes = $classes ? ' ' . $classes : '';
+
+    ($this->conf)('form.id', null);
+    return <<<HTML
+    <form method=post class="mb-3 row$classes">$content</form>
+    HTML;
+
+
+});
+
+
+$this->addShortcode('button', function ($attributes, $content, $tagName) {
+
+    // [field text firstname]
+    $type = $attributes[0];
+    $id = $attributes[1];
+    $label = $attributes[2] ?? $id;
+
+    $classes = $this->getCssClasses($attributes);
+    $btn = $attributes['btn'] ?? 'primary';
+
+    //$classes = $classes ? $classes . ' ' : '';
+
+    $content = <<<HTML
+
+        <div class="col-12">
+            <button type="$type" class="btn btn-$btn">$label</button>
+        </div>
+
+        HTML;
+
+    return $content;
+
+
+});
+
+
+$this->addShortcode('hero', function ($attributes, $content, $tagName) {
+
+    // if (isset($attributes['image'])) {
+
+    //     $attributes['type'] = array_shift($attributes);
+    // }
+
+    if (!isset($attributes['height']))
+        $attributes['height'] = '50vh';
+
+    $attributes['height'] = $attributes['h'] ?? '50';
+    $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
+
+    return $this->includeTemplate($attributes, $content, 'jumbotron', false);
+
+
+});
+$this->addShortcode('card', function ($attributes, $content, $tagName) {
+
+    // if (isset($attributes['image'])) {
+
+    //     $attributes['type'] = array_shift($attributes);
+    // }
+
+
+    $classes = $this->getCssClasses($attributes);
+    $content = $this->renderBlock($content);
+
+    return <<<HTML
+     
+    <div class="card $classes ">
+    <div class="card-body">
+        <h5 class="card-title">{$attributes['title']}</h5>
+        
+        <p class="card-text">{$content}</p>
+    </div>
+    </div>
+   
+    HTML;
+    return $this->includeTemplate($attributes, $content, 'jumbotron', false);
+
+
+});
+$this->addShortcode('button', function ($attributes, $content, $tagName) {
+
+
+    $title = "'$attributes[0]'" ?? '';
+    $link = "'$attributes[1]'" ?? '';
+
+
+    $attr = implode(' ', $attributes) . ' .btn .btn-lg';
+
+    $attributes['classes'] = $this->getCssClasses($attributes);
+    return $this->renderBlock("[link  $title $link $attr ]");
+
+    return $this->includeTemplate($attributes, $content, 'button', false);
+
+
+});
 $this->addShortcode('alert', function ($attributes, $content, $tagName) {
 
-    if (!isset ($attributes['type'])) {
+    if (!isset($attributes['type'])) {
         $attributes['type'] = array_shift($attributes);
     }
 
-    if (isset ($attributes[0])) {
+    if (isset($attributes[0])) {
         $attributes['title'] = array_shift($attributes);
     }
 
@@ -150,7 +262,7 @@ $this->addShortcode('.audio', function ($attributes, $content, $tagName) {
 
     $config = '{"shide_top":true,"shide_btm":false,"auto_load":true}';
     $config = '{"shide_top":false,"shide_btm":true,"auto_load":false}';
-    if (!isset ($attributes['file']))
+    if (!isset($attributes['file']))
         $attributes['this.items'] = $attributes[0];
     else {
 
@@ -207,6 +319,30 @@ COL;
     return <<<HTML
 
   <div class="row row-cols-1 row-cols-lg-$nb $class">
+  $cols
+  </div>
+
+HTML;
+});
+
+$this->addShortcode('cards', function ($attributes, $content, $tagName) {
+    $content = explode("\n[==]", $content);
+    $class = $attributes['class'] ?? "";
+    $nb = count($content);
+    $cols = '';
+    foreach ($content as $key => $value) {
+
+        $value = $this->renderBlock($value);
+        $cols .= <<<COL
+<div class="col d-flex align-items-stretch ">
+        $value
+</div>
+COL;
+    }
+
+    return <<<HTML
+
+  <div class="row row-cols-1 row-cols-lg-$nb my-4 $class ">
   $cols
   </div>
 
@@ -305,7 +441,7 @@ $this->addShortcode('.foreach', function ($attributes, $content, $tagName) {
     $op = $attributes[1];
 
     if ($op !== 'in') {
-        die ('foreach syntax is "foreach item/file in list/dir" ');
+        die('foreach syntax is "foreach item/file in list/dir" ');
     }
 
     $content = trim($content);
@@ -377,10 +513,10 @@ $this->addShortcode('include', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
-        die ('recurtion spotted in include ' . $attributes[0]);
+        die('recurtion spotted in include ' . $attributes[0]);
     }
 
-    if (!isset ($attributes[0]) || $attributes[0] === 'ALL' || $attributes[0] === '.*') {
+    if (!isset($attributes[0]) || $attributes[0] === 'ALL' || $attributes[0] === '.*') {
         $path = ($this->conf)("page.path");
         //$path = $this->get_absolute_mempad_path($path);
         $elem = $this->mempad->getElementByPath($path);
@@ -411,7 +547,7 @@ $this->addShortcode('...inc', function ($attributes, $content, $tagName) {
     static $rec = 0;
     $rec++;
     if ($rec > 20) {
-        die ('recurtion spotted in include ' . $attributes[0]);
+        die('recurtion spotted in include ' . $attributes[0]);
     }
 
     $path = ($this->conf)("page.path") . "/" . $attributes[0];
@@ -428,7 +564,7 @@ $this->addShortcode('...inc', function ($attributes, $content, $tagName) {
 $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     static $order = true;
     $order = !$order;
-    if (isset ($attributes['order'])) {
+    if (isset($attributes['order'])) {
         $order = $attributes['order'] === 'left';
     }
 
@@ -446,7 +582,7 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     $video = $attributes['video'] ?? false;
     $link = $attributes['link'] ?? '';
     $loop = $attributes['loop'] ?? '';
-    $hr = isset ($attributes['hr']) ? '<hr class="featurette-divider">' : '';
+    $hr = isset($attributes['hr']) ? '<hr class="featurette-divider">' : '';
     $caption = $attributes['caption'] ?? '';
     $id = $this->id($attributes);
     if ($id)
@@ -455,7 +591,7 @@ $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     $ratio1 = intval($attributes['ratio'] ?? '7');
 
     if ($ratio1 < 1 || $ratio1 > 11)
-        die ("featurette: ratio invalid: " . $ratio1 . "<br>" . $title . "<br>" . $content);
+        die("featurette: ratio invalid: " . $ratio1 . "<br>" . $title . "<br>" . $content);
     $ratio2 = 12 - $ratio1;
 
 
@@ -557,7 +693,7 @@ $this->addShortcode('code', function ($attributes, $content, $tagName) {
     );
 
     $show = '';
-    if (isset ($attributes[1])) {
+    if (isset($attributes[1])) {
 
         if ($attributes[1] === 'html' && $attributes[0] === 'markdown') {
             $content = $this->markdownParser->transform($content);
@@ -734,8 +870,12 @@ $this->addShortcode('link', function ($attributes, $content, $tagName) {
             $href = $this->mempad->getElementById($parentId)->url;
         }
     }
+    $classes = $this->getCssClasses($attributes);
+    if ($classes)
+        $classes = " class='{$classes}'";
+
     $absroot = ($this->conf)('absroot');
-    if (isset ($attributes[1])) {
+    if (isset($attributes[1])) {
         $text = $attributes[1];
     } else if ($content) {
         $text = $this->renderBlock($content);
@@ -750,7 +890,9 @@ $this->addShortcode('link', function ($attributes, $content, $tagName) {
             $href = $absroot . $href;
     }
 
-    $html = '<a href="' . $href . '"' . $target . '>' . $text . '</a>';
+    $html = <<<HTML
+    <a href="$href"$target$classes>$text</a>
+    HTML;
     return $html;
 });
 
@@ -859,7 +1001,7 @@ $this->addShortcode('region', function ($attributes, $content, $tagName) {
     }
 
 
-    if (isset ($attributes[1])) {
+    if (isset($attributes[1])) {
         $template = $attributes[1];
     } else if ($content) {
         $html = $this->renderBlock($content);
@@ -881,11 +1023,11 @@ $this->addShortcode('for', function ($attributes, $content, $tagName) {
     $op = $attributes[1];
 
     if ($op !== 'in')
-        die ('foreach syntax is "foreach item/file in list/dir" ');
+        die('foreach syntax is "foreach item/file in list/dir" ');
 
     $content = trim($content);
     if (strpos('..', $attributes[2]) != false)
-        die (" '..' not allowed in for");
+        die(" '..' not allowed in for");
     if ($varname === "file") {
         foreach (glob('media/' . $attributes[2] . '/*') as $filename) {
 
@@ -1089,7 +1231,7 @@ $this->addShortcode('slides', function ($attributes, $content, $tagName) {
     $content = ($this->conf)('page.content');
     $slides = explode("\n<h2>", $content);
     $tmp = "";
-    die ('toto');
+    die('toto');
     foreach ($slides as $index2 => $slide) {
 
         //do we have vertical slides ?
@@ -1128,12 +1270,12 @@ $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
         $bsClass .= " row-cols-lg-$lg";
 
     $attributes['bs5cols'] = $bsClass;
-    if (isset ($attributes['items'])) {
+    if (isset($attributes['items'])) {
 
         $items = ($this->conf)($attributes['items']);
         foreach ($items as $key => $item) {
 
-            if (isset ($item['caption']) && !isset ($item['title']))
+            if (isset($item['caption']) && !isset($item['title']))
                 $item['title'] = $item['caption'];
 
             # code...
@@ -1145,8 +1287,8 @@ $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
     }
 
-    if (!isset ($attributes['folder'])) {
-        die ('[gallery] are either folder or items.');
+    if (!isset($attributes['folder'])) {
+        die('[gallery] are either folder or items.');
     }
 
     $directory = ($this->conf)("folder.public") . "/media/img/$attributes[folder]/*.*";
@@ -1257,7 +1399,7 @@ $this->addShortcode('scrolly', function ($attributes, $content, $tagName) {
 
 $this->addShortcode('list', function ($attributes, $content, $tagName) {
     $separtor = $attribute['separator'] ?? '---';
-    $id = $attribute['id'] ?? die ("{list} id is missing");
+    $id = $attribute['id'] ?? die("{list} id is missing");
 
     $str = $this->formatSimpleArray($content, "$id.items");
 });
@@ -1288,7 +1430,7 @@ $this->addShortcode('submenu', function ($attributes, $content, $tagName) {
         if ($elts) {
             $elts = $elts->children;
         } else
-            die ("[submenu $url $attributes[1] ] no children for: $url");
+            die("[submenu $url $attributes[1] ] no children for: $url");
 
     }
 

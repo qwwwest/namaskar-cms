@@ -133,7 +133,7 @@ class QwwwickRenderer
     public function addShortcode($tag, $function)
     {
         if (!is_callable($function)) {
-            throw new \ErrorException("Function must be callable");
+            throw new \ErrorException("Function must be callable ($tag)");
         }
 
         $this->shortcodes[$tag] = $function;
@@ -1080,7 +1080,7 @@ class QwwwickRenderer
             $rec++;
 
             if ($rec > 10) {
-                die ('recurtion spotted in ' . $template);
+                die('recurtion spotted in ' . $template);
             }
 
             $theme = ($this->conf)('site.theme');
