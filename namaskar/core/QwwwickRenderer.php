@@ -393,13 +393,42 @@ class QwwwickRenderer
         $content = trim(($this->conf)('page.content'));
         $content = $this->renderBlock($content);
         $html = $this->processShortcodes($content);
+        $this->postContentProcessing();
         ($this->conf)('page.content', trim($content));
+
+
 
         $html = $this->processTokens($template);
         $html = $this->processShortcodes($html);
         $this->oldContext();
 
         return $html;
+    }
+
+    public function postContentProcessing()
+    {
+
+        $conf = $this->conf;
+
+        if ($conf('page.show.regions')) {
+            $conf('page.body_classes[]', 'show-regions');
+        }
+
+
+        if ($conf('theme.navbar.fixed')) {
+            $conf('page.body_classes[]', 'navbar-fixed');
+        }
+
+        $bodyclasses = $conf('page.body_classes');
+
+
+
+        if (is_array($bodyclasses)) {
+            $classes = implode(' ', $bodyclasses);
+            $conf('page.body_class_attribute', " class='$classes'");
+
+        }
+
     }
 
     public function renderLoginPage()

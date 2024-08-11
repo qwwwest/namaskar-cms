@@ -1,0 +1,30 @@
+<header>
+  <nav class="navbar navbar-expand-{{theme.navbar.expand}} ">
+
+
+    <div class="container-fluid mainlinks navbarbg">
+      {% include hamburger.html %}
+
+
+      <a class="navbar-brand" href="{{ homepath }}/{{ site.homeURL }}">
+        {% if site.logo.svg %}
+        <svg alt="" class="logo" width="{{site.logo.width}}" height="{{site.logo.height}}">
+          <use xlink:href="{{media}}/{{site.logo.svg}}"></use>
+        </svg>
+        {% endif %}
+        {% if site.logo.img %}
+        <img alt="" class="logo" width="{{site.logo.width}}" height="{{site.logo.height}}"
+          src="{{media}}/{{site.logo.img}}" />
+
+        {% endif %}
+        {% if site.brandname %}
+        <strong>{{ site.brandname }}</strong>
+        {% endif %}
+      </a>
+      {% include menu-main.html %}
+      {% include menu-language.html if site.language.menu %}
+
+    </div>
+  </nav>
+
+</header>

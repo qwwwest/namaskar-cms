@@ -76,3 +76,9 @@
  .namaskar-demo {
      margin: 2rem;
  }
+
+
+ footer .row {
+     margin: 0 !important;
+     text-align: center;
+ }

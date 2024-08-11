@@ -71,9 +71,10 @@ class AssetController extends AbstractController
             'backgrounds',
             'sidemenu',
             'toc',
-            'featurette',
+            'features',
             'language-menu',
             'layout',
+            'misc',
         ];
 
         $css = '';

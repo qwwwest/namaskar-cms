@@ -346,6 +346,8 @@ class ZenConfig
         if ($forceArray) {
             $varname = substr($varname, 0, -2);
 
+
+
         }
 
 
@@ -368,15 +370,32 @@ class ZenConfig
                 $ini = &$ini[$var];
                 continue;
             }
-            if ($ii === $last && gettype($ini) === 'object') {
+            if ($ii === $last && !$forceArray && gettype($ini) === 'object') {
+
                 return $ini->{$var} = $value;
+            }
+
+            if ($ii === $last && $forceArray && gettype($ini) === 'object') {
+
+                if (!isset($ini->{$var}))
+                    $ini->{$var} = [];
+
+                ($ini->{$var})[] = $value;
+
+                return $ini->{$var};
             }
 
             if ($ii === $last && $forceArray && (!isset($ini[$var]))) {
                 $ini[$var] = ['_addByPush' => '', $value];
+
                 return $ini[$var];
             }
 
+            if ($ii === $last && $forceArray) {
+                ($ini[$var])[] = $value;
+
+                return $ini[$var];
+            }
 
 
             if ($ii === $last && (!isset($ini[$var]))) {

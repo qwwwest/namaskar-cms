@@ -1,0 +1,181 @@
+:root {
+
+    --color1: #024;
+    --color2: #fff;
+    --color3: #fc0;
+    --navbar-bgc: #002244;
+
+
+    --main-text-color: var(--color1);
+    --main-bgc: var(--color2);
+    --main-title-color: var(--color3);
+    --main-link-color: var(--color3);
+
+    --hero-title-color: var(--color3);
+    --hero-text-color: var(--color2);
+
+    --hero-navbar-bgc-start: transparent;
+
+    --hero-navbar-bgc-end: var(--navbar-bgc);
+
+    --hero-navbar-link: var(--color2);
+    --hero-navbar-brand: var(--color3);
+
+
+    --footer-bgc: var(--color1);
+    --footer-text-color: var(--color2);
+    --footer-link-color: var(--color3);
+    --footer-title-color: var(--color3);
+
+}
+
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    oooverflow-x: hidden !important;
+    scroll-behavior: smooth !important;
+
+
+}
+
+
+div.hero h1,
+div.hero h2 {
+    color: var(--hero-title-color);
+}
+
+div.hero p {
+    color: var(--hero-text-color);
+    font-size: 1.2rem;
+}
+
+
+body.navbar-fixed {
+
+    padding-top: 100px !important;
+}
+
+body.navbar-fixed.has_hero {
+    padding-top: 0 !important;
+}
+
+body.navbar-fixed nav.navbar {
+
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    /* Position the navbar at the top of the page */
+    width: 100%;
+    /* Full width */
+    z-index: 1000;
+}
+
+
+
+.collapse.navbar-collapse.h-100.bg-dark {
+    background-color: transparent ! important;
+    transition: background-color 1s;
+}
+
+.collapse.navbar-collapse.h-100.bg-dark.show {
+    background-color: var(--navbar-bgc);
+}
+
+/******* COLORS AND SIZE *******/
+
+
+
+html {
+    font-size: 22px;
+
+}
+
+
+
+
+
+body {
+    color: var(--color1);
+    background: var(--color2);
+
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: var(--main-title-color);
+}
+
+main a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+
+nav.navbar a.nav-link,
+nav.navbar a.nav-link:hover,
+nav.navbar a.nav-link.active {
+    color: var(--hero-navbar-link);
+}
+
+nav.navbar a.navbar-brand strong,
+nav.navbar a.navbar-brand:hover strong {
+    color: var(--hero-navbar-brand);
+}
+
+nav.navbar {
+    transition: background-color 1s;
+}
+
+body:not(.has_hero) nav.navbar {
+    background: var(--navbar-bgc) !important;
+}
+
+body.has_hero nav.navbar {
+    background: var(--hero-navbar-bgc-start);
+
+}
+
+body.has_hero nav.navbar.nav-colored {
+    background: var(--hero-navbar-bgc-end);
+}
+
+/*** FOOTER ***/
+
+footer .row {
+    background-color: var(--footer-bgc);
+
+}
+
+
+footer {
+
+
+    background-color: var(--footer-bgc);
+}
+
+
+footer .row * {
+
+    color: var(--footer-text-color);
+    text-align: center;
+}
+
+footer .row h1,
+footer .row h2,
+footer .row h3 {
+    text-align: center;
+    color: var(--footer-title-color);
+    font-weight: bold;
+}
+
+footer .row a {
+    text-align: center;
+    color: var(--footer-link-color);
+    font-weight: bold;
+    text-decoration: none;
+}

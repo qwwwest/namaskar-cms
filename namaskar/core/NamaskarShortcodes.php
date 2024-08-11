@@ -11,7 +11,7 @@ $this->shortCode2Template('danger', 'alert', true, ['type' => 'danger']);
 $this->shortCode2Template('warning', 'alert', true, ['type' => 'warning']);
 $this->shortCode2Template('img2', 'templates', false);
 
-//$this->shortCode2Template('hero');
+
 
 new Form($this);
 
@@ -77,10 +77,15 @@ $this->addShortcode('hero', function ($attributes, $content, $tagName) {
     $attributes['height'] = $attributes['h'] ?? '50';
     $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
 
+    // ($this->conf)('page.body_classes[]', 'media');
+    ($this->conf)('page.body_classes[]', 'has_hero');
+
+
     return $this->includeTemplate($attributes, $content, 'jumbotron', false);
 
 
 });
+
 $this->addShortcode('card', function ($attributes, $content, $tagName) {
 
     // if (isset($attributes['image'])) {
@@ -561,6 +566,85 @@ $this->addShortcode('...inc', function ($attributes, $content, $tagName) {
     //return $content;
 });
 
+$this->addShortcode('set', function ($attributes, $content, $tagName) {
+    ($this->conf)($attributes[0], $attributes[1]);
+    return '';
+});
+
+$this->addShortcode('body', function ($attributes, $content, $tagName) {
+    if ($attributes[0] == 'add')
+        ($this->conf)('page.body_classes[]', $attributes[1]);
+    return '';
+});
+
+/*
+A zigzag layout is a design pattern where elements, such as images and text, alternate positions in a repetitive sequence, creating a dynamic and visually engaging arrangement. This layout enhances the visual appeal and readability of the content by breaking the monotony and guiding the viewer's attention.
+*/
+$this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
+
+
+    static $order = false;
+    static $ratio = '7/5';
+
+    $order = !$order;
+
+    $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
+
+    [$media, $content] = explode("\n====", $content);
+
+    if (isset($attributes['order'])) {
+        $order = $attributes['order'] === 'left';
+    }
+
+    $order1 = $order2 = '';
+
+    if ($order) {
+
+        $order1 = 'order-md-2';
+        $order2 = 'order-md-1';
+    }
+
+    $id = $this->id($attributes);
+    if ($id)
+        $id = " id='$id'";
+    $class = $this->getCssClasses($attributes);
+    $r = explode('/', $ratio);
+
+    if (count($r) != 2 || $r[0] + $r[1] != 12)
+        die('zigzag: ratio incorrect: ' . $ratio);
+
+    $ratio1 = intval($r[0]);
+    $ratio2 = intval($r[1]);
+
+
+
+    $media = $this->renderBlock($media);
+    $content = $this->renderBlock($content);
+
+    $content = <<<HTML
+    <div class="row zigzag$class">
+        <div class="col-md-$ratio1 $order1 zigzag-content">
+            <div>
+            $content
+            </div>
+        </div>
+        <div class="col-md-$ratio2 $order2 zigzag-media ">
+        
+        $media
+        
+        </div>
+    </div>
+    
+    HTML;
+
+
+
+
+    return $content;
+});
+
+
+
 $this->addShortcode('featurette', function ($attributes, $content, $tagName) {
     static $order = true;
     $order = !$order;
@@ -637,7 +721,7 @@ HTML;
 
     $content = <<<HTML
 <div class="row featurette$class">
-    <div class="col-md-$ratio1 $order1">
+    <div class="col-md-$ratio1 $order1 featurette-content">
     $astart
       $title
       <p>$content</p>
@@ -931,6 +1015,15 @@ $this->addShortcode('img', function ($attributes, $content, $tagName) {
     }
 
     return trim($html);
+});
+$this->addShortcode('default', function ($attributes, $content, $tagName) {
+
+    $shortcode = array_shift($attributes);
+
+    foreach ($attributes as $key => $value) {
+        ($this->conf)("default.$shortcode.$key", $value);
+    }
+
 });
 
 $this->addShortcode('region', function ($attributes, $content, $tagName) {

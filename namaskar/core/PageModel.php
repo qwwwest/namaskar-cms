@@ -301,6 +301,8 @@ class PageModel
 
 
 
+
+
         $conf('page.content', trim($content));
 
         /******** end buildModel ********/
