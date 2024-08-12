@@ -38,7 +38,7 @@ $this->addShortcode('___form', function ($attributes, $content, $tagName) {
 });
 
 
-$this->addShortcode('button', function ($attributes, $content, $tagName) {
+$this->addShortcode('____button', function ($attributes, $content, $tagName) {
 
     // [field text firstname]
     $type = $attributes[0];
@@ -66,22 +66,25 @@ $this->addShortcode('button', function ($attributes, $content, $tagName) {
 
 $this->addShortcode('hero', function ($attributes, $content, $tagName) {
 
-    // if (isset($attributes['image'])) {
 
-    //     $attributes['type'] = array_shift($attributes);
-    // }
+    $op = null;
+    if (isset($attributes['dark'])) {
+        $op = '#000000' . (dechex(round(substr($attributes['dark'], 0, -1) * 255 / 100)));
+    }
+    if (isset($attributes['light'])) {
+        $op = die(dechex(substr($attributes['light'], 0, -1) * 255 / 100));
+    }
 
-    if (!isset($attributes['height']))
-        $attributes['height'] = '50vh';
+    if ($op)
+        $attributes['op'] = $op;
 
     $attributes['height'] = $attributes['h'] ?? '50';
     $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
 
-    // ($this->conf)('page.body_classes[]', 'media');
     ($this->conf)('page.body_classes[]', 'has_hero');
 
 
-    return $this->includeTemplate($attributes, $content, 'jumbotron', false);
+    return $this->includeTemplate($attributes, $content, 'hero', false);
 
 
 });
@@ -115,8 +118,8 @@ $this->addShortcode('card', function ($attributes, $content, $tagName) {
 $this->addShortcode('button', function ($attributes, $content, $tagName) {
 
 
-    $title = "'$attributes[0]'" ?? '';
-    $link = "'$attributes[1]'" ?? '';
+    $title = "\"$attributes[0]\"" ?? '';
+    $link = "\"$attributes[1]\"" ?? '';
 
 
     $attr = implode(' ', $attributes) . ' .btn .btn-lg';
@@ -590,7 +593,13 @@ $this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
 
     $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
 
-    [$media, $content] = explode("\n====", $content);
+    if (isset($attributes['img'])) {
+        $media = <<<MEDIA
+        [img "$attributes[img]"]
+        MEDIA;
+
+    } else
+        [$media, $content] = explode("\n====", $content);
 
     if (isset($attributes['order'])) {
         $order = $attributes['order'] === 'left';
