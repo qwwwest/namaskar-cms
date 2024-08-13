@@ -69,16 +69,17 @@ $this->addShortcode('hero', function ($attributes, $content, $tagName) {
 
     $op = null;
     if (isset($attributes['dark'])) {
-        $op = '#000000' . (dechex(round(substr($attributes['dark'], 0, -1) * 255 / 100)));
+        $op = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
     }
     if (isset($attributes['light'])) {
-        $op = die(dechex(substr($attributes['light'], 0, -1) * 255 / 100));
+        $op = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
     }
 
     if ($op)
         $attributes['op'] = $op;
 
-    $attributes['height'] = $attributes['h'] ?? '50';
+    $attributes['height'] = trim($attributes['height'] ?? '50', '%');
+
     $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
 
     ($this->conf)('page.body_classes[]', 'has_hero');

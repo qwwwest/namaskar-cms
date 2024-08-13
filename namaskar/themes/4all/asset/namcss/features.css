@@ -33,16 +33,22 @@
 /* -----------------------
     Hero and jumbotron
   ------------------------- */
+body.has_hero {
+
+    overflow-x: hidden !important;
+}
 
 .jumbotron,
 div.hero {
-    width: 100vw;
+    width: calc(100vw);
     padding: 20vh 0;
     position: relative;
     margin-left: -50vw;
 
     left: 50%;
     margin-bottom: 2rem;
+
+
 
 
 
