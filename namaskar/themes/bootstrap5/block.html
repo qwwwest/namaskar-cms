@@ -1,0 +1,20 @@
+<div class="{{classes}}">
+    {% if link %}
+    <a href="{{absroot}}/{{link}}">
+        {% endif %}
+        <div class="content">
+            <div class="w-100"> {{content}}</div>
+
+        </div>
+        {% if img %}
+        <div class="media  ">
+            <div class="tint" style="background-color: {{rgba}}"></div>
+
+            <div class="img"><img src="{{absroot}}/media/img/{{img}}" alt="{{alt}}" class="img-fluid"></div>
+
+        </div>
+        {% endif %}
+        {% if link %}
+    </a>
+    {% endif %}
+</div>

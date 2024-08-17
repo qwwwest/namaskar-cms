@@ -1,6 +1,6 @@
-/* -----------------------
+/***************************
       Zigzag Layout
-  ------------------------- */
+***************************/
 
 
 .zigzag-media img {
@@ -30,9 +30,9 @@
 
 }
 
-/* -----------------------
-    Hero and jumbotron
-  ------------------------- */
+/***************************
+    HERO and JUMBO
+****************************/
 body.has_hero {
 
     overflow-x: hidden !important;
@@ -41,14 +41,11 @@ body.has_hero {
 .jumbotron,
 div.hero {
     width: calc(100vw);
-    padding: 20vh 0;
+
     position: relative;
     margin-left: -50vw;
 
     left: 50%;
-    margin-bottom: 2rem;
-
-
 
 
 
@@ -79,22 +76,26 @@ div.hero .content {
     place-items: center;
 
 
+
+
 }
 
 .jumbotron .bgcover,
-div.hero .bgcover {
+div.hero div.bgcover {
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
     margin: 0;
     padding: 0;
+
+    z-index: 10;
+    overflow: hidden;
     background-position: top center;
     background-attachment: scroll;
     background-repeat: no-repeat;
-    background-size: cover;
-    z-index: 10;
-    overflow: hidden;
+    background-size: cover !important;
+
 }
 
 
@@ -118,13 +119,6 @@ div.hero .bgcolor {
     padding: 0;
 }
 
-.h50 {
-    min-height: 50vh !important;
-}
-
-.h100 {
-    min-height: 100vh !important;
-}
 
 
 body {
@@ -137,4 +131,207 @@ body.header {
 
     margin-top: 0 !important;
     padding-top: 0 !important;
+}
+
+
+/***************************
+    Block content
+****************************/
+
+
+div.block.full-width,
+div.blocks.full-width,
+div.blocks.full {
+    width: 100vw;
+
+    position: relative;
+    margin-left: -50vw;
+
+    left: 50%;
+
+
+}
+
+div.blocks.center {
+    justify-content: space-evenly
+}
+
+div.block {
+    width: 100%;
+
+    flex: 1;
+
+    position: relative;
+
+    overflow: hidden !important;
+
+
+}
+
+div.block>a {
+    text-decoration: none;
+
+
+}
+
+div.block.dark {
+    background-color: var(--color1);
+    color: var(--color2);
+
+}
+
+div.block.rounded {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1;
+
+    box-shadow: 0px 0px 10px white;
+
+}
+
+div.block.rounded.button {
+    max-width: 10vw;
+
+
+}
+
+
+.h10 {
+    height: 10vh;
+}
+
+
+.h20 {
+    height: 20vh;
+}
+
+.h25 {
+    height: 25vh;
+}
+
+.h40 {
+    height: 40vh;
+}
+
+.h50 {
+    height: 50vh;
+}
+
+.h60 {
+    height: 60vh;
+}
+
+.h75 {
+    height: 75vh;
+}
+
+.h100 {
+    height: 100vh !important;
+}
+
+
+
+
+
+
+
+div.blocks>div.block.w40 {
+    width: 40%;
+
+}
+
+div.blocks>div.block.w50 {
+    width: 50%;
+
+}
+
+div.blocks>div.block.w60 {
+    width: 60%;
+
+}
+
+
+div.block>.content {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    z-index: 20;
+    padding: 0px;
+    color: inherit;
+}
+
+div.blocks.full>div.block>.content {
+
+    padding: 16px 32px;
+}
+
+div.block>.content>img {
+    display: block;
+    max-width: 100%;
+
+
+}
+
+
+div.block .media {
+    width: 100%;
+    height: 100%;
+
+
+
+    position: absolute;
+    z-index: 0;
+
+    top: 0;
+    left: 0;
+
+}
+
+
+div.block .media img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    position: absolute;
+    z-index: 0;
+
+    top: 0;
+    left: 0;
+
+}
+
+
+
+div.block>.media>.tint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 5;
+
+}
+
+
+
+div.block>.block-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+
+
+    z-index: 0;
+    overflow: hidden;
+    background-position: center;
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    background-size: cover !important;
+
 }

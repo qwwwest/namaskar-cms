@@ -64,21 +64,94 @@ $this->addShortcode('____button', function ($attributes, $content, $tagName) {
 });
 
 
+$this->addShortcode('row', function ($attributes, $content, $tagName) {
+
+
+    $classes = 'row d-flex align-items-stretch  blocks ';
+    if (isset($attributes[0]) && $attributes[0] == 'full') {
+        array_shift($attributes);
+        $classes .= 'full-width ';
+    }
+
+    if (isset($attributes['height'])) {
+        $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
+    }
+
+    if (isset($attributes['h'])) {
+        $classes .= ' h' . trim($attributes['h'] ?? '50', '%');
+    }
+
+    $classes .= ' ' . $this->getCssClasses($attributes); //. " " . $tagName;
+    $classes = trim($classes);
+    $content = $this->renderBlock($content);
+
+
+    return <<<HTML
+        <div class="$classes">
+        $content
+        </div>
+        HTML;
+
+
+});
+
+$this->addShortcode('block', function ($attributes, $content, $tagName) {
+
+    $classes = "block ";
+    if (isset($attributes[0]) && $attributes[0] == 'full') {
+        array_shift($attributes);
+        $classes .= ' full-width ';
+    }
+
+    $rgba = $attributes['rgba'] ?? "#00000000";
+    if (isset($attributes['dark'])) {
+        $rgba = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+    }
+
+    if (isset($attributes['light'])) {
+        $rgba = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+    }
+
+    if ($rgba)
+        $attributes['rgba'] = $rgba;
+    if (isset($attributes['height'])) {
+        $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
+    }
+
+
+    if (isset($attributes['h'])) {
+        $classes .= ' h' . trim($attributes['h'] ?? '50', '%');
+    }
+    //$attributes['width'] = trim($attributes['width'] ?? '50', '%');
+
+    $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
+
+
+
+
+    return $this->includeTemplate($attributes, $content, 'block', false);
+
+
+});
+
+
+
 $this->addShortcode('hero', function ($attributes, $content, $tagName) {
 
 
-    $op = null;
+    $rgba = null;
     if (isset($attributes['dark'])) {
-        $op = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+        $rgba = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
     }
     if (isset($attributes['light'])) {
-        $op = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+        $rgba = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
     }
 
-    if ($op)
-        $attributes['op'] = $op;
+    if ($rgba)
+        $attributes['rgba'] = $rgba;
 
-    $attributes['height'] = trim($attributes['height'] ?? '50', '%');
+    if (isset($attributes['height']))
+        $attributes['height'] = trim($attributes['height'] ?? '50', '%');
 
     $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
 

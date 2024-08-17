@@ -369,7 +369,11 @@ class QwwwickRenderer
         $content = $this->processTokens($content);
 
         $content = $this->markdownParser->transform($content);
-        if (strpos($content, '<p>') === 0 && strpos($content, '</p>', strlen($content) - 5))
+        if (
+            strpos($content, '<p>') === 0
+            && strpos($content, '</p>', strlen($content) - 5)
+            && strpos($content, '<p>', 4) === false
+        )
             $content = trim(substr($content, 3, -5)); // remove '<p>' tags
         return $content;
     }
