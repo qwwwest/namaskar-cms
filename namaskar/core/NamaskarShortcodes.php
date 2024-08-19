@@ -67,11 +67,8 @@ $this->addShortcode('____button', function ($attributes, $content, $tagName) {
 $this->addShortcode('row', function ($attributes, $content, $tagName) {
 
 
-    $classes = 'row d-flex align-items-stretch  blocks ';
-    if (isset($attributes[0]) && $attributes[0] == 'full') {
-        array_shift($attributes);
-        $classes .= 'full-width ';
-    }
+    $classes = 'row rowblock ';
+
 
     if (isset($attributes['height'])) {
         $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
@@ -83,8 +80,10 @@ $this->addShortcode('row', function ($attributes, $content, $tagName) {
 
     $classes .= ' ' . $this->getCssClasses($attributes); //. " " . $tagName;
     $classes = trim($classes);
-    $content = $this->renderBlock($content);
 
+    ($this->conf)('in_row', true);
+    $content = $this->renderBlock($content);
+    ($this->conf)('in_row', false);
 
     return <<<HTML
         <div class="$classes">
@@ -95,14 +94,29 @@ $this->addShortcode('row', function ($attributes, $content, $tagName) {
 
 });
 
+
 $this->addShortcode('block', function ($attributes, $content, $tagName) {
 
-    $classes = "block ";
-    if (isset($attributes[0]) && $attributes[0] == 'full') {
-        array_shift($attributes);
-        $classes .= ' full-width ';
+
+    $classes = "block";
+
+    $responsive = '';
+    if (isset($attributes['sd']))
+        $responsive .= ' col-md-' . $attributes['sd'];
+    if (isset($attributes['md']))
+        $responsive .= ' col-md-' . $attributes['md'];
+    if (isset($attributes['lg']))
+        $responsive .= ' col-md-' . $attributes['lg'];
+
+    if (isset($attributes['xl']))
+        $responsive .= ' col-md-' . $attributes['xl'];
+
+
+    if (($this->conf)('in_row', true) && $responsive === '') {
+        $classes .= " col-md";
     }
 
+    $classes .= " $responsive";
     $rgba = $attributes['rgba'] ?? "#00000000";
     if (isset($attributes['dark'])) {
         $rgba = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
@@ -112,8 +126,9 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
         $rgba = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
     }
 
-    if ($rgba)
-        $attributes['rgba'] = $rgba;
+
+    $attributes['rgba'] = $rgba;
+
     if (isset($attributes['height'])) {
         $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
     }
@@ -124,7 +139,7 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
     }
     //$attributes['width'] = trim($attributes['width'] ?? '50', '%');
 
-    $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
+    $attributes['classes'] = $classes . ' ' . $this->getCssClasses($attributes);
 
 
 

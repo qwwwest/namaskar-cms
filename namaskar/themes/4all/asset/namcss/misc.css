@@ -53,36 +53,6 @@ div.hero * {
 }
 
 
-body.navbar-fixed {
-
-    padding-top: 100px !important;
-}
-
-body.navbar-fixed.has_hero {
-    padding-top: 0 !important;
-}
-
-body.navbar-fixed nav.navbar {
-
-    position: fixed;
-    overflow: hidden;
-    top: 0;
-    /* Position the navbar at the top of the page */
-    width: 100%;
-    /* Full width */
-    z-index: 1000;
-}
-
-
-
-.collapse.navbar-collapse.h-100.bg-dark {
-    background-color: transparent ! important;
-    transition: background-color 1s;
-}
-
-.collapse.navbar-collapse.h-100.bg-dark.show {
-    background-color: var(--navbar-bgc);
-}
 
 /******* COLORS AND SIZE *******/
 

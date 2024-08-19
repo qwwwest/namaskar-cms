@@ -139,9 +139,9 @@ body.header {
 ****************************/
 
 
-div.block.full-width,
-div.blocks.full-width,
-div.blocks.full {
+
+.block.full,
+.rowblock.full {
     width: 100vw;
 
     position: relative;
@@ -152,19 +152,21 @@ div.blocks.full {
 
 }
 
-div.blocks.center {
+.rowblock.center {
     justify-content: space-evenly
 }
 
-div.block {
+main>div.block {
     width: 100%;
+    position: relative;
+}
 
-    flex: 1;
+.row>div.block {
+
 
     position: relative;
 
     overflow: hidden !important;
-
 
 }
 
@@ -174,7 +176,7 @@ div.block>a {
 
 }
 
-div.block.dark {
+.dark {
     background-color: var(--color1);
     color: var(--color2);
 
@@ -229,27 +231,6 @@ div.block.rounded.button {
 }
 
 
-
-
-
-
-
-div.blocks>div.block.w40 {
-    width: 40%;
-
-}
-
-div.blocks>div.block.w50 {
-    width: 50%;
-
-}
-
-div.blocks>div.block.w60 {
-    width: 60%;
-
-}
-
-
 div.block>.content {
     width: 100%;
     height: 100%;
@@ -264,24 +245,20 @@ div.block>.content {
     color: inherit;
 }
 
-div.blocks.full>div.block>.content {
+.rowblock.full>div.block>.content {
 
-    padding: 16px 32px;
+    paaaadding: 16px 32px;
 }
 
 div.block>.content>img {
     display: block;
     max-width: 100%;
 
-
 }
-
 
 div.block .media {
     width: 100%;
     height: 100%;
-
-
 
     position: absolute;
     z-index: 0;
@@ -290,7 +267,6 @@ div.block .media {
     left: 0;
 
 }
-
 
 div.block .media img {
     width: 100%;
@@ -306,8 +282,6 @@ div.block .media img {
 
 }
 
-
-
 div.block>.media>.tint {
     position: absolute;
     top: 0;
@@ -316,22 +290,5 @@ div.block>.media>.tint {
     height: 100%;
     object-fit: cover;
     z-index: 5;
-
-}
-
-
-
-div.block>.block-img {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-
-
-    z-index: 0;
-    overflow: hidden;
-    background-position: center;
-    background-attachment: scroll;
-    background-repeat: no-repeat;
-    background-size: cover !important;
 
 }
