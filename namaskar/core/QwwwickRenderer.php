@@ -369,12 +369,12 @@ class QwwwickRenderer
         $content = $this->processTokens($content);
 
         $content = $this->markdownParser->transform($content);
-        if (
-            strpos($content, '<p>') === 0
-            && strpos($content, '</p>', strlen($content) - 5)
-            && strpos($content, '<p>', 4) === false
-        )
-            $content = trim(substr($content, 3, -5)); // remove '<p>' tags
+        // if (
+        //     strpos($content, '<p>') === 0
+        //     && strpos($content, '</p>', strlen($content) - 5)
+        //     && strpos($content, '<p>', 4) === false
+        // )
+        //     $content = trim(substr($content, 3, -5)); // remove '<p>' tags
         return $content;
     }
 
@@ -1119,9 +1119,10 @@ class QwwwickRenderer
             $theme = ($this->conf)('site.theme');
             $templateFile = "$theme/$template.html";
 
-            $content = $this->renderBlock($content);
+            $content = $this->renderBlock(trim($content));
 
             $attributes['content'] = $content;
+            $attributes['classes'] = $this->getCssClasses($attributes);
 
 
             // $html   = $this->includeTemplate ($templateFile, $attributes);
@@ -1203,7 +1204,7 @@ class QwwwickRenderer
         }
 
         foreach ($attributes as $key => $value) {
-            if (is_numeric($key) && preg_match('/^([.#])([_a-zA-Z][_a-zA-Z0-9-])*$/', $value, $matches)) {
+            if (is_numeric($key) && preg_match('/^(#)([_a-zA-Z][_a-zA-Z0-9-]*)$/', $value, $matches)) {
 
                 if ($matches[1] === '#') {
                     return $matches[2];

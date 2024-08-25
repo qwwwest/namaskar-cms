@@ -3,7 +3,11 @@
     --color1: #024;
     --color2: #fff;
     --color3: #fc0;
-    --navbar-bgc: #002244;
+
+
+    --navbar-link: var(--color2);
+    --navbar-brand: var(--color2);
+    --navbar-bgc: #000B;
 
 
     --main-text-color: var(--color1);
@@ -15,11 +19,11 @@
     --hero-text-color: var(--color2);
 
     --hero-navbar-bgc-start: transparent;
-
     --hero-navbar-bgc-end: var(--navbar-bgc);
 
     --hero-navbar-link: var(--color2);
     --hero-navbar-brand: var(--color3);
+
 
 
     --footer-bgc: var(--color1);
@@ -162,4 +166,201 @@ body.no-scroll {
 
 div.block.border {
     border: 2rem solid var(--color1);
+}
+
+
+
+main>p>img {
+
+    margin: 16px;
+}
+
+main>p>img.square {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    scale: 1;
+    transition: scale 1s;
+
+    max-width: 400px;
+
+}
+
+main>p>img.square:hover {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    scale: 1.05;
+
+}
+
+
+
+
+
+main>p>img.nice {
+    border-radius: 12px;
+
+}
+
+main>p>img.nice {
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+
+}
+
+
+.hero h1,
+main h1,
+main h2,
+.huge h1,
+.huge h2,
+.huge h3 {
+
+    color: #FFFFFF00 !important;
+    -webkit-text-stroke-width: 2px;
+    stroke-width: 2px;
+    -webkit-text-stroke-color: #FFFFFF;
+    stroke: #FFFFFF;
+    text-shadow: 2px 2px 2px #00000033;
+
+    font-size: calc(6vw + 6vh);
+    opacity: 1;
+    padding: 1rem 0;
+    margin: 0;
+    line-height: 1;
+}
+
+
+.blockquote.huge>p,
+figcaption.blockquote-footer.huge {
+
+    color: #FFFFFF !important;
+    -webkit-text-stroke-width: 2px;
+    stroke-width: 2px;
+    -webkit-text-stroke-color: #FFFFFF;
+    stroke: #FFFFFF;
+
+
+    font-size: calc(6vw + 6vh);
+    opacity: 1;
+    padding: 1rem 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.content p {
+
+    text-shadow: 2px 2px 4px #000000, -2px -2px 4px #000000, 2px 2px 8px #000000, -2px -2px 8px #000000, 0 0 16px #000000;
+
+
+
+
+    text-align: justify;
+
+    padding: 0px 32px;
+    line-height: 1.1;
+
+
+}
+
+
+
+
+nav.navbar a.navbar-brand strong {
+
+    color: #00000044 !important;
+    -webkit-text-stroke-width: 1px;
+    stroke-width: 1px;
+    -webkit-text-stroke-color: #FFFFFF;
+    stroke: #FFFFFF;
+    text-shadow: 2px 2px 4px #00000044;
+    font-size: calc(2vw + 3.5vh);
+    opacity: 1;
+    font-size: 1.6rem !important;
+
+
+}
+
+.hero.huge a.h2,
+.hero .submenu .nav-item {
+
+    color: #ffffff !important;
+    -webkit-text-stroke-width: 2px;
+    stroke-width: 2px;
+    -webkit-text-stroke-color: #FFFFFF;
+    stroke: #FFFFFF;
+    text-shadow: 2px 2px 4px black !important;
+    font-size: calc(2vw + 3.5vh);
+    opacity: 1;
+    font-size: 1.6rem !important;
+    opacity: .85;
+
+}
+
+.hero.huge a.h2:before,
+.hero .submenu .nav-item:before {
+
+    content: "▸ ";
+    opacity: .5;
+
+
+}
+
+.hero .submenu.top {
+    padding: 0;
+}
+
+main h2 {
+    font-size: calc(3.2vw + 3.2vh);
+    -webkit-text-stroke-color: var(--color1);
+    text-shadow: 2px 2px 4px #ffffff44;
+    stroke: var(--color1);
+    margin-top: 60px !important;
+
+}
+
+
+
+blockquote.blockquote.huge>p,
+figcaption.blockquote-footer.huge {
+    padding: 0px;
+    margin: 0px;
+
+    max-width: 1024px;
+    font-size: calc(3vw + 3vh);
+    background-color: #00000022;
+
+}
+
+* {
+    scroll-margin-top: 60px;
+}
+
+
+.huge.light h1,
+.huge.light h2,
+.huge.light a {
+
+    -webkit-text-stroke-color: var(--color1);
+    stroke: var(--color1);
+    text-shadow: 2px 2px 4px var(--color2);
+
+}
+
+.huge a {
+    font-size: 5 vw;
+}
+
+.huge h2 {
+    font-size: calc(3.5vw + 3.5vh);
+
+    text-align: left;
+}
+
+.huge h3 {
+    font-size: calc(3vw + 3vh);
+
+    text-align: left;
+}
+
+.huge p {
+    font-size: 1.2rem;
 }

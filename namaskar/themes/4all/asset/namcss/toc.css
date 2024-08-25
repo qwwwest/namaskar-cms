@@ -1,15 +1,25 @@
 /* TOC : table of content */
 
 #table-of-contents {
-    float: right;
+    float: none;
     display: none;
-    width: 320px;
-    border-left: 2px solid inherit;
+    width: 100%;
+    margin: 8px;
     padding: 8px;
-    background-color: #234;
-    color: white;
-    border-radius: 8px;
+    background-color: transparent;
+    color: var(--color1);
 
+
+
+}
+
+@media (min-width: 768px) {
+    #table-of-contents {
+        float: left;
+        width: 50%;
+
+
+    }
 }
 
 #table-of-contents:before {
@@ -66,9 +76,23 @@
 #table-of-contents .h2 {
     list-style: none;
     font-size: 1.1em;
+    display: none;
 }
 
 #table-of-contents .h3 {
     padding-left: 1em;
     font-size: 1em;
+    display: none;
+}
+
+#table-of-contents.level2 .h2 {
+    display: block;
+}
+
+#table-of-contents.level3 .h3 {
+    display: block;
+}
+
+#table-of-contents.level4 .h4 {
+    display: block;
 }

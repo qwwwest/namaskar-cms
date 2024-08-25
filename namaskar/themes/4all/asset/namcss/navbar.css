@@ -1,5 +1,85 @@
 /* Navbar */
 
+.collapse.navbar-collapse {
+    background-color: var(--navbar-bgc);
+    transition: all .5s;
+}
+
+body.has_hero #navbarCollapse.collapse.navbar-collapse.bg-dark {
+    background-color: transparent !important;
+
+}
+
+.navbar-collapse.collapse.show,
+.navbar-collapse.collapsing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh !important;
+    padding: 30px;
+    z-index: 1200;
+    overflow-y: auto;
+    transition: all .5s;
+
+}
+
+
+.navbar-collapse.collapsing {
+    position: absolute;
+
+    left: -500px;
+
+    background-color: var(--navbar-bgc) !important;
+
+}
+
+
+.navbar-collapse.collapse.show,
+.navbar-collapse.collapsing {
+
+    left: 0;
+    background-color: var(--navbar-bgc) !important;
+
+}
+
+body.navbar-fixed nav.navbar {
+
+    position: fixed;
+    top: 0;
+    /* Position the navbar at the top of the page */
+    width: 100%;
+    /* Full width */
+    z-index: 1000;
+}
+
+
+body.navbar-fixed .navbar-collapse.collapse.show,
+body.navbar-fixed .navbar-collapse.collapsing {
+    top: 0px;
+    padding: 100px 0 0 20px;
+
+}
+
+
+
+
+
+body.navbar-fixed:not(.has_hero) {
+
+    padding-top: 100px !important;
+}
+
+
+
+.mainlinks {
+
+    padding: 0;
+    height: 60px;
+
+
+}
+
 
 nav.navbar {
     height: 64px !important;
@@ -48,68 +128,4 @@ a.navbar-brand {
     text-decoration: none ! important;
     color: #fff !important;
 
-}
-
-
-.navbar-collapse.collapse.show,
-.navbar-collapse.collapsing {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh !important;
-    padding: 30px;
-    z-index: 1200;
-    overflow-y: auto;
-
-}
-
-body.navbar-fixed .navbar-collapse.collapse.show,
-body.navbar-fixed .navbar-collapse.collapsing {
-    top: 60px;
-
-}
-
-.mainlinks {
-
-    padding: 0;
-    height: 60px;
-
-
-}
-
-
-
-body.navbar-fixed:not(.has_hero) {
-
-    padding-top: 100px !important;
-}
-
-
-
-
-/**************
-BLEP **************/
-
-
-
-body.navbar-fixed nav.navbar {
-
-    position: fixed;
-    top: 0;
-    /* Position the navbar at the top of the page */
-    width: 100%;
-    /* Full width */
-    z-index: 1000;
-}
-
-
-
-.collapse.navbar-collapse.h-100.bg-dark {
-    background-color: transparent ! important;
-    transition: background-color 1s;
-}
-
-.collapse.navbar-collapse.h-100.bg-dark.show {
-    background-color: var(--navbar-bgc) !important;
 }

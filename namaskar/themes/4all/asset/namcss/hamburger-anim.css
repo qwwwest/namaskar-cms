@@ -11,6 +11,9 @@
     margin: 0px 16px;
     background: transparent;
 
+    position: relative;
+    z-index: 2000;
+
 
 }
 

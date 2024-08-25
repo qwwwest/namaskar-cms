@@ -97,8 +97,24 @@ $this->addShortcode('row', function ($attributes, $content, $tagName) {
 
 $this->addShortcode('block', function ($attributes, $content, $tagName) {
 
-
+    static $num = 0;
     $classes = "block";
+
+    $blocks = explode('[block ', $content);
+    if (count($blocks) > 1) {
+
+        $blocks = join("[/block]\n\n[block ", $blocks);
+        $attr = '';
+        foreach ($attributes as $key => $value) {
+            if (is_int($key))
+                $attr .= " $value";
+            else
+                $attr .= " $key=\"$value\"";
+        }
+
+        return $this->renderBlock("[block $attr ]\n" . $blocks . "\n[/block]");
+    }
+
 
     $responsive = '';
     if (isset($attributes['sd']))
@@ -116,14 +132,20 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
         $classes .= " col-md";
     }
 
+
+
     $classes .= " $responsive";
     $rgba = $attributes['rgba'] ?? "#00000000";
-    if (isset($attributes['dark'])) {
-        $rgba = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+
+    $dark = $attributes['dark'] ?? ($this->conf)("default.block.dark");
+
+    if ($dark) {
+        $rgba = '#000000' . (dechex(round(trim($dark, '%') * 255 / 100)));
     }
 
-    if (isset($attributes['light'])) {
-        $rgba = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
+    $light = $attributes['light'] ?? ($this->conf)("default.block.light");
+    if ($light) {
+        $rgba = '#ffffff' . (dechex(round(trim($light, '%') * 255 / 100)));
     }
 
 
@@ -134,16 +156,62 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
     }
 
 
-    if (isset($attributes['h'])) {
-        $classes .= ' h' . trim($attributes['h'] ?? '50', '%');
-    }
+
+    $height = $attributes['h'] ?? ($this->conf)("default.block.h") ?? 50;
+    $classes .= ' h' . trim($height, '%');
+
+    $pos = $attributes['pos'] ?? ($this->conf)("default.block.pos") ?? 5;
+
+
+    $x = ($pos - 1) % 3;
+    $y = intdiv(($pos - 1), 3);
+
+    $classes .= " x$x y$y";
+
+
+
+
     //$attributes['width'] = trim($attributes['width'] ?? '50', '%');
+
+
+
+
+    $blockid = ($this->conf)("default.blockid");
+    if ($blockid === null) {
+        $blockid = 0;
+
+    } else {
+        $blockid++;
+
+    }
+
+    $swapClasses = explode('/', ($this->conf)("default.block.classes") ?? "");
+
+    $swapClasses = $swapClasses[$num % count($swapClasses)] ?? '';
+    $classes .= $this->getCssClasses($attributes);
+
+    if ($swapClasses)
+        $classes .= ' ' . $swapClasses;
 
     $attributes['classes'] = $classes . ' ' . $this->getCssClasses($attributes);
 
+    $content = $this->renderBlock($content);
+
+    ($this->conf)("default.blockid", $blockid);
+
+    $id = $this->id($attributes);
+    if ($id)
+        $id = " id='$id'";
+    else {
+
+        $id = " id='block$blockid'";
+
+    }
+
+    $attributes['id'] = $id;
 
 
-
+    $num++;
     return $this->includeTemplate($attributes, $content, 'block', false);
 
 
@@ -173,7 +241,37 @@ $this->addShortcode('hero', function ($attributes, $content, $tagName) {
     ($this->conf)('page.body_classes[]', 'has_hero');
 
 
-    return $this->includeTemplate($attributes, $content, 'hero', false);
+    $hero = $this->includeTemplate($attributes, $content, 'hero', false);
+
+    ($this->conf)("site.regions.hero", $hero);
+
+    return '';
+
+
+});
+
+
+
+$this->addShortcode('goto', function ($attributes, $content, $tagName) {
+
+    $classes = $this->getCssClasses($attributes);
+    $content = $this->renderBlock($content);
+
+    $id = $attributes[0] ?? '#main';
+
+    if ($id === 'next') {
+        $id = '#block' . (intval(($this->conf)("default.blockid")) + 1);
+    }
+
+    return <<<HTML
+    <div class="click_to_id d-none d-md-block">
+        <a href="?$id" class="text-decoration-none">&#11147;</a> 
+    </div>
+    HTML;
+
+    //return $this->renderBlock('[link "?#main" "&#11147;" .h1 .text-decoration-none .gotomain ]');
+
+
 
 
 });
@@ -237,6 +335,48 @@ $this->addShortcode('alert', function ($attributes, $content, $tagName) {
 
 
 
+$this->addShortcode('symbol', function ($attributes, $content, $tagName) {
+    $sym = $attributes[0];
+
+    if ($sym === 'heart')
+        return "&#10084;";
+    if ($sym === 'copyright')
+        return "&copy;";
+
+    return "SYM:$sym";
+
+});
+
+$this->addShortcode('rating', function ($attributes, $content, $tagName) {
+
+    static $added = false;
+    $star = '';
+    if (!$added) {
+        $added = true;
+        $star = <<<HTML
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol fill="orange" viewBox="0 0 16 16" id="star">
+            
+            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    
+            </symbol>
+ 
+        </svg>
+
+ 
+
+        HTML;
+    }
+    $num = $attributes[0];
+
+    $stars = str_repeat("<svg><use href='#star'/></svg>", 5);
+    return <<<HTML
+    $star
+    <div class="rating">$stars</div>
+    HTML;
+
+
+});
 
 $this->addShortcode('video', function ($attributes, $content, $tagName) {
     $url = $attributes[0];
@@ -675,12 +815,22 @@ A zigzag layout is a design pattern where elements, such as images and text, alt
 $this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
 
 
-    static $order = false;
+    static $order = true;
     static $ratio = '7/5';
+    static $num = 0;
+
 
     $order = !$order;
 
     $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
+
+
+    $swapClasses = explode('/', ($this->conf)("default.zigzag.classes") ?? "");
+
+    $swapClasse = $swapClasses[$num % count($swapClasses)] ?? '';
+
+
+    $num++;
 
     if (isset($attributes['img'])) {
         $media = <<<MEDIA
@@ -702,10 +852,31 @@ $this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
         $order2 = 'order-md-1';
     }
 
+    $blockid = ($this->conf)("default.blockid");
+    if ($blockid === null) {
+        $blockid = 0;
+
+    } else {
+        $blockid++;
+
+    }
+
+    ($this->conf)("default.blockid", $blockid);
+
     $id = $this->id($attributes);
     if ($id)
         $id = " id='$id'";
+    else {
+
+        $id = " id='block$blockid'";
+
+    }
+
+
     $class = $this->getCssClasses($attributes);
+
+    if ($swapClasse)
+        $class .= ' ' . $swapClasse;
     $r = explode('/', $ratio);
 
     if (count($r) != 2 || $r[0] + $r[1] != 12)
@@ -720,7 +891,7 @@ $this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
     $content = $this->renderBlock($content);
 
     $content = <<<HTML
-    <div class="row zigzag$class">
+    <div class="row zigzag$class" $id>
         <div class="col-md-$ratio1 $order1 zigzag-content">
             <div>
             $content
@@ -1045,12 +1216,21 @@ $this->addShortcode('shortcodes', function ($attributes, $content, $tagName) {
 $this->addShortcode('link', function ($attributes, $content, $tagName) {
     $href = $attributes[0];
 
+    $url = ($this->conf)('url');
+
+
     if ($href === '..') {
-        $url = ($this->conf)('url');
+
         $parentId = $this->mempad->getElementByUrl($url)->parent;
         if ($parentId) {
             $href = $this->mempad->getElementById($parentId)->url;
         }
+    }
+
+    if (strpos($href, '?') === 0) {
+
+        $href = "$url/$href";
+
     }
     $classes = $this->getCssClasses($attributes);
     if ($classes)
@@ -1087,6 +1267,10 @@ $this->addShortcode('img', function ($attributes, $content, $tagName) {
     $caption = $attributes['caption'] ?? '';
     $alt = $title ?? $attributes['alt'] ?? $attributes[0];
 
+    //$classes1 = ($this->conf)("default.img.classes");
+    $classes = ($this->conf)("default.img.classes") . $this->getCssClasses($attributes);
+
+
     if (in_array("modal", $attributes)) {
         $html = <<<MODAL
         <a href="$media/img/$path"  data-bs-toggle="modal" data-bs-target="#lightboxModal"  $caption
@@ -1108,7 +1292,7 @@ $this->addShortcode('img', function ($attributes, $content, $tagName) {
     } else {
         $title = $title ?? $alt;
         $html = <<<IMG
-        <img src="$media/img/$path" class="img-fluid" alt="$alt" title="$title" $uAttr data-toggle="lightbox" />
+        <img src="$media/img/$path" class="img-fluid$classes" alt="$alt" title="$title" $uAttr data-toggle="lightbox" />
         IMG;
     }
 
@@ -1118,8 +1302,13 @@ $this->addShortcode('default', function ($attributes, $content, $tagName) {
 
     $shortcode = array_shift($attributes);
 
+
+    $classes = $this->getCssClasses($attributes);
+    if ($classes)
+        $attributes['classes'] = $classes;
     foreach ($attributes as $key => $value) {
-        ($this->conf)("default.$shortcode.$key", $value);
+        if (!is_int($key))
+            ($this->conf)("default.$shortcode.$key", $value);
     }
 
 });
@@ -1333,9 +1522,14 @@ $this->addShortcode(
 );
 
 $this->addShortcode('toc', function ($attributes, $content, $tagName) {
-    $title = $attributes[0] ? $attributes[0] : "On This Page";
+    $title = $attributes['title'] ?? "";
 
-    return "\n<div id=\"table-of-contents\" data-toc-header=\"$title\"></div>";
+
+    $classes = $this->getCssClasses($attributes);
+
+
+
+    return "\n<div id=\"table-of-contents\" data-toc-header=\"$title\" class=\"$classes\"></div>";
 });
 
 $this->addShortcode('lorem', function ($attributes, $content, $tagName) {

@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let elt = document.getElementById("table-of-contents");
     if (elt === null) return;
     let toc = "";
-    headers = document.querySelectorAll("main > h2,main > h3,main > h4");
+    headers = document.querySelectorAll("main > h2, .block h2, main > h3, .block h3,main > h4");
     if (headers.length < 2) elt.outerHTML = "";
     for (let i = 0; i < headers.length; i++) {
       const h = headers[i];
@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
 let sidebar = document.getElementById("region-sidebar-first");
 let submenus = document.getElementById("submenus");
 
@@ -148,9 +147,7 @@ const navSlide = () => {
 
 //navSlide();
 
-
 let Namaskar = { items: [], index: 0 };
-
 
 if (document.querySelector('.hero .bgcover')) {
   document.body.onscroll = function myFunction() {
@@ -176,9 +173,25 @@ if (document.querySelector('.hero .bgcover')) {
       nav.classList.remove("nav-colored");
     }
   }
-
+  document.body.onscroll();
 
 }
+
+/*
+Bootstrap 5 Collapse Events
+show.bs.collapse: It is fired as soon as the show() method of the instance is called. 
+shown.bs.collapse: It is fired when the collapse element is completely visible after all the CSS transitions are done.
+hide.bs.collapse: It is fired as soon as the hide() method of the instance is called. 
+hidden.bs.collapse: It is fired when the collapse element is completely hidden after all the CSS transitions are done.
+*/
+
+let burger = document.getElementById('burger')
+
+burger.addEventListener('show.bs.collapse', function () {
+  console.log('show.bs.collapse:burger')
+})
+
+console.log(burger)
 
 
 

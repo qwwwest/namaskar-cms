@@ -1,9 +1,10 @@
-<figure class="text-start h1">
-    <blockquote class="blockquote ">
-        <p class="h1">{{content}}</p>
+<figure class="text-start {{classes}}">
+    <blockquote class="blockquote {{classes}}">
+        {{content}}
     </blockquote>
-    <figcaption class="blockquote-footer h2">
-        {% if author %} {{ author }}, {% endif %}
+    <figcaption class="blockquote-footer {{classes}}">
+        {% if author %} {{ author }}{% endif %}
+        {% if author && source %}, {% endif %}
         {% if source %} <cite title="Source Title">{{ source }}</cite> {% endif %}
 
     </figcaption>
