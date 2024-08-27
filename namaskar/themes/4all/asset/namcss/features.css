@@ -171,21 +171,42 @@ body.header {
 
 div.click_to_id {
     position: absolute;
-    display: inline;
+    display: block;
     line-height: .8;
-    float: inline-end;
+
 
     padding: 0 1rem 0 0;
 
     margin: 0;
 
-    bottom: 2rem !important;
+    bottom: 30px !important;
     right: 0;
 
     opacity: .7;
-    font-size: 4rem !important;
+    font-size: 3.6rem !important;
     transition: all 300ms;
     z-index: 1000;
+
+}
+
+div.click_to_id a {
+
+    display: inline;
+}
+
+div.hero div.click_to_id {
+
+
+    right: 0px;
+
+
+}
+
+
+div.zigzag div.click_to_id {
+
+    bottom: 80px !important;
+    right: 15px;
 
 
 }

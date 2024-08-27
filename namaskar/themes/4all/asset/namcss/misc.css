@@ -56,6 +56,24 @@ div.hero * {
 
 }
 
+div.hero.text-center * {
+    text-align: center;
+
+}
+
+
+div.huge h2 strong,
+div.huge h3 strong {
+    color: var(--color1) !important;
+
+}
+
+div.huge.dark h2 strong,
+div.huge.dark h3 strong {
+    color: var(--color2) !important;
+
+}
+
 
 
 /******* COLORS AND SIZE *******/
@@ -212,9 +230,10 @@ main h1,
 main h2,
 .huge h1,
 .huge h2,
-.huge h3 {
+.huge h3,
+.huge.h1 {
 
-    color: #FFFFFF00 !important;
+    color: #00000000 !important;
     -webkit-text-stroke-width: 2px;
     stroke-width: 2px;
     -webkit-text-stroke-color: #FFFFFF;
@@ -226,6 +245,22 @@ main h2,
     padding: 1rem 0;
     margin: 0;
     line-height: 1;
+}
+
+
+
+.huge h2 a,
+.huge h3 a {
+    text-decoration: underline;
+    color: var(--color2);
+}
+
+div.zigzag .zigzag-content p:first-child:first-letter {
+
+    font-size: 2rem;
+    font-weight: bold;
+
+
 }
 
 
@@ -246,21 +281,26 @@ figcaption.blockquote-footer.huge {
     line-height: 1;
 }
 
+.content h2+p,
+.content h3+p {
+    margin-top: 16px;
+
+}
+
 .content p {
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 
-    text-shadow: 2px 2px 4px #000000, -2px -2px 4px #000000, 2px 2px 8px #000000, -2px -2px 8px #000000, 0 0 16px #000000;
+    text-shadow: -1px -1px 4px black, 0 0 2px black, 1px 1px 4px black;
 
+    text-align: left;
 
-
-
-    text-align: justify;
-
-    padding: 0px 32px;
+    padding: 0px 8px;
     line-height: 1.1;
 
 
 }
-
 
 
 
@@ -337,6 +377,7 @@ figcaption.blockquote-footer.huge {
 
 .huge.light h1,
 .huge.light h2,
+.huge.light h3,
 .huge.light a {
 
     -webkit-text-stroke-color: var(--color1);
@@ -363,4 +404,9 @@ figcaption.blockquote-footer.huge {
 
 .huge p {
     font-size: 1.2rem;
+}
+
+
+nav.navbar a.nav-link.active {
+    text-decoration: overline;
 }

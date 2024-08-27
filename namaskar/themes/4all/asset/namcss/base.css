@@ -177,10 +177,7 @@
 
 
 
- h2 a:hover::after {
-     content: ' #';
-     opacity: .5;
- }
+
 
  main h2,
  main h3 {

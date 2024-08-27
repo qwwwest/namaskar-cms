@@ -116,6 +116,17 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
     }
 
 
+    $block_type = $attributes[0] ?? null;
+    if ($block_type === 'zigzag' || $block_type === 'zz') {
+        array_shift($attributes);
+        return $this->zigzag($attributes, $content, 'zigzag');
+    }
+
+    if ($block_type === 'hero') {
+        array_shift($attributes);
+        return $this->hero($attributes, $content, 'hero');
+    }
+
     $responsive = '';
     if (isset($attributes['sd']))
         $responsive .= ' col-md-' . $attributes['sd'];
@@ -219,37 +230,7 @@ $this->addShortcode('block', function ($attributes, $content, $tagName) {
 
 
 
-$this->addShortcode('hero', function ($attributes, $content, $tagName) {
-
-
-    $rgba = null;
-    if (isset($attributes['dark'])) {
-        $rgba = '#000000' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
-    }
-    if (isset($attributes['light'])) {
-        $rgba = '#ffffff' . (dechex(round(trim($attributes['dark'], '%') * 255 / 100)));
-    }
-
-    if ($rgba)
-        $attributes['rgba'] = $rgba;
-
-    if (isset($attributes['height']))
-        $attributes['height'] = trim($attributes['height'] ?? '50', '%');
-
-    $attributes['classes'] = $this->getCssClasses($attributes) . " " . $tagName;
-
-    ($this->conf)('page.body_classes[]', 'has_hero');
-
-
-    $hero = $this->includeTemplate($attributes, $content, 'hero', false);
-
-    ($this->conf)("site.regions.hero", $hero);
-
-    return '';
-
-
-});
-
+$this->addShortcode('hero', [$this, 'hero']);
 
 
 $this->addShortcode('goto', function ($attributes, $content, $tagName) {
@@ -812,105 +793,7 @@ $this->addShortcode('body', function ($attributes, $content, $tagName) {
 /*
 A zigzag layout is a design pattern where elements, such as images and text, alternate positions in a repetitive sequence, creating a dynamic and visually engaging arrangement. This layout enhances the visual appeal and readability of the content by breaking the monotony and guiding the viewer's attention.
 */
-$this->addShortcode('zigzag', function ($attributes, $content, $tagName) {
-
-
-    static $order = true;
-    static $ratio = '7/5';
-    static $num = 0;
-
-
-    $order = !$order;
-
-    $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
-
-
-    $swapClasses = explode('/', ($this->conf)("default.zigzag.classes") ?? "");
-
-    $swapClasse = $swapClasses[$num % count($swapClasses)] ?? '';
-
-
-    $num++;
-
-    if (isset($attributes['img'])) {
-        $media = <<<MEDIA
-        [img "$attributes[img]"]
-        MEDIA;
-
-    } else
-        [$media, $content] = explode("\n====", $content);
-
-    if (isset($attributes['order'])) {
-        $order = $attributes['order'] === 'left';
-    }
-
-    $order1 = $order2 = '';
-
-    if ($order) {
-
-        $order1 = 'order-md-2';
-        $order2 = 'order-md-1';
-    }
-
-    $blockid = ($this->conf)("default.blockid");
-    if ($blockid === null) {
-        $blockid = 0;
-
-    } else {
-        $blockid++;
-
-    }
-
-    ($this->conf)("default.blockid", $blockid);
-
-    $id = $this->id($attributes);
-    if ($id)
-        $id = " id='$id'";
-    else {
-
-        $id = " id='block$blockid'";
-
-    }
-
-
-    $class = $this->getCssClasses($attributes);
-
-    if ($swapClasse)
-        $class .= ' ' . $swapClasse;
-    $r = explode('/', $ratio);
-
-    if (count($r) != 2 || $r[0] + $r[1] != 12)
-        die('zigzag: ratio incorrect: ' . $ratio);
-
-    $ratio1 = intval($r[0]);
-    $ratio2 = intval($r[1]);
-
-
-
-    $media = $this->renderBlock($media);
-    $content = $this->renderBlock($content);
-
-    $content = <<<HTML
-    <div class="row zigzag$class" $id>
-        <div class="col-md-$ratio1 $order1 zigzag-content">
-            <div>
-            $content
-            </div>
-        </div>
-        <div class="col-md-$ratio2 $order2 zigzag-media ">
-        
-        $media
-        
-        </div>
-    </div>
-    
-    HTML;
-
-
-
-
-    return $content;
-});
+$this->addShortcode('zigzag', [$this, 'zigzag']);
 
 
 
