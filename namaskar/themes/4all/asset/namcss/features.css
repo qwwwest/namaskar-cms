@@ -325,6 +325,14 @@ div.block.rounded.button {
     .h100 {
         min-height: 100vh !important;
     }
+
+    .h120 {
+        min-height: 120vh !important;
+    }
+
+    .h150 {
+        min-height: 150vh !important;
+    }
 }
 
 

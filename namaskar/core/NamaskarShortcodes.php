@@ -1,5 +1,6 @@
 <?php
 use Qwwwest\Namaskar\Form;
+use Qwwwest\Namaskar\BlockBooster;
 use Qwwwest\Namaskar\Kernel;
 
 
@@ -13,7 +14,8 @@ $this->shortCode2Template('img2', 'templates', false);
 
 
 
-new Form($this);
+//new Form($this);
+new BlockBooster($this);
 
 $this->addShortcode('___form', function ($attributes, $content, $tagName) {
 
@@ -64,173 +66,7 @@ $this->addShortcode('____button', function ($attributes, $content, $tagName) {
 });
 
 
-$this->addShortcode('row', function ($attributes, $content, $tagName) {
 
-
-    $classes = 'row rowblock ';
-
-
-    if (isset($attributes['height'])) {
-        $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
-    }
-
-    if (isset($attributes['h'])) {
-        $classes .= ' h' . trim($attributes['h'] ?? '50', '%');
-    }
-
-    $classes .= ' ' . $this->getCssClasses($attributes); //. " " . $tagName;
-    $classes = trim($classes);
-
-    ($this->conf)('in_row', true);
-    $content = $this->renderBlock($content);
-    ($this->conf)('in_row', false);
-
-    return <<<HTML
-        <div class="$classes">
-        $content
-        </div>
-        HTML;
-
-
-});
-
-
-$this->addShortcode('block', function ($attributes, $content, $tagName) {
-
-    static $num = 0;
-    $classes = "block";
-
-    $blocks = explode('[block ', $content);
-    if (count($blocks) > 1) {
-
-        $blocks = join("[/block]\n\n[block ", $blocks);
-        $attr = '';
-        foreach ($attributes as $key => $value) {
-            if (is_int($key))
-                $attr .= " $value";
-            else
-                $attr .= " $key=\"$value\"";
-        }
-
-        return $this->renderBlock("[block $attr ]\n" . $blocks . "\n[/block]");
-    }
-
-
-    $block_type = $attributes[0] ?? null;
-    if ($block_type === 'zigzag' || $block_type === 'zz') {
-        array_shift($attributes);
-        return $this->zigzag($attributes, $content, 'zigzag');
-    }
-
-    if ($block_type === 'hero') {
-        array_shift($attributes);
-        return $this->hero($attributes, $content, 'hero');
-    }
-
-    $responsive = '';
-    if (isset($attributes['sd']))
-        $responsive .= ' col-md-' . $attributes['sd'];
-    if (isset($attributes['md']))
-        $responsive .= ' col-md-' . $attributes['md'];
-    if (isset($attributes['lg']))
-        $responsive .= ' col-md-' . $attributes['lg'];
-
-    if (isset($attributes['xl']))
-        $responsive .= ' col-md-' . $attributes['xl'];
-
-
-    if (($this->conf)('in_row', true) && $responsive === '') {
-        $classes .= " col-md";
-    }
-
-
-
-    $classes .= " $responsive";
-    $rgba = $attributes['rgba'] ?? "#00000000";
-
-    $dark = $attributes['dark'] ?? ($this->conf)("default.block.dark");
-
-    if ($dark) {
-        $rgba = '#000000' . (dechex(round(trim($dark, '%') * 255 / 100)));
-    }
-
-    $light = $attributes['light'] ?? ($this->conf)("default.block.light");
-    if ($light) {
-        $rgba = '#ffffff' . (dechex(round(trim($light, '%') * 255 / 100)));
-    }
-
-
-    $attributes['rgba'] = $rgba;
-
-    if (isset($attributes['height'])) {
-        $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
-    }
-
-
-
-    $height = $attributes['h'] ?? ($this->conf)("default.block.h") ?? 50;
-    $classes .= ' h' . trim($height, '%');
-
-    $pos = $attributes['pos'] ?? ($this->conf)("default.block.pos") ?? 5;
-
-
-    $x = ($pos - 1) % 3;
-    $y = intdiv(($pos - 1), 3);
-
-    $classes .= " x$x y$y";
-
-
-
-
-    //$attributes['width'] = trim($attributes['width'] ?? '50', '%');
-
-
-
-
-    $blockid = ($this->conf)("default.blockid");
-    if ($blockid === null) {
-        $blockid = 0;
-
-    } else {
-        $blockid++;
-
-    }
-
-    $swapClasses = explode('/', ($this->conf)("default.block.classes") ?? "");
-
-    $swapClasses = $swapClasses[$num % count($swapClasses)] ?? '';
-    $classes .= $this->getCssClasses($attributes);
-
-    if ($swapClasses)
-        $classes .= ' ' . $swapClasses;
-
-    $attributes['classes'] = $classes . ' ' . $this->getCssClasses($attributes);
-
-    $content = $this->renderBlock($content);
-
-    ($this->conf)("default.blockid", $blockid);
-
-    $id = $this->id($attributes);
-    if ($id)
-        $id = " id='$id'";
-    else {
-
-        $id = " id='block$blockid'";
-
-    }
-
-    $attributes['id'] = $id;
-
-
-    $num++;
-    return $this->includeTemplate($attributes, $content, 'block', false);
-
-
-});
-
-
-
-$this->addShortcode('hero', [$this, 'hero']);
 
 
 $this->addShortcode('goto', function ($attributes, $content, $tagName) {
@@ -519,7 +355,7 @@ $this->addShortcode('.vimeo', function ($attributes, $content, $tagName) {
 HTML;
 });
 
-$this->addShortcode('====', function ($attributes, $content, $tagName) {
+$this->addShortcode('____====', function ($attributes, $content, $tagName) {
     $content = explode("\n[==]", $content);
     $class = $attributes['class'] ?? "";
     $nb = count($content);
@@ -793,7 +629,8 @@ $this->addShortcode('body', function ($attributes, $content, $tagName) {
 /*
 A zigzag layout is a design pattern where elements, such as images and text, alternate positions in a repetitive sequence, creating a dynamic and visually engaging arrangement. This layout enhances the visual appeal and readability of the content by breaking the monotony and guiding the viewer's attention.
 */
-$this->addShortcode('zigzag', [$this, 'zigzag']);
+
+// $this->addShortcode('_________zigzag', [$this, 'zigzag']);
 
 
 
