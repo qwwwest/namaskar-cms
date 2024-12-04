@@ -1,0 +1,192 @@
+{% if firstTime %}
+
+<style>
+  .catpicker {
+    display: block;
+    background-color: black;
+
+  }
+
+
+
+  .catpicker .picture_wrapper {
+    height: 70vh;
+    position: relative;
+    transition: all 0.4s;
+
+    width: 100%;
+  }
+
+
+  .catpicker .picture_wrapper img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    opacity: .6;
+    transition: all 0.4s;
+  }
+
+
+
+  .catpicker .picture_wrapper a,
+  .catpicker .picture_wrapper:hover a {
+
+    text-decoration: none;
+  }
+
+  .catpicker .picture_wrapper h2,
+  .catpicker .picture_wrapper h3,
+  .catpicker .picture_wrapper h4,
+  .catpicker .picture_wrapper .title {
+
+    font-size: 2.2rem;
+    font-weight: bold;
+
+    line-height: 1;
+    color: white;
+    position: absolute;
+    bottom: 130px;
+    left: 10px;
+    margin: 0;
+    margin: 0;
+
+
+    text-shadow: #000 0px 0px 4px;
+
+    z-index: 20;
+  }
+
+
+
+  .catpicker .picture_wrapper p {
+    padding: 0;
+    margin: 0;
+
+  }
+
+  .catpicker .picture_wrapper p:first-of-type {
+
+    opacity: 1;
+    scale: 1;
+    transition: opacity 0.4s 0.4s ease-in-out;
+
+
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    color: white !important;
+    font-weight: bold;
+    text-shadow: #000 0px 0px 4px;
+    z-index: 20;
+    padding: 4px;
+    display: block;
+
+  }
+
+
+
+  @media (min-width: 768px) {
+
+    .catpicker {
+      display: flex;
+
+
+    }
+
+    .catpicker .picture_wrapper h2,
+    .catpicker .picture_wrapper h3,
+    .catpicker .picture_wrapper h4,
+    .catpicker .picture_wrapper .title {
+
+
+      transform: rotate(-90deg);
+      transform-origin: 0 0;
+      transition: all 0.4s;
+      bottom: -80px;
+
+    }
+
+
+    .catpicker .picture_wrapper:hover h2,
+    .catpicker .picture_wrapper:hover h3,
+    .catpicker .picture_wrapper:hover h4,
+    .catpicker .picture_wrapper:hover .title {
+      bottom: 170px;
+      transform: rotate(0);
+      transform-origin: 0 60px;
+    }
+
+    .catpicker .picture_wrapper p:first-of-type {
+
+      opacity: 0;
+      scale: 0;
+
+
+    }
+
+
+    .catpicker .picture_wrapper:hover p:first-of-type {
+
+      opacity: 1;
+      scale: 1;
+
+      bottom: 15px;
+    }
+
+    .catpicker .picture_wrapper:hover {
+      width: 50vw !important;
+    }
+
+    .catpicker.items_1 .picture_wrapper {
+      width: calc(100vw / 1);
+    }
+
+    .catpicker.items_2 .picture_wrapper {
+      width: calc(100vw / 2);
+    }
+
+    .catpicker.items_3 .picture_wrapper {
+      width: calc(100vw / 3);
+    }
+
+    .catpicker.items_4 .picture_wrapper {
+      width: calc(100vw / 4);
+    }
+
+    .catpicker.items_5 .picture_wrapper {
+      width: calc(100vw / 5);
+    }
+
+    .catpicker.items_6 .picture_wrapper {
+      width: calc(100vw / 6);
+    }
+
+    .catpicker.items_7 .picture_wrapper {
+      width: calc(100vw / 7);
+    }
+
+    .catpicker.items_8 .picture_wrapper {
+      width: calc(100vw / 8);
+    }
+
+    .catpicker.items_9 .picture_wrapper {
+      width: calc(100vw / 9);
+    }
+
+    .catpicker.items_10 .picture_wrapper {
+      width: calc(100vw / 10);
+    }
+
+  }
+</style>
+{% endif %}
+
+<div class="catpicker items_{{ count }}  ">
+  {% for item in items %}
+
+  <div class="picture_wrapper">
+    {{item}}
+  </div>
+  {% endfor %}
+</div>

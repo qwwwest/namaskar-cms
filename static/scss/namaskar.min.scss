@@ -1,0 +1,30 @@
+$padding: 6px;
+ 
+// command line:
+// cd static/scss
+// sass -w -q --embed-sources .:../../_namaskar/themes/4all/asset --style compressed
+
+
+/*! Namaskar main theme v1.00.002 */  
+
+@import "bootstrap5.3.3/_bootstrap"; 
+@import "_base.scss";
+@import "_alert.scss";
+@import "_backgrounds.scss";
+
+@import "_breadcrumb.scss";
+@import "_carousel.scss";
+@import "_hamburger-anim.scss";
+@import "_language-menu.scss"; 
+@import "_layout.scss";
+@import "_navbar.scss";
+@import "_sidemenu.scss";
+@import "_toc.scss";
+@import "_lightbox.scss";
+
+@import "_blocks.scss";
+ 
+@import "_fx.scss";     
+@import "_misc.scss";      
+ 
+          

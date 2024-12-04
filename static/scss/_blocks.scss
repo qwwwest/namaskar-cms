@@ -1,0 +1,551 @@
+/***************************
+      Zigzag Layout
+***************************/
+
+
+.zigzag-media img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+
+}
+
+
+.zigzag.rounded .zigzag-media img {
+ 
+
+    border-radius: 8px;
+   
+}
+
+ 
+
+
+@media (min-width: 40em) {
+    .zigzag-media {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+
+    }
+
+    .zigzag-content {
+        display: flex;
+        align-items: center;
+        poosition: relative;
+
+        ;
+    }
+
+
+}
+
+/***************************
+    HERO 
+****************************/
+body.has_hero {
+
+    overflow-x: hidden !important;
+}
+
+div.cover,
+div.hero {
+    width: 100vw;
+
+    position: relative;
+    margin-left: -50vw;
+
+    left: 50%;
+    
+
+
+
+}
+
+div.cover,
+div.hero {
+    height: 100vh;
+    
+
+
+
+}
+
+ 
+
+div.cover .content,
+div.hero .content {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    z-index: 12;
+    position: relative;
+    display: grid;
+    place-items: center;
+
+
+
+
+}
+
+
+.cover .bgcover,
+div.hero div.bgcover {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+
+    z-index: 10;
+    overflow: hidden;
+    background-position: top center;
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    background-size: cover !important;
+
+}
+
+
+
+
+
+.cover .block-bgcover {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    margin: 0;
+    padding: 0;
+
+
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover !important;
+
+
+}
+
+.row .block-bgcover {
+
+    background-attachment: scroll;
+    background-size: cover !important;
+}
+
+
+div.cover p,
+div.hero p {
+    width: 80%;
+    margin: auto;
+
+
+}
+
+div.cover .bgcolor,
+div.hero .bgcolor {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 11;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+body {
+
+    margin-top: 100px ! important;
+    padding-top: 100px ! important;
+}
+
+body.header {
+
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+
+
+div.click_to_id {
+    position: absolute;
+    display: block;
+    line-height: .8;
+
+
+    padding: 0 1rem 0 0;
+
+    margin: 0;
+
+    bottom: 30px !important;
+    right: 0;
+
+    opacity: .7;
+    font-size: 3.6rem !important;
+    transition: all 300ms;
+    z-index: 1000;
+
+}
+
+div.click_to_id a {
+
+    display: inline;
+}
+
+div.hero div.click_to_id {
+
+
+    right: 0px;
+
+
+}
+
+
+div.zigzag div.click_to_id {
+
+    bottom: 80px !important;
+    right: 15px;
+
+
+}
+
+div.click_to_id:hover {
+    opacity: 1;
+
+}
+
+
+
+/***************************
+    Block content
+****************************/
+
+
+
+.zigzag.full,
+.block.full,
+.rowblock.full {
+    width: 100vw;
+
+    position: relative;
+    margin-left: -50vw;
+
+    left: 50%;
+
+
+}
+
+.rowblock.center {
+    justify-content: space-evenly
+}
+
+main>div.cover {
+    
+    position: relative;
+    min-height: 100vh;
+    overflow-y: auto;
+
+}
+
+.row>div.block {
+
+
+    position: relative;
+
+    overflow: hidden !important;
+
+}
+
+div.cover>a {
+    text-decoration: none;
+
+
+}
+
+
+
+.light {
+    background-color: var(--color2);
+    color: var(--color1);
+
+}
+
+
+.dark {
+    background-color: var(--color1);
+    color: var(--color2);
+
+}
+
+div.block.rounded {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1;
+
+    box-shadow: 0px 0px 10px white;
+
+}
+
+div.block.img-rounded img {
+    border-radius: 50% !important;
+    aspect-ratio: 1 / 1;
+
+    box-shadow: 0px 0px 10px white;
+
+}
+
+div.block.rounded.button {
+    max-width: 10vw;
+
+
+}
+
+
+/* Responsive height */
+@media (min-width: 768px) {
+
+    .h10 {
+        min-height: 10vh;
+    }
+
+
+    .h20 {
+        min-height: 20vh;
+    }
+
+    .h25 {
+        min-height: 25vh;
+    }
+
+    .h40 {
+        min-height: 40vh;
+    }
+
+    .h50 {
+        min-height: 50vh;
+    }
+
+    .h60 {
+        min-height: 60vh;
+    }
+
+    .h75 {
+        min-height: 75vh;
+    }
+
+    .h100 {
+        min-height: 100vh !important;
+    }
+
+    .h120 {
+        min-height: 120vh !important;
+    }
+
+    .h150 {
+        min-height: 150vh !important;
+    }
+}
+
+
+div.cover {
+
+
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    min-height: 100vh;
+    padding: 60px 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+}
+
+
+div.hero>.content,
+div.cover>.content {
+    width: 100%;
+
+    max-width: 1024px;
+
+    z-index: 20;
+
+    margin: auto;
+    color: inherit;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+
+}
+
+
+
+div.hero.x0,
+div.cover.x0 {
+
+    justify-content: flex-start;
+
+
+
+}
+
+
+div.hero.x1,
+div.cover.x1 {
+
+    justify-content: center;
+
+
+}
+
+div.hero.x1 .content,
+div.cover.x1 .content {
+
+    text-align: center;
+
+
+}
+
+
+
+div.hero.x2,
+div.cover.x2 {
+
+    justify-content: flex-end;
+
+
+
+}
+
+
+
+div.hero.x2>.content>*,
+div.cover.x2>.content>* {
+
+    text-align: right;
+
+}
+
+div.hero.y0,
+div.cover.y0 {
+
+    align-items: flex-start;
+}
+
+div.hero.y1,
+div.cover.y1 {
+
+    align-items: center;
+
+}
+
+div.hero.y2
+div.cover.y2 {
+
+    align-items: flex-end;
+    padding-bottom: 0 !important;
+
+}
+
+
+
+
+
+
+
+div.cover>.content {
+    margin: 0;
+    padding: 0;
+}
+
+div.block>.content>* {
+
+
+
+    padding: 8px 32px;
+
+
+}
+
+
+
+
+
+div.block .media {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    z-index: 0;
+
+    top: 0;
+    left: 0;
+
+}
+
+div.block .media img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    position: absolute;
+    z-index: 0;
+
+    top: 0;
+    left: 0;
+
+}
+
+
+
+div.block>.media>.tint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 5;
+
+}
+
+div.rating>svg {
+    display: inline;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: 4px;
+}
+
+
+div.block.left, div.col.left > * {
+    text-align: right;
+}
+
+div.block.right, div.col.right > * {
+    text-align: right;
+}
+
+div.block.center, div.col.center > * {
+    text-align: center;
+}
+
+
+main .topblock {
+    margin-top: 2rem; 
+}
+
+main .topblock h2 {
+    margin: 0 0 2rem 0 ;
+}

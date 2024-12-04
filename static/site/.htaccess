@@ -1,0 +1,26 @@
+RewriteEngine On
+
+# Redirect to https if available, except localhost
+RewriteCond %{HTTPS} off
+RewriteCond %{SERVER_PORT} 443
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Remove trailing "/" in folder names
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^ %1 [R,L]
+
+# We don't show files in folders
+Options -Indexes
+
+# Redirect .ini file requests to custom 404 page
+RewriteRule ^.*\.ini$ /404.php [L,R=404]
+
+# This folder contains the website data, so it should not be accessible
+RewriteRule "media/_data/" - [F]
+
+# index.php is the entry point for unknown URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)?$ index.php?url=$1 [L,QSA]
+

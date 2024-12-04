@@ -1,0 +1,249 @@
+:root {
+  --blue: #1e90ff;
+  --white: #ffffff;
+  --bgc: #2b3035;
+  --text: #ffffff;
+  --title: #55ccff;
+
+  font-size: 20px !important;
+}
+
+.bi {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: -.125em;
+  fill: currentColor;
+}
+
+
+body,
+header.navbar.bg-dark {
+  background-color: var(--bgc) !important;
+  color: var(--text);
+
+}
+
+/*
+ * Sidebar
+ */
+
+@media (min-width: 768px) {
+  .sidebar .offcanvas-lg {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 48px;
+  }
+
+  .navbar-search {
+    display: block;
+  }
+}
+
+.sidebar .nav-link {
+  font-size: .875rem;
+  font-weight: 500;
+  color: var(--title);
+  margin: 0 !important;
+  padding-bottom: 4px !important;
+  padding-top: 4px !important;
+}
+
+
+h1 {
+
+  font-size: 2.4rem !important;
+  color: #fff
+}
+
+main h1,
+main h2 {
+
+  color: var(--title) !important;
+  background-color: #2b3035;
+}
+
+main h2 {
+  margin-top: 2.5rem !important;
+  border-bottom: var(--title) 2px solid !important;
+  font-size: 1.2rem;
+
+}
+
+main p {
+
+  font-size: 1rem;
+
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+}
+
+.bi {
+  vertical-align: -.125em;
+  fill: currentColor;
+}
+
+svg.bi.logo {
+
+  color: black;
+}
+
+/*
+ * Navbar
+ */
+
+.navbar-brand {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  baaackground-color: rgb(--bgc);
+  boex-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .form-control {
+  padding: .75rem 1rem;
+}
+
+
+.links .link a {
+  font-family: monospace;
+}
+
+.links .link a:hover {
+  text-decoration: underline;
+}
+
+.links .link a {
+  text-decoration: none;
+}
+
+.links .link a:hover {
+  text-decoration: underline;
+}
+
+plop {
+  background-size: 40px 40px;
+  background-image: radial-gradient(circle, #000000 1px, rgba(0, 0, 0, 0) 1px);
+}
+
+
+img {
+
+  object-fit: contain !important;
+  background-size: 10px 10px;
+  background-image: linear-gradient(to right, #ffffff11 1px, transparent 1px),
+    linear-gradient(to bottom, #ffffff11 1px, transparent 1px);
+  color: #000000;
+
+}
+
+svg.card-img-top {
+
+  object-fit: contain !important;
+
+  color: black;
+
+}
+
+.card-text {
+  font-size: .8rem;
+  text-align: center;
+  opacity: .4;
+  transition: opacity .3s;
+}
+
+.card:hover .card-text {
+
+  opacity: 1;
+}
+
+.card-body {
+  padding: 2px;
+}
+
+
+table.contact td {
+  margin: 0;
+  padding: 0;
+}
+
+details {
+  display: block;
+  width: 100%;
+  font-size: .8rem;
+}
+
+
+table.contact tr.new .who {
+  font-weight: bold;
+  opacity: 1;
+}
+
+table.contact .delete {
+  font-weight: bold;
+  color: red;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+
+table.contact tr {
+
+  opacity: 1;
+}
+
+
+
+table.contact tr.seen {
+
+  opacity: .4;
+}
+
+table.contact tr.new .status {
+  font-weight: bold;
+  color: #af3;
+  text-decoration: none;
+  font-size: 1rem;
+  opacity: 1;
+}
+
+table.contact tr.seen .status {
+
+  color: #666;
+
+}
+
+table.contact tr:hover td {
+
+  background-color: #000;
+
+}
+
+details span {
+  display: inline-block;
+  width: 30%;
+  margin: 0;
+  padding: 0 .5rem;
+
+}
+
+details>summary>span.date,
+details>span.phone {
+  opacity: .6;
+
+}
+
+
+
+details>summary>span>a {
+  color: var(--title);
+
+}
+
+
+
+details>summary {
+
+  list-style-type: none;
+}

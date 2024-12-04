@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    font-family: "Lato", sans-serif;
+}
+
+
+
+:root {
+
+    --color1: #000;
+    --color2: #fff;
+    --color3: #444;
+    --color4: #223344;
+
+    --navbar-bgc: #223;
+
+
+    --main-text-color: var(--color1);
+    --main-bgc: var(--color2);
+    --main-title-color: var(--color3);
+    --main-link-color: var(--color3);
+
+    --hero-title-color: var(--color3);
+    --hero-text-color: var(--color2);
+
+    --hero-navbar-bgc-start: transparent;
+
+    --hero-navbar-bgc-end: var(--navbar-bgc);
+
+    --hero-navbar-link: var(--color2);
+    --hero-navbar-brand: var(--color3);
+
+
+    --footer-bgc: var(--navbar-bgc);
+    --footer-text-color: var(--color2);
+    --footer-link-color: var(--color2);
+    --footer-title-color: var(--color2);
+
+    --font-text: 'Lato';
+    --font-title: 'Lato';
+    --font-brandname: 'Lato';
+    --font-code: 'monospace';
+
+}
+
+
+.navbar-collapse.bg-dark.collapse {
+    background-color: var(--navbar-bgc) !important;
+    z-index: 0;
+}
+
+.navbar-collapse.bg-dark.collapse.show,
+.navbar-collapse.collapsing {
+
+    padding-top: 100px;
+    transition: background-color 300ms;
+
+}
+
+h3 {
+    font-size: 1.5rem !important;
+    color: var(--navbar-bgc) !important;
+}
+
+main h2 {
+    font-size: 2rem !important;
+    color: var(--navbar-bgc) !important;
+}
+
+main h1 {
+    font-size: 2.4rem !important;
+    color: var(--navbar-bgc) !important;
+}
+
+
+svg.bi {
+    width: 16px;
+    height: 16px;
+}
