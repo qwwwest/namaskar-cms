@@ -1,7 +1,8 @@
 /* Navbar */
 
-.collapse.navbar-collapse {
+body:not(.has_hero) .collapse.navbar-collapse {
     background-color: var(--navbar-bgc);
+ 
     transition: all .5s;
 }
 
@@ -26,9 +27,13 @@ body.has_hero #navbarCollapse.collapse.navbar-collapse.bg-dark.show {
     z-index: 1200;
     overflow-y: auto;
     transition: all .5s;
+    background-color: var(--navbar-bgc) !important;
+    padding: 100px 0 0 0;
+
 
 }
 
+ 
 
 .navbar-collapse.collapsing {
     position: absolute;
@@ -40,17 +45,48 @@ body.has_hero #navbarCollapse.collapse.navbar-collapse.bg-dark.show {
 }
 
 
-.navbar-collapse.collapse.show,
-.navbar-collapse.collapsing {
 
-    left: 0;
-    background-color: var(--navbar-bgc) !important;
+
+body.navbar-fixed nav.navbar  {
+
+    position: fixed!important;
+    top: 0;
+    /* Position the navbar at the top of the page */
+    width: 100%;
+    /* Full width */
+    z-index: 1000;
 
 }
 
-body.navbar-fixed nav.navbar {
 
-    position: fixed;
+body.navbar-auto nav.navbar {
+
+    position: fixed!important;
+    top: 0;
+    /* Position the navbar at the top of the page */
+    width: 100%;
+    /* Full width */
+    z-index: 1000;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+    
+}
+
+ 
+body.navbar-auto nav.navbar.hidden-navbar {
+    transform: translateY(-120%);
+ 
+}
+
+body.navbar-fixed main, body.navbar-auto main {
+
+    padding-top: 100px!important;
+    
+}
+
+body.has_hero nav.navbar {
+
+    position:absolute;
     top: 0;
     /* Position the navbar at the top of the page */
     width: 100%;
@@ -59,14 +95,7 @@ body.navbar-fixed nav.navbar {
 }
 
 
-body.navbar-fixed .navbar-collapse.collapse.show,
-body.navbar-fixed .navbar-collapse.collapsing {
-    top: 0px;
-    padding: 100px 0 0 20px;
-
-}
-
-
+ 
 
 
 
@@ -75,6 +104,10 @@ body.navbar-fixed:not(.has_hero) {
     padding-top: 100px !important;
 }
 
+body.has_hero {
+
+    padding-top: 0 !important;
+}
 
 
 .mainlinks {
@@ -101,6 +134,8 @@ a.navbar-brand {
 
     display: flex;
     align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .bg-primary .navbar-nav .nav-link.active {

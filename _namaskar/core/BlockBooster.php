@@ -11,7 +11,7 @@ class BlockBooster
     private $blocks = [];
 
     private $firstLevelBlocks = [];
-    private $num = 0;
+    private $num = -1;
     private $blockid = 0;
     private $in_row = false;
 
@@ -126,12 +126,11 @@ class BlockBooster
 
         ($this->conf)("default.blockid", 0);
 
+        if (!isset($attributes['img']) && isset($attributes[0])) {
+            $attributes['img'] = $attributes[0];
 
-        $attributes['h'] = $attributes['h'] ?? '100';
+        }
 
-        $attributes = $this->setBlockAttributes($attributes, $tagName);
-
-        $attributes['id'] = " id=block0";
 
         ($this->conf)('page.body_classes[]', 'has_hero');
 
@@ -148,16 +147,11 @@ class BlockBooster
     public function cover($attributes, $content, $tagName)
     {
 
-        ($this->conf)("default.blockid", 0);
+        if (!isset($attributes['img']) && isset($attributes[0])) {
+            $attributes['img'] = $attributes[0];
 
-        $attributes = $this->setBlockAttributes($attributes, $tagName);
-
-        $attributes['id'] = " id=block0";
-
-        ($this->conf)('page.body_classes[]', 'has_hero');
-
-
-        $cover = $this->includeTemplate($attributes, $content, 'block-hero', false);
+        }
+        $cover = $this->includeTemplate($attributes, $content, 'block-cover', false);
 
 
 
@@ -169,7 +163,6 @@ class BlockBooster
     public function zigzag($attributes, $content, $tagName)
     {
 
-
         static $order = true;
         static $ratio = '6/6';
         static $num = 0;
@@ -177,9 +170,10 @@ class BlockBooster
 
         $order = !$order;
 
-        $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
+        //was :  $ratio = $attributes['ratio'] ?? ($this->conf)("default.zigzag.ratio") ?? $ratio;
+        $ratio = $attributes['ratio'] ?? $this->getDefault('zigzag', 'ratio') ?? $ratio;
 
-        $attributes = $this->setBlockAttributes($attributes, $tagName);
+        // $attributes = $this->setBlockAttributes($attributes, $tagName);
 
         $num++;
 
@@ -191,7 +185,7 @@ class BlockBooster
             MEDIA;
 
         } else {
-            $exploded = explode("\n@@@", $content);
+            $exploded = explode("\n===", $content, 2);
             if (!isset($exploded[1])) {
                 dump("block: zigzag");
                 dump($attributes);
@@ -275,6 +269,27 @@ class BlockBooster
 
     }
 
+    public function title($attributes, $content, $tagName)
+    {
+
+
+        $classes = self::$renderer->getCssClasses($attributes);
+        $classes = trim($classes);
+
+
+        $content = $this->renderBlock($content);
+
+        if ($classes)
+            return <<<HTML
+            <div class="$classes">
+            $content
+            </div>
+            HTML;
+
+
+        return $content;
+    }
+
 
     public function blocksRenderer($attributes, $content, $tagName)
     {
@@ -282,11 +297,25 @@ class BlockBooster
         $classes = "";
 
 
-        $block_type = $attributes[0] ?? null;
+        //$block_type = $attributes[0] ?? null;
+        $block_type = strtolower($attributes[0] ?? '');
 
-        $attributes = $this->setBlockAttributes($attributes, $tagName);
+        // alias
+        if ($block_type === 'zz')
+            $block_type === 'zigzag';
+        // alias
+        if ($block_type === 'cover')
+            $block_type = 'cover2';
 
-        if ($block_type === 'zigzag' || $block_type === 'zz') {
+        $attributes = $this->setTopBlockAttributes($attributes, $block_type);
+
+        if ($block_type === 'title') {
+            array_shift($attributes);
+            return $this->title($attributes, $content, 'title');
+
+        }
+
+        if ($block_type === 'zigzag') {
             array_shift($attributes);
             return $this->zigzag($attributes, $content, 'zigzag');
 
@@ -294,7 +323,7 @@ class BlockBooster
             array_shift($attributes);
             return $this->hero($attributes, $content, 'hero');
 
-        } elseif ($block_type === 'cover') {
+        } elseif ($block_type === 'cover2') {
             array_shift($attributes);
             return $this->cover($attributes, $content, 'cover');
 
@@ -306,7 +335,8 @@ class BlockBooster
             return $this->content($attributes, $content, 'content');
         }
 
-        return $this->block($attributes, $content, 'block');
+        die("unknown block:$block_type");
+        // return $this->block($attributes, $content, 'block');
 
     }
     public function block($attributes, $content, $tagName)
@@ -337,7 +367,8 @@ class BlockBooster
 
         if ($img) {
             $caption = $attributes['caption'] ?? null;
-            $ratio = $attributes['ratio'] ?? ($this->conf)("default.content.ratio") ?? $ratio;
+            // was $ratio = $attributes['ratio'] ?? ($this->conf)("default.content.ratio") ?? $ratio;
+            $ratio = intval($attributes['ratio'] ?? $this->getDefault('content', 'ratio') ?? $ratio);
 
             if (self::$renderer->isSetValue($attributes, 'left'))
                 $orderLeft = self::$renderer->isSetValue($attributes, 'left');
@@ -362,7 +393,9 @@ class BlockBooster
 
         }
 
-        $attributes = $this->setBlockAttributes($attributes, $tagName);
+
+
+        //   $attributes = $this->setBlockAttributes($attributes, $tagName);
 
 
 
@@ -373,7 +406,20 @@ class BlockBooster
 
     private function renderBlock($blep)
     {
-        return self::$renderer->renderBlock($blep);
+        //return self::$renderer->renderBlock($blep);
+        return $this->renderTopBlock($blep);
+    }
+
+    public function renderTopBlock($content)
+    {
+        $content = trim($content);
+
+        if ($content === '')
+            return '';
+
+        $content = self::$renderer->renderBlock($content);
+
+        return $content;
     }
 
     private function includeTemplate($attributes, $content, $template, $auto)
@@ -382,7 +428,13 @@ class BlockBooster
     }
 
 
-    private function setBlockAttributes($attributes, $tagName)
+    private function getDefault($tagName, $attr)
+    {
+        return ($this->conf)("default.$tagName.$attr")
+            ?? ($this->conf)("theme.default.$tagName.$attr")
+            ?? null;
+    }
+    private function setTopBlockAttributes($attributes, $tagName)
     {
 
         static $numtype = [];
@@ -392,7 +444,7 @@ class BlockBooster
 
         $num = $numtype[$tagName] += 1;
 
-        $classes = " $tagName";
+        $classes = "topblock block $tagName";
 
         $responsive = '';
         if (isset($attributes['sd']))
@@ -413,29 +465,30 @@ class BlockBooster
 
         $rgba = $attributes['rgba'] ?? '#00000000';
 
-        $dark = $attributes['dark'] ?? ($this->conf)("default.$tagName.dark") ?? null;
+        $dark = $attributes['dark'] ?? $this->getDefault($tagName, 'dark');
+
 
         if ($dark !== null) {
             $rgba = '#000000' . (dechex(round(trim($dark, '%') * 255 / 100)));
+
         }
 
-        $light = $attributes['light'] ?? ($this->conf)("default.$tagName.light") ?? null;
+
+
+        $light = $attributes['light'] ?? $this->getDefault($tagName, 'light');
         if ($light !== null) {
             $rgba = '#ffffff' . (dechex(round(trim($light, '%') * 255 / 100)));
+            $classes .= " light";
         }
 
         $attributes['rgba'] = $rgba;
 
-
         if (isset($attributes['height'])) {
-            $classes .= ' h' . trim($attributes['height'] ?? '50', '%');
+            $classes .= ' h' . trim($attributes['height'] ?? '100', '%');
         }
 
-        // $height = $attributes['h'] ?? ($this->conf)("default.$tagName.h") ?? null;
-        // if ($height)
-        //     $classes .= ' h' . trim($height, '%');
+        $height = $attributes['h'] ?? $this->getDefault($tagName, 'h');
 
-        $height = $attributes['h'] ?? ($this->conf)("default.$tagName.h") ?? null;
         if ($height)
             $attributes['height'] = trim($height, '%');
 
@@ -446,8 +499,7 @@ class BlockBooster
         //     $attributes['style'] = 'height:' . trim($height, '%') . "vh";
 
 
-        $pos = $attributes['pos'] ?? ($this->conf)("default.$tagName.pos") ?? 5;
-
+        $pos = $attributes['pos'] ?? $this->getDefault($tagName, 'pos') ?? 5;
 
         $x = ($pos - 1) % 3;
         $y = intdiv(($pos - 1), 3);
@@ -465,10 +517,10 @@ class BlockBooster
 
         }
 
-        $swapClasses = explode('/', ($this->conf)("default.$tagName.classes") ?? "");
+        $swapClasses = explode('/', $this->getDefault($tagName, 'classes') ?? "");
+
 
         $swapClasses = $swapClasses[$num % count($swapClasses)] ?? '';
-        //$classes .= $this->getCssClasses($attributes);
 
         if ($swapClasses)
             $classes .= " $swapClasses";
@@ -495,63 +547,5 @@ class BlockBooster
     }
 
 
-
-
-    private function ___getAttributes($attributes, $tagName)
-    {
-
-        static $numtype = [];
-
-        if (!isset($numtype[$tagName]))
-            $numtype[$tagName] = -1;
-
-        $num = $numtype[$tagName] += 1;
-
-        $classes = "block $tagName";
-
-        $responsive = '';
-        if (isset($attributes['sd']))
-            $responsive .= ' col-sd-' . $attributes['sd'];
-        if (isset($attributes['md']))
-            $responsive .= ' col-md-' . $attributes['md'];
-        if (isset($attributes['lg']))
-            $responsive .= ' col-lg-' . $attributes['lg'];
-
-        if (isset($attributes['xl']))
-            $responsive .= ' col-xl-' . $attributes['xl'];
-
-        if ($this->in_row && $responsive === '') {
-            $classes .= " col-md";
-        }
-
-        $classes .= " $responsive";
-
-        $swapClasses = explode('/', ($this->conf)("default.$tagName.classes") ?? "");
-
-        $swapClasses = $swapClasses[$num % count($swapClasses)] ?? '';
-        //$classes .= $this->getCssClasses($attributes);
-
-        if ($swapClasses)
-            $classes .= " $swapClasses";
-
-        $attributes['classes'] = $classes . ' ' . self::$renderer->getCssClasses($attributes);
-
-
-
-        ($this->conf)("default.blockid", $blockid);
-
-        $id = self::$renderer->id($attributes);
-        if ($id)
-            $id = " id='$id'";
-        else {
-
-            $id = " id='block$blockid'";
-
-        }
-
-        $attributes['id'] = $id;
-
-        return $attributes;
-    }
 
 }

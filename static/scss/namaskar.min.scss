@@ -5,7 +5,7 @@ $padding: 6px;
 // sass -w -q --embed-sources .:../../_namaskar/themes/4all/asset --style compressed
 
 
-/*! Namaskar main theme v1.00.002 */  
+/*! Namaskar main theme v1.00.003 */  
 
 @import "bootstrap5.3.3/_bootstrap"; 
 @import "_base.scss";
@@ -23,6 +23,8 @@ $padding: 6px;
 @import "_lightbox.scss";
 
 @import "_blocks.scss";
+@import "_block_cover2.scss";
+@import "_typography.scss";
  
 @import "_fx.scss";     
 @import "_misc.scss";      

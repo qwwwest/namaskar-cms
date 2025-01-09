@@ -13,107 +13,7 @@ class AssetController extends AbstractController
 {
 
 
-    // #[Rooooute('/sites/{domain}/asset/{asset*}')]
-    // public function assetManager($domain, $asset = '/'): ?Response
-    // {
 
-    //     $domain = basename($domain);
-    //     $pageEntity = new PageEntity();
-
-    //     if (!$pageEntity->init($domain)) {
-    //         die("blep $domain");
-
-    //     }
-
-    //     $zen = Kernel::service('ZenConfig');
-
-
-    //     $theme = $zen('site.theme') ?? 'bootstrap5';
-
-    //     return $this->_staticAssetLoader($theme, $asset);
-
-
-
-    // }
-
-
-
-    // #[Ruuuuuoute('/{domain?}/asset/{asset*}')]
-    // public function domainAssetManager($domain = null, $asset = null): ?Response
-    // {
-
-    //     if ($asset === null || $asset === '')
-    //         return null;
-
-    //     // if domain is null, we use from global
-    //     if (!$domain)
-    //         $domain = $GLOBALS['mempad'];
-
-
-    //     $zen = Kernel::service('ZenConfig');
-    //     $theme = $zen('site.theme') ?? 'bootstrap5';
-    //     return $this->_staticAssetLoader($theme, $asset);
-
-    // }
-
-    // #[Rouuuuuute('/asset/namaskar.min.css')]
-    // public function namaskarAssetManager(): ?Response
-    // {
-    //     $cssFiles = [
-    //         'bootstrap.min',
-    //         'base',
-    //         'alert',
-    //         'carousel',
-    //         'breadcrumb',
-    //         'lightbox',
-    //         'hamburger-anim',
-    //         'navbar',
-    //         'backgrounds',
-    //         'sidemenu',
-    //         'toc',
-    //         'features',
-    //         'language-menu',
-    //         'layout',
-    //         'misc',
-    //     ];
-
-    //     $css = '';
-
-    //     $conf = Kernel::service('ZenConfig');
-
-    //     $templateFolder = $conf('folder.app')
-    //         . '/themes/4all/asset/namcss/';
-
-    //     foreach ($cssFiles as $key => $file) {
-
-    //         $filename = "$templateFolder/$file.css";
-    //         if (!is_file($filename)) {
-    //             return $this->response('css not found: ' . $filename);
-    //         }
-
-    //         $css .= file_get_contents($filename) . "\n";
-    //     }
-
-    //     $templateFolder = $conf('folder.asset');
-    //     $domain = $conf('site.domain');
-
-    //     //   . '/themes/4all/asset/namcss/';
-
-    //     $filename = "$templateFolder/$domain.css";
-    //     if (is_file($filename)) {
-    //         $css .= "\n/*** $domain.css ***/\n" . file_get_contents($filename) . "\n";
-    //     }
-
-    //     $filename = "$templateFolder/styles.css";
-    //     if (is_file($filename)) {
-    //         $css .= "\n/*** styles.css ***/\n" . file_get_contents($filename) . "\n";
-    //     }
-
-    //     $response = new Response($css);
-    //     $response->setContentType('css');
-    //     return $response;
-
-    // }
 
     #[Route('/asset/{asset*}')]
     public function singleAssetManager($asset = null): ?Response
@@ -126,7 +26,7 @@ class AssetController extends AbstractController
 
 
         $zen = Kernel::service('ZenConfig');
-        $theme = $zen('site.theme') ?? 'bootstrap5';
+        $theme = $zen('site.theme') ?? 'kotek';
         return $this->_staticAssetLoader($theme, $asset);
 
     }
@@ -140,6 +40,35 @@ class AssetController extends AbstractController
         $filenames[] = "/$theme/asset/$rest";
         $filenames[] = "/bootstrap5/asset/$rest";
         $filenames[] = "/4all/asset/$rest";
+
+        if ($rest === 'styles.css') {
+            $styles = '';
+            //dd(N('folder.themes'));
+            foreach (N('folder.themes') as $templateFolder) {
+
+                $filepath = "$templateFolder/4all/asset/styles.css";
+
+                if (is_file($filepath)) {
+                    $content = file_get_contents($filepath);
+
+
+                    $styles .= $content;
+                }
+
+
+            }
+
+
+
+            $filepath = N('folder.media') . '/_data/styles.css';
+            if (is_file($filepath))
+                $styles .= file_get_contents($filepath);
+
+
+            $response = new Response($styles);
+            $response->setContentType('css');
+            return $response;
+        }
 
         foreach (N('folder.themes') as $templateFolder) {
 

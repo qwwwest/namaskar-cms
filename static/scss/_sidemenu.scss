@@ -12,21 +12,7 @@
     margin: 0;
     list-style: none !important;
     outline: 0;
-    cooolor: var(--bs-heading-color);
-
-
-}
-
-.sidemenu a {
-
-    color: var(--bs-heading-color);
-
-
-}
-
-#submenus .submenu * {
-
-    color: #ffffff !important;
+    color: inherit;
 
 
 }
@@ -58,7 +44,7 @@
     outline: 0;
 
     top: -.2em;
-    left: -14px;
+    left: -18px;
     width: 2em;
     height: 2em;
 

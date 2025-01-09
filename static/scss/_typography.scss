@@ -1,0 +1,176 @@
+
+%outline {
+    color: #0000 !important;
+
+    -webkit-text-stroke-color: var(--color1);
+    stroke: var(--color1);
+
+    -webkit-text-stroke-width: 2px;
+    stroke-width: 2px;
+ 
+    opacity: 1;
+    padding: 1rem 0;
+    margin: 0;
+    line-height: 1;
+  }
+   
+
+
+      .contour, .contour1,.contour2,.contour3,.contour4 {
+        @extend %outline;
+      }
+    
+
+    .contour1, nav.navbar-brand.contour1 strong {
+        -webkit-text-stroke-width: 1px;
+        stroke-width: 1px;
+    }
+    
+    .contour2 {
+        -webkit-text-stroke-width: 2px;
+        stroke-width: 2px;
+    }
+    
+    .contour3 {
+        -webkit-text-stroke-width: 3px;
+        stroke-width: 3px;
+    }
+    
+    .contour4 {
+        -webkit-text-stroke-width: 4px;
+        stroke-width: 4px;
+    }
+     
+
+
+.stroke.light h1,
+.stroke.light h2,
+.stroke.light h3,
+.stroke.light h4,
+.stroke.light a {
+
+    -webkit-text-stroke-color: var(--color1);
+    stroke: var(--color1);
+    text-shadow: 2px 2px 4px var(--color2);
+
+}
+
+//strknb, strk strk hn nb linx
+
+.navbar-brand.contour strong    {
+    @extend %outline;
+     
+    -webkit-text-stroke-color: var(--navbar-brand);
+    stroke: var(--navbar-brand);
+    -webkit-text-stroke-width: 1px;
+    stroke-width: 1px;
+ 
+ 
+}
+
+// huge titles
+ 
+h1.huge    {
+    font-size: calc(4.5vw + 4.5vh)!important;
+}
+
+
+h2.huge {
+
+    font-size: calc(2.7vw + 2.7vw) !important;
+
+
+}
+
+h3.huge {
+
+    font-size: calc(2.5vw + 2.5vh) !important;
+
+
+}
+h4.huge {
+
+    font-size: calc(2vw + 2vh) !important;
+
+
+}
+
+ h1.huge strong,
+ h2.huge strong,
+ h3.huge strong,
+ h4.huge strong
+{
+    color: var(--color1) !important;
+    -webkit-text-stroke-color: var(--color1);
+    stroke: var(--color1);
+    -webkit-text-stroke-width: 0;
+    stroke-width: 0;
+}
+
+
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4 {
+    -webkit-text-stroke-color: var(--color2);
+    stroke: var(--color2);
+
+
+}
+
+
+.dark h1.huge strong,
+.dark h2.huge strong,
+.dark h3.huge strong,
+.dark h4.huge strong
+{
+    color: var(--color2) !important;
+    -webkit-text-stroke-color: var(--color1);
+    stroke: var(--color1);
+    -webkit-text-stroke-width: 0;
+    stroke-width: 0;
+}
+
+.huge h2 a,
+.huge h3 a {
+    text-decoration: underline;
+    color: var(--color2);
+}
+
+a.navbar-brand strong {
+    font-family: var(--font-brandname);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-title);
+}
+
+html {
+    font-size: var(--bs-font-size-base)!important;
+}
+
+
+body {
+   
+    font-family: var(--font-text)!important;
+
+
+}
+
+// Mixin to generate font-size classes
+@mixin generate-font-size-classes($start, $end, $step) {
+    @for $x from $start through $end {
+      @if ($x % $step == 0) {
+        .fontsize#{$x} {
+            font-size: #{($x / 10)}rem !important;
+        }
+      }
+    }
+  }
+  
+  // Include the mixin
+  @include generate-font-size-classes(10, 85, 1);

@@ -15,6 +15,9 @@ class Form
 
     private static $forms = [];
     private string $formId;
+    private string $token;
+
+    private string $mail;
     private string $mode;
     private bool $isPost;
     private static $renderer;
@@ -42,7 +45,7 @@ class Form
         $forms[] = $this;
 
         $regex = [];
-        $regex['hidden'] = '^[a-zA-Z][a-zA-Z0-9._-]{1,16}$';
+        $regex['hidden'] = '^[a-zA-Z0-9._-]{1,16}$';
         //Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters
         // $regex['password'] = '(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}';
         //$regex['url'] = 'https?://.+';
@@ -54,6 +57,15 @@ class Form
         $regex['name'] = '^.{2,32}$';
         $this->regex = $regex;
 
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $_SESSION['form_token'] = bin2hex(random_bytes(4)); // Unique token
+
+        }
+
+        if (!isset($_SESSION['form_success']))
+            $_SESSION['form_success'] = false;
+
+        $this->token = $_SESSION['form_token'];
 
     }
 
@@ -108,11 +120,6 @@ class Form
         $this->fields[] = [$fieldId, $type, $required, $value, $attributes];
     }
 
-    public function sanitize($type, $value)
-    {
-
-    }
-
 
 
     public function addShortcodes($renderer)
@@ -143,8 +150,11 @@ class Form
 
 
         $this->formId = strtolower($attributes['id'] ?? '');
+        $this->mail = strtolower($attributes['mail'] ?? '');
         if ($this->formId === '')
             die('FormId id is required');
+
+
 
         if (!$this->isValidFormId($this->formId))
             die('FormId is not valid:');
@@ -157,6 +167,7 @@ class Form
 
         // add formId as a hidden value in the form
         $content = "[input hidden form_id $this->formId ]\n$content";
+        $content = "[input hidden token $this->token ]\n$content";
 
         $content = self::$renderer->renderBlock($content);
 
@@ -178,18 +189,31 @@ class Form
 
                 $formData['id'] = uniqid();
 
+                $mailContent = '';
+
                 //firstname,lastname,email,phone,city,country,message,date
                 foreach ($this->fields as $key => $field) {
                     [$fieldId, $type, $required, $value, $attributes] = $field;
 
                     $formData[$fieldId] = $value;
+
                 }
 
                 $filename = $formData['form_id'];
                 unset($formData['form_id']);
                 unset($formData['submit']);
+
+                foreach ($formData as $key => $value) {
+
+                    if ($key === 'message') {
+                        $mailContent .= "\r\n\r\n" . wordwrap($value, 70, "\r\n") . "\r\n";
+
+                    } else if ($key != 'id' && $key != 'token')
+                        $mailContent .= "$key: $value\r\n";
+                }
+
                 date_default_timezone_set('Europe/Paris');
-                $formData['date'] = date('Y-m-d H:i:s');
+                $formData['date'] = date('Y-m-d H:i');
                 $formData['time'] = time();
                 $formData['ip'] = getUserIpAddress();
                 $formData['status'] = 1;
@@ -200,6 +224,29 @@ class Form
                     $message = $this->form_message['success'];
                     $alert = 'success';
                     $inert = ' inert';
+                    // send mail
+                    $to = $this->mail;
+                    $subject = ucfirst($this->formId) . ' ' . N('site.domain');
+
+                    $headers = [
+                        'From' => $formData['email'],
+                        'Reply-To' => $formData['email'],
+                        'X-Mailer' => 'PHP/' . phpversion(),
+                        'Content-type' => 'text/plain; charset=UTF-8',
+                        'MIME-Version' => '1.0'
+                    ];
+
+                    $mailSent = mail($to, $subject, $mailContent, $headers);
+                    if ($mailSent === false) {
+                        wlog('error', "Failed to send email see backend for mail copy");
+                        throw new \Exception("Failed to send email");
+                    }
+
+                    $_SESSION['form_success'] = true;
+
+                    header("Refresh: 0");
+                    exit;
+
                 } catch (\Exception $e) {
                     $message = $this->form_message['error'];
                     $alert = 'error';
@@ -216,6 +263,19 @@ class Form
 
             $form_message = <<<HTML
             <div class="alert alert-$alert" role="alert">
+                $message
+            </div>
+
+            HTML;
+        }
+
+        if ($_SESSION['form_success'] === true) {
+
+            $message = self::$renderer->renderBlock($this->form_message['success']);
+            $_SESSION['form_success'] = false;
+            $inert = true;
+            $form_message = <<<HTML
+            <div class="alert alert-success" role="alert">
                 $message
             </div>
 
@@ -376,9 +436,9 @@ class Form
             if ($type === 'tel') {
                 $value = "+33 6 123 456 789";
             }
-            if ($type === 'hidden' && $fieldId === 'form_id') {
-                $value = $this->formId;
-            }
+            // if ($type === 'hidden' && $fieldId === 'form_id') {
+            //     $value = $this->formId;
+            // }
             if ($type === 'textarea') {
                 $value = "";
             }
@@ -387,16 +447,27 @@ class Form
         if (isset($_POST[$fieldId])) {
             $value = trim($_POST[$fieldId]);
 
-            $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            $value = htmlspecialchars($value, 0, 'UTF-8');
         }
 
         if (isset($_POST[$fieldId]) && $type === 'hidden' && $fieldId === 'form_id' && $value !== $this->formId) {
 
 
-            dump($_POST);
+            //dump($_POST);
             die('form_id mismatch : ' . $value . ' != ' . $this->formId);
 
         }
+
+        if (isset($_POST[$fieldId]) && $type === 'hidden' && $fieldId === 'token' && $value !== $this->token) {
+
+
+            //dump($_POST);
+            // die('form token mismatch : ' . $value . ' != ' . $this->token);
+            die('form token mismatch');
+
+        }
+
+
 
         $classes = self::$renderer->getCssClasses($attributes);
 
@@ -409,9 +480,16 @@ class Form
 
         if ($type === 'hidden') {
             $height = $attributes['height'] ?? '10rem';
-            $content = <<<HTML
-                <input type="hidden" name="$fieldId" value="$this->formId">
+            if ($fieldId === 'form_id') {
+                $content = <<<HTML
+                <input type="hidden" name="form_id" value="$this->formId">
                 HTML;
+            } else if ($fieldId === 'token') {
+                $content = <<<HTML
+                <input type="hidden" name="token" value="$this->token">
+                HTML;
+            }
+
 
         } elseif ($type === 'textarea') {
             $height = $attributes['height'] ?? '10rem';
@@ -488,11 +566,7 @@ class Form
             return false;
 
         if ($type === 'textarea') {
-
-
-
-            return preg_match("/$regex/", $value);
-
+            return strlen($value) >= $min; //preg_match("/$regex/", $value);
         }
 
         if ($type === 'text' || $type === 'name' || $type === 'hidden') {

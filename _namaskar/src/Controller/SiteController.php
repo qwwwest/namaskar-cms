@@ -141,7 +141,7 @@ class SiteController extends AbstractController
         ];
 
 
-        return $this->render('bootstrap5', $vars);
+        return $this->render('kotek', $vars);
 
 
     }

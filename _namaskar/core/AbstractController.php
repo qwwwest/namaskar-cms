@@ -34,7 +34,10 @@ class AbstractController
         $pageModel->buildModel($url);
         $qRenderer = new QwwwickRenderer(($this->conf)('folder.themes'));
 
-        $theme = N('page.theme') ?? N('site.theme') ?? 'bootstrap5';
+        $theme = N('page.theme') ?? N('site.theme') ?? 'kotek';
+
+        if ($theme === '')
+            $theme = 'kotek';
 
         $html = $qRenderer->renderPage($theme);
 

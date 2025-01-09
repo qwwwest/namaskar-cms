@@ -1,0 +1,61 @@
+ @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+ body.thbnw {
+
+     --color1: #000;
+     --color2: #fff;
+     --color3: #444;
+     --color4: #223344;
+
+     --hero-title-color: var(--color3);
+     --hero-text-color: var(--color2);
+
+     --hero-navbar-bgc-start: transparent;
+     --hero-navbar-bgc-end: var(--navbar-bgc);
+
+     --hero-navbar-link: var(--color2);
+     --hero-navbar-brand: var(--color2);
+
+
+     --footer-bgc: var(--navbar-bgc);
+     --footer-text-color: var(--color2);
+     --footer-link-color: var(--color2);
+     --footer-title-color: var(--color2);
+
+
+
+ }
+
+ .zigzag .zigzag-media img {
+     border-radius: 20px;
+ }
+
+ main .cover2 h2 {
+     padding: .5rem !important;
+ }
+
+
+ .huge h2 a,
+ .huge h3 a {
+     text-decoration: underline;
+     color: var(--color2);
+ }
+
+ div.zigzag .zigzag-content p:first-child:first-letter {
+     font-size: 2rem;
+     font-weight: bold;
+ }
+
+ .blockquote.huge>p,
+ figcaption.blockquote-footer.huge {
+     color: #FFFFFF !important;
+     -webkit-text-stroke-width: 2px;
+     stroke-width: 2px;
+     -webkit-text-stroke-color: #FFFFFF;
+     stroke: #FFFFFF;
+     font-size: calc(6vw + 6vh);
+     opacity: 1;
+     padding: 1rem 0;
+     margin: 0;
+     line-height: 1;
+ }

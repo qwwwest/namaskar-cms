@@ -1,29 +1,24 @@
+ 
 :root {
 
     --color1: #000;
     --color2: #fff;
     --color3: #fc0;
 
+    --bs-light: #d1d8dc;
+    --bs-white: #ffffff;
+    --bs-black: #000000;
+    --bs-dark: #101318;
+    --bs-primary: #284263;
+    --bs-secondary: #ed1c58;
+    --bs-info: #8568a8;
+    --bs-success: #109c58;
+    --bs-warning: #e1c812;
+    --bs-danger: #ef1007;
 
     --navbar-link: var(--color2);
     --navbar-brand: var(--color2);
-    --navbar-bgc: #000B;
-
-
-    --main-text-color: var(--color1);
-    --main-bgc: var(--color2);
-    --main-title-color: var(--color3);
-    --main-link-color: var(--color3);
-
-    --hero-title-color: var(--color3);
-    --hero-text-color: var(--color2);
-
-    --hero-navbar-bgc-start: transparent;
-    --hero-navbar-bgc-end: var(--navbar-bgc);
-
-    --hero-navbar-link: var(--color2);
-    --hero-navbar-brand: var(--color3);
-
+    --navbar-bgc: var(--bs-dark);
 
 
     --footer-bgc: var(--color1);
@@ -31,6 +26,72 @@
     --footer-link-color: var(--color3);
     --footer-title-color: var(--color3);
 
+    --bs-font-size-base: 1.2rem; 
+    --bs-body-font-size: var(--bs-font-size-base);
+    --bs-heading-color: var(--bs-primary);
+
+}
+
+
+body { 
+
+    --bs-body-color: var(--color1);
+    --bs-body-bg: var(--color2);
+
+    --hero-title-color: var(--color2);
+    --hero-text-color: var(--color2);
+
+    --hero-navbar-bgc-start: transparent;
+
+    --hero-navbar-bgc-end: var(--navbar-bgc);
+
+    --hero-navbar-link: var(--color2);
+    --hero-navbar-brand: var(--color3);
+
+
+    --footer-bgc: var(--navbar-bgc);
+    --footer-text-color: var(--color2);
+    --footer-link-color: var(--color2);
+    --footer-title-color: var(--color2);
+
+
+    /* Background colors for elements */
+    --bs-bg-light: var(--color1);
+    --bs-bg-dark: var(--color1);
+    --bs-bg-body: var(--color1);
+
+
+    --bs-text-light: var(--color2);
+    --bs-text-dark: var(--color1);
+
+
+    /*links Specific Variables*/
+    --bs-link-color: var(--color1);
+    --bs-link-hover-color: var(--color1);
+    --bs-link-font-weight: "bold";
+    --bs-link-decoration: "underline";
+
+
+    /*Navbar-Specific Variables*/
+    --bs-navbar-color: var(--color2);
+    --bs-navbar-bg: var(--navbar-bgc);
+    --bs-navbar-toggler-color: var(--color2);
+    --bs-navbar-brand-color: var(--navbar-brand);
+    --bs-navbar-brand-hover-color: var(--navbar-brand);
+    --bs-navbar-nav-link-color: var(--navbar-link);
+    --bs-navbar-nav-link-hover-color: var(--navbar-link);
+
+ 
+    --bs-font-size-sm: calc(var(--bs-font-size-base) * 0.875);
+    --bs-font-size-lg: calc(var(--bs-font-size-base) * 1.25); 
+ 
+    /*
+    --bs-hN-font-size ...
+    */
+
+    --bs-h1-font-size: calc(var(--bs-font-size-base) * 2.5);
+    --bs-h2-font-size: calc(var(--bs-font-size-base) * 2);
+    --bs-h3-font-size: calc(var(--bs-font-size-base) * 1.75);
 }
 
 html,
@@ -40,75 +101,11 @@ body {
 
     scroll-behavior: smooth !important;
 
-    scrollbar-color: var(--color2) var(--main-text-color);
-
-
-}
-
-
-div.hero h1,
-div.hero h2 {
-    color: var(--hero-title-color);
-}
-
-div.hero * {
-    color: var(--hero-text-color);
+    scrollbar-color: var(--color2) var(--color1);
 
 }
 
-div.hero.text-center * {
-    text-align: center;
-
-}
-
-
-div.huge h2 strong,
-div.huge h3 strong {
-    color: var(--color1) !important;
-
-}
-
-div.huge.dark h2 strong,
-div.huge.dark h3 strong {
-    color: var(--color2) !important;
-
-}
-
-
-
-/******* COLORS AND SIZE *******/
-
-
-
-html {
-    font-size: 22px;
-
-
-}
-
-
-
-
-
-body {
-    color: var(--color1);
-    background: var(--color2);
-
-}
-
-h1,
-h2,
-h3,
-h4 {
-    color: var(--main-title-color);
-}
-
-main a {
-    color: inherit;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
+ 
 
 
 nav.navbar a.nav-link,
@@ -221,59 +218,6 @@ main>p>img.nice {
 }
 
 
- 
-.stroke h1,
-.stroke h2,
-.stroke h3,
-.stroke.h1 {
-
-    color: #00000000 !important;
-    -webkit-text-stroke-width: 2px;
-    stroke-width: 2px;
-    -webkit-text-stroke-color: #FFFFFF;
-    stroke: #FFFFFF;
-    text-shadow: 2px 2px 2px #00000033;
-
-    font-size: calc(6vw + 6vh);
-    opacity: 1;
-    padding: 1rem 0;
-    margin: 0;
-    line-height: 1;
-}
-
-
-
-.huge h2 a,
-.huge h3 a {
-    text-decoration: underline;
-    color: var(--color2);
-}
-
-div.zigzag .zigzag-content p:first-child:first-letter {
-
-    font-size: 2rem;
-    font-weight: bold;
-
-
-}
-
-
-.blockquote.huge>p,
-figcaption.blockquote-footer.stroke {
-
-    color: #FFFFFF !important;
-    -webkit-text-stroke-width: 2px;
-    stroke-width: 2px;
-    -webkit-text-stroke-color: #FFFFFF;
-    stroke: #FFFFFF;
-
-
-    font-size: calc(6vw + 6vh);
-    opacity: 1;
-    padding: 1rem 0;
-    margin: 0;
-    line-height: 1;
-}
 
 .content h2+p,
 .content h3+p {
@@ -298,38 +242,6 @@ figcaption.blockquote-footer.stroke {
 }
 
 
-// nav.navbar a.navbar-brand strong
-.outline {
-
-    color: #00000044 !important;
-    -webkit-text-stroke-width: 1px;
-    stroke-width: 1px;
-    -webkit-text-stroke-color: #FFFFFF;
-    stroke: #FFFFFF;
-    text-shadow: 2px 2px 4px #00000044;
-    font-size: calc(2vw + 3.5vh);
-    opacity: 1;
-    font-size: 1.6rem !important;
-
-
-}
-
-.hero.stroke a.h2,
-.hero .submenu .nav-item {
-
-    color: #ffffff !important;
-    -webkit-text-stroke-width: 2px;
-    stroke-width: 2px;
-    -webkit-text-stroke-color: #FFFFFF;
-    stroke: #FFFFFF;
-    text-shadow: 2px 2px 4px black !important;
-    font-size: calc(2vw + 3.5vh);
-    opacity: 1;
-    font-size: 1.6rem !important;
-    opacity: .85;
-
-}
-
 .hero.huge a.h2:before,
 .hero .submenu .nav-item:before {
 
@@ -343,13 +255,6 @@ figcaption.blockquote-footer.stroke {
     padding: 0;
 }
 
-main h2 {
-    font-size: calc(2vw + 2vh);
-    -webkit-text-stroke-color: var(--color1);
- 
-    
-
-}
 
 
 .id_div {
@@ -357,53 +262,14 @@ main h2 {
 }
 
 
-blockquote.blockquote.huge>p,
-figcaption.blockquote-footer.huge {
-    padding: 0px;
-    margin: 0px;
-
-    max-width: 1024px;
-    font-size: calc(3vw + 3vh);
-    background-color: #00000022;
-
-}
+ 
 
 * {
     scroll-margin-top: 60px;
 }
 
 
-.stroke.light h1,
-.stroke.light h2,
-.stroke.light h3,
-.stroke.light a {
-
-    -webkit-text-stroke-color: var(--color1);
-    stroke: var(--color1);
-    text-shadow: 2px 2px 4px var(--color2);
-
-}
-
-.huge a {
-    font-size: 5 vw;
-}
-
-.huge h2 {
-    font-size: calc(3.5vw + 3.5vh);
-
-    text-align: left;
-}
-
-.huge h3 {
-    font-size: calc(3vw + 3vh);
-
-    text-align: left;
-}
-
-.huge p {
-    font-size: 1.2rem;
-}
-
+ 
 
 nav.navbar a.nav-link.active {
     text-decoration: overline;
@@ -417,3 +283,38 @@ nav.navbar a.nav-link.active {
 form.sent button#submit {
     display: none!important;
 } 
+
+
+
+svg.bi {
+    width: 16px;
+    height: 16px;
+}
+
+
+
+img.rounded8 {
+    border-radius: 8px !important;
+
+}
+
+img.rounded16 {
+    border-radius: 8px !important;
+
+}
+
+
+img.circle {
+    border-radius: 50% !important;
+
+}
+
+img.shadow {
+
+    box-shadow: 0px 0px 10px white;
+
+}
+
+figcaption {
+    font-weight: bold;
+}

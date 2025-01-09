@@ -65,8 +65,6 @@ class Kernel
             }
 
 
-
-
         }
 
 
@@ -87,6 +85,10 @@ class Kernel
         // $conf('app.domain', $_SERVER['SERVER_NAME']);
         $conf('app.domain', $_SERVER['HTTP_HOST']);
         $conf('app.protocol', $isHttps ? "https" : "http");
+
+        $canonical = ($isHttps ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+
+        $conf('seo.canonical', $canonical);
 
 
 
@@ -231,7 +233,7 @@ class Kernel
 name: '$project' 
 domain: '$project' 
 language: 'en'
-theme: 'bootstrap5'
+theme: 'kotek'
 auto.title: 'yes'
                   
                         ");

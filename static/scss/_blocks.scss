@@ -18,8 +18,6 @@
    
 }
 
- 
-
 
 @media (min-width: 40em) {
     .zigzag-media {
@@ -48,6 +46,7 @@ body.has_hero {
     overflow-x: hidden !important;
 }
 
+// make them full width !
 div.cover,
 div.hero {
     width: 100vw;
@@ -57,21 +56,12 @@ div.hero {
 
     left: 50%;
     
-
-
-
 }
 
 div.cover,
 div.hero {
     height: 100vh;
-    
-
-
-
 }
-
- 
 
 div.cover .content,
 div.hero .content {
@@ -82,9 +72,6 @@ div.hero .content {
     position: relative;
     display: grid;
     place-items: center;
-
-
-
 
 }
 
@@ -139,8 +126,8 @@ div.hero div.bgcover {
 }
 
 
-div.cover p,
-div.hero p {
+div.cover.OLD p,
+div.hero.old p {
     width: 80%;
     margin: auto;
 
@@ -159,14 +146,7 @@ div.hero .bgcolor {
     padding: 0;
 }
 
-
-
-body {
-
-    margin-top: 100px ! important;
-    padding-top: 100px ! important;
-}
-
+ 
 body.header {
 
     margin-top: 0 !important;
@@ -229,7 +209,9 @@ div.click_to_id:hover {
     Block content
 ****************************/
 
-
+.cfull .content {
+    width: 100vw;
+}
 
 .zigzag.full,
 .block.full,
@@ -273,14 +255,27 @@ div.cover>a {
 
 
 
-.light {
+.light * {
+   
+    color: var(--color1);
+
+}
+
+
+.dark * {
+ 
+    color: var(--color2);
+
+}
+
+.light div.zigzag-content, .light div.zigzag-media  {
     background-color: var(--color2);
     color: var(--color1);
 
 }
 
 
-.dark {
+.dark .zigzag-content, .dark div.zigzag-media    {
     background-color: var(--color1);
     color: var(--color2);
 
@@ -357,9 +352,6 @@ div.block.rounded.button {
 
 div.cover {
 
-
-
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -377,7 +369,7 @@ div.hero>.content,
 div.cover>.content {
     width: 100%;
 
-    max-width: 1024px;
+    maaax-width: 1024px;
 
     z-index: 20;
 
@@ -450,7 +442,7 @@ div.cover.y1 {
 
 }
 
-div.hero.y2
+div.hero.y2,
 div.cover.y2 {
 
     align-items: flex-end;
@@ -542,9 +534,7 @@ div.block.center, div.col.center > * {
 }
 
 
-main .topblock {
-    margin-top: 2rem; 
-}
+ 
 
 main .topblock h2 {
     margin: 0 0 2rem 0 ;

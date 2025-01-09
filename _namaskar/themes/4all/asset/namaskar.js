@@ -158,19 +158,21 @@ if (document.querySelector('.hero .bgcover')) {
   document.body.onscroll = function myFunction() {
     const factor = .5;
     const scrolltotop = document.scrollingElement.scrollTop;
-    const bgcover = document.getElementsByClassName('.hero .bgcover')
+    const bgcover = document.querySelector('.hero .bgcover')
 
     const scollY = scrolltotop * factor | 0;
     const nav = document.querySelector('nav.navbar');
 
-    for (let i = 0; i < bgcover.length; i++) {
-      bgcover[i].style.backgroundPosition = "center " + scollY + "px";
+    if (bgcover) {
+      bgcover.style.backgroundPosition = "center " + scollY + "px";
+
 
     }
 
+
     if (document.body.scrollTop >= 200 || document.documentElement.scrollTop >= 200) {
       nav.classList.add("nav-colored");
-      console.log(document.documentElement.scrollTop)
+
 
     }
     else {
@@ -181,6 +183,32 @@ if (document.querySelector('.hero .bgcover')) {
   document.body.onscroll();
 
 }
+
+
+const navbar = document.querySelector('body.navbar-auto nav.navbar');
+
+
+if (navbar) {
+
+  navbar.lastScrollTop = 0;
+  window.addEventListener('scroll', function () {
+    const currentScroll = window.scrollY || document.documentElement.scrollTop;
+    console.log('currentScroll', currentScroll);
+    if (currentScroll > navbar.lastScrollTop) {
+      // Scrolling down
+      navbar.classList.add('hidden-navbar');
+      console.log('ADD hidden-navbar');
+    } else {
+      // Scrolling up
+      navbar.classList.remove('hidden-navbar');
+      console.log('REMOVE hidden-navbar')
+    }
+
+    navbar.lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Avoid negative scroll
+  });
+}
+
+
 
 /*
 Bootstrap 5 Collapse Events

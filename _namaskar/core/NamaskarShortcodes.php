@@ -435,6 +435,7 @@ $this->addShortcode('center', function ($attributes, $content, $tagName) {
 
 
     $classes = $this->getCssClasses($attributes);
+    $content = $this->renderBlock($content);
     return <<<HTML
 
     <div class="text-center $classes">
@@ -443,6 +444,35 @@ $this->addShortcode('center', function ($attributes, $content, $tagName) {
 
     HTML;
 });
+
+$this->addShortcode('div', function ($attributes, $content, $tagName) {
+
+
+    $classes = $this->getCssClasses($attributes);
+    $content = $this->renderBlock($content);
+    return <<<HTML
+
+    <div class="namdiv $classes">
+    $content
+    </div>
+
+    HTML;
+});
+
+$this->addShortcode('abs', function ($attributes, $content, $tagName) {
+
+
+    $classes = $this->getCssClasses($attributes);
+    $content = $this->renderBlock($content);
+    return <<<HTML
+
+    <div class="namdiv pos-abs $classes">
+    $content
+    </div>
+
+    HTML;
+});
+
 
 $this->addShortcode('====', function ($attributes, $content, $tagName) {
     $content = explode("\n[==]", $content);
@@ -1103,6 +1133,20 @@ $this->addShortcode('link', function ($attributes, $content, $tagName) {
 });
 
 
+
+$this->addShortcode('cap', function ($attributes, $content, $tagName) {
+    $path = $attributes[0];
+
+    $caption = $attributes[1] ?? $attributes[0];
+
+    $html = "[img \"$path\" caption=\"$caption\"]";
+
+    $html = $this->processShortcodes($html);
+
+
+    return trim($html);
+});
+
 $this->addShortcode('img', function ($attributes, $content, $tagName) {
     $path = $attributes[0];
     $zen = Kernel::service('ZenConfig');
@@ -1189,6 +1233,40 @@ $this->addShortcode('default', function ($attributes, $content, $tagName) {
     foreach ($attributes as $key => $value) {
         if (!is_int($key))
             ($this->conf)("default.$shortcode.$key", $value);
+    }
+
+});
+
+$this->addShortcode('seo', function ($attributes, $content, $tagName) {
+
+    $name = array_shift($attributes);
+
+    $names = [
+        "author",
+        "description",
+        "canonical",
+        "locale",
+        "canonical",
+        "locale",
+        "site_name",
+        "type",
+        "title",
+        "summary",
+        "image",
+    ];
+
+
+    if (!in_array("name", $names)) {
+        die("shortcode seo, unknown meta : $name");
+    };
+
+
+    $classes = $this->getCssClasses($attributes);
+    if ($classes)
+        $attributes['classes'] = $classes;
+    foreach ($attributes as $key => $value) {
+        if (!is_int($key))
+            ($this->conf)("seo.$name", $value);
     }
 
 });
@@ -1329,6 +1407,35 @@ $this->addShortcode('for', function ($attributes, $content, $tagName) {
         }
 
     return $this->processShortcodes($html);
+});
+
+$this->addShortcode('listfolder', function ($attributes, $content, $tagName) {
+
+    $html = '';
+    $folder = $attributes[0];
+
+    $content = trim($content);
+    if (strpos('..', $folder) != false)
+        die(" '..' not allowed in for");
+
+    foreach (glob("media/$folder/*") as $filename) {
+
+        $file = pathinfo($filename);
+        $file['size'] = filesize($filename);
+        $file['url'] = $filename;
+        $basename = basename($filename);
+        $html .= <<<HTML
+        <li><a href="$filename">$basename</a></li>
+        HTML;
+    }
+    if ($html === '') {
+        $html = "nothing found in media/$folder";
+    }
+    //  end of folder scanning
+
+
+    return "<ul>$html</ul>";
+
 });
 
 $this->addShortcode('background', function ($attributes, $content, $tagName) {
@@ -1491,6 +1598,67 @@ SCR;
     return trim($js);
 });
 
+
+$this->addShortcode('mailto', function ($attributes, $content, $tagName) {
+
+    $character_set = "+-.0123456789@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
+
+    $this->processShortcodes($content);
+    $content = $attributes[0] ?? strrev($content);
+
+    $key = str_shuffle($character_set);
+    $cipher_text = '';
+    $id = 'e' . rand(1, 999999999);
+    for ($i = 0; $i < strlen($content); $i++) {
+
+        if (strpos($character_set, $content[$i]) === false) {
+            $cipher_text .= ($content[$i] === '"') ? '\"' : $content[$i];
+        } else {
+            $cipher_text .= $key[strpos($character_set, $content[$i])];
+        }
+    }
+    $js = <<<SCR
+<span id="$id">[protected by js]</span>
+
+<script>
+(function (){let a="$key", b, c="$cipher_text", d="";b=a.split("").sort().join("");for(let e=c.length-1;e>-1;e--)
+if(a.indexOf(c.charAt(e) !== false)) d+=b.charAt(a.indexOf(c.charAt(e)));else d+= c.charAt(e);d = d.split("").reverse().join("");
+document.getElementById("$id").innerHTML=`<a href='mailto:\${d}'>\${d}</a>`;
+}());
+</script>
+SCR;
+
+    return trim($js);
+});
+
+
+
+
+$this->addShortcode('pdf', function ($attributes, $content, $tagName) {
+
+    $url = $attributes[0] ?? false;
+    $title = $attributes[1] ?? "";
+
+    if ($url === false)
+        die("shortcode: [pdf] url missing");
+
+    if (!preg_match("@^https?://@", $url)) {
+
+        $media = ($this->conf)('media');
+        $url = "$media/pdf/$url";
+    }
+
+    return <<<html
+         
+        <embed src="$url" type="application/pdf" style="width:100%;height:90vh" title="$title" />
+        
+        html;
+
+
+
+
+});
+
 $this->addShortcode('slides', function ($attributes, $content, $tagName) {
 
     $content = ($this->conf)('page.content');
@@ -1582,26 +1750,31 @@ $this->addShortcode('gallery', function ($attributes, $content, $tagName) {
 
 
 $this->addShortcode('carousel', function ($attributes, $content, $tagName) {
-    static $id = 0;
-    $id++;
+    static $num = 0;
+    $num++;
 
-    $elementId = $tagName . '_' . $id;
-    ($this->conf)("$elementId.id", $elementId);
+    $files = [];
+    $folder = $attributes[0] ?? die('carousel no folder');
 
-    $str = $this->formatSimpleArray($content, "$elementId.items");
-    $this->conf->parseString($str);
+    foreach (glob("media/img/$folder/*") as $filename) {
 
-    $attributes = array_merge($attributes, ['this' => "$elementId"]);
-    foreach ($attributes as $key => $attribute) {
-        if (is_integer($key)) {
-            $attributes[$attribute] = $attribute;
-            ($this->conf)("$elementId.$attribute", $attribute);
-        } else {
-            ($this->conf)("$elementId.$key", $attribute);
-        }
+        $files[] = $filename;
+
     }
 
-    return $this->templateHandler($attributes, null, $tagName, false);
+    $attributes['files'] = $files;
+    $attributes['id'] = $tagName . $num;
+
+
+    $attributes['fade'] = ' carousel-fade';
+
+    $interval = '';
+    if (isset($attributes['speed']))
+        $interval = " data-bs-interval=\"$attributes[speed]\"";
+
+    $attributes['interval'] = $interval;
+
+    return $this->includeTemplate($attributes, $content, 'carousel', false);
 });
 
 $this->addShortcode('.lightboxModal', function ($attributes, $content, $tagName) {

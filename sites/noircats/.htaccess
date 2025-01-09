@@ -1,23 +1,29 @@
-RewriteEngine on
 
-# this folder content the website data, so it should not be accessible
-RewriteRule "media/_data/" - [F]
-
-# we don't show files in folders
-Options -Indexes
-
-# Redirect to https, except localhost
+RewriteEngine On
+# Redirect to https if available, except localhost
 RewriteCond %{HTTPS} off
-RewriteCond %{REMOTE_ADDR} !127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}
-RewriteCond %{HTTP_HOST} !localhost [NC]
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+RewriteCond %{SERVER_PORT} 443
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # remove trailing "/" in folder names 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [R,L]
 
-# if the requested url does not exist, index.php will take care of it.
+# we don't show files in folders
+Options -Indexes
+
+# this folder content the website data, so it should not be accessible
+RewriteRule "media/_data/" - [F]
+
+# index.php is the entry point for unknown url
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)?$ index.php?url=$1 [L,QSA]
+ 
+
+# RewriteCond %{HTTP_HOST} !localhost [NC]
+
+
+
+

@@ -41,9 +41,6 @@ class PageModel
     }
 
 
-
-
-
     /**
      * laConf
      * get the Language Aware Configuration settings, 
@@ -237,11 +234,23 @@ class PageModel
 
         $this->siteMenuMain($url);
 
-        // site.menu.auto === true 
-
-
 
         $content = $conf('page.rawContent');
+
+        if ($conf('site.seo'))
+            $this->buildPageSEO();
+
+        if ($conf('theme.fonts')) {
+
+            $fonts = $this->includeGoogleFonts(explode(
+                '|',
+                $conf('theme.fonts.load')
+            ));
+            $conf('site.fonts', $fonts);
+
+        }
+
+
 
         // AUTOLINK: 
         $content = preg_replace('"\n(http[s]?://[^\n]+?)\n"', '<a href="$1" target="_blank">$1</a>' . "\n", $content);
@@ -273,13 +282,52 @@ class PageModel
 
 
 
-
         $conf('page.content', trim($content));
 
         /******** end buildModel ********/
         return $content;
     }
 
+
+    private function buildPageSEO()
+    {
+
+        $conf = $this->conf;
+        $content = $conf('page.rawContent');
+
+
+        $conf('seo.description', $conf('page.seo.description') ?? $this->getDescription($content));
+        $conf('seo.locale', $conf('site.seo.locale'));
+
+
+
+    }
+
+    private function getDescription($markdown)
+    {
+        // Split the markdown string into lines
+
+        $markdown = str_replace('<br>', ' ', $markdown);
+        $markdown = str_replace('*', '', $markdown);
+        $markdown = strip_tags($markdown);
+        $lines = explode("\n", $markdown);
+        $headers = [];
+
+        foreach ($lines as $line) {
+            // Check if the line starts with "## "
+            if (strpos($line, '# ') === 0) {
+                // Remove the "## " prefix and trim the line
+                $headers[] = trim(substr($line, 2));
+            } else
+                if (strpos($line, '## ') === 0) {
+                    // Remove the "## " prefix and trim the line
+                    $headers[] = trim(substr($line, 3));
+                }
+        }
+
+        // Concatenate the headers with a space between them
+        return implode(' - ', $headers);
+    }
 
     private function isUrlActive($itemUrl): bool
     {
@@ -404,8 +452,10 @@ class PageModel
     {
         $content = trim($this->mempad->mpContent[$id]);
 
-        if (preg_match('/^[=]{3}\s*\n(.*)\n[=]{3}\s*(.*)$/ms', $content, $m)) {
+        if (preg_match('/^[=]{3}\s*\n(.*?)\n[=]{3}\s*(.*)$/s', $content, $m)) {
             $fm = new ZenConfig(true);
+
+
             $fm->parseString($m[1]);
             return [$fm, $m[2]];
         }
@@ -594,6 +644,152 @@ class PageModel
             }
         }
     }
+
+
+    function includeGoogleFonts(array $fontNames): string
+    {
+
+        // List of 50 most popular Google Fonts with their valid names
+        $popularFonts = [
+            'Roboto',
+            'Open Sans',
+            'Lato',
+            'Montserrat',
+            'Oswald',
+            'Raleway',
+            'Poppins',
+            'Roboto Slab',
+            'Playfair Display',
+            'Merriweather',
+            'Noto Sans',
+            'Ubuntu',
+            'Nunito',
+            'Work Sans',
+            'Arimo',
+            'Source Sans Pro',
+            'Cabin',
+            'PT Sans',
+            'Lora',
+            'Fjalla One',
+            'Quicksand',
+            'Titillium Web',
+            'PT Serif',
+            'Karla',
+            'Indie Flower',
+            'Rubik',
+            'Bitter',
+            'Heebo',
+            'Libre Baskerville',
+            'Overpass',
+            'Mukta',
+            'Dosis',
+            'Josefin Sans',
+            'Anton',
+            'Comfortaa',
+            'Varela Round',
+            'Asap',
+            'Barlow',
+            'Cormorant Garamond',
+            'Abel',
+            'Signika Negative',
+            'Assistant',
+            'Dancing Script',
+            'Exo 2',
+            'Muli',
+            'Amatic SC',
+            'Zilla Slab',
+            'Oxygen',
+            'Slabo 27px',
+            'Spectral',
+            'Manrope'
+        ];
+
+        // Filter the fonts to include only valid names
+        $validFonts = array_intersect($fontNames, $popularFonts);
+
+        // If no valid fonts, return an empty string
+        if (empty($validFonts)) {
+            die("PageModel::includeGoogleFonts: no valid font found '$fontNames'");
+        }
+
+        // Prepare the Google Fonts URL
+        $encodedFonts = array_map('urlencode', $validFonts);
+
+        $families = [];
+        $styles = "";
+
+        $colors = "";
+
+        $themeColors = N("theme.colors");
+        if ($themeColors)
+            foreach ($themeColors as $key => $color) {
+
+                $colors .= "--bs-$key: $color;\n";
+
+            }
+
+        $fontText = N('theme.fonts.text');
+        //$fontHeaders = N('theme.fonts.title') ?? $fontText;
+        [$fontHeaders, $fontHeadersColor] = $this->getFontAndColor(N('theme.fonts.title') ?? $fontText);
+
+        $fontBrandname = N('theme.fonts.brandname') ?? $fontText;
+
+        $fontCode = N('theme.fonts.code') ?? 'monospace';
+
+        $styles = <<<html
+        
+        :root {
+        $colors
+            
+        --font-text: '$fontText';
+        --font-title: '$fontHeaders';
+        --font-brandname: '$fontBrandname';
+        --font-code: '$fontCode';
+
+        --bs-font-size-base: 1.2rem;
+        --bs-body-font-size: var(--bs-font-size-base);
+        --bs-heading-color: $fontHeadersColor;
+
+        }
+        html;
+
+
+
+        foreach ($encodedFonts as $key => $font) {
+            $families[] = "family=$font:ital,wght@0,400;0,700;1,400;1,700&display=swap";
+
+        }
+        $families = implode('&', $families);
+        $code = <<<html
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?{$families}&display=swap" rel="stylesheet">
+        <style>$styles</style>
+        html;
+
+
+        return $code;
+    }
+
+
+    public function getFontAndColor($str): array
+    {
+        $arr = explode(' ', $str);
+
+        if (!isset($arr[1]))
+            $arr[1] = 'body-color';
+
+        $font = $arr[0];
+        $color = "var(--bs-$arr[1])";
+
+
+        return [$font, $color];
+
+
+
+    }
+
+
 
 
 }

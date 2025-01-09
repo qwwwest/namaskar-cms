@@ -1,0 +1,140 @@
+ 
+
+/***************************
+    cover2 
+****************************/
+  
+div.cover2
+{
+    width: 100vw;
+
+    position: relative;
+    margin-left: -50vw;
+
+    left: 50%;
+ 
+& > div.block-img  {
+    display:block;
+    width: 100%;
+    height: 50vh;
+ 
+    z-index: -1;
+    background-position: center;
+    background-size: cover;
+    background-attachment: scroll ;
+    position: relative;
+    & > .content1cover   {
+        display:block;
+        width: 100%;
+        background-color: transparent;
+       
+        
+ 
+        margin: 0 ; 
+        padding:  2rem ; 
+         
+        position: absolute;
+        bottom: 0;
+
+        
+        & > h2 {
+          
+ 
+            padding:0;
+            margin:0;
+        }
+    }
+  
+}
+
+ 
+
+}
+
+  .content2cover  {
+    display:block;
+    width: 100%;
+    background-color: var(--color2);
+    color: var(--color1);
+    position: relative;
+    padding: 1rem;
+    max-width: 1024px;
+}
+
+@media (min-width: 768px) {
+    div.cover2
+    {
+    
+
+    & > div.block-img  {
+ 
+        height: 100vh;
+        position: relative;
+      
+        z-index: -1;
+     
+        &  .content1cover   {
+            display:block;
+            width: 100%;
+            max-width: 1024px;
+    
+            color: var(--color1);
+    
+            padding: 1rem 0;
+            
+     
+            position: -webkit-sticky;
+            position: sticky;
+            top: 65%;
+           
+            text-align: left;
+            background:  transparent;
+            color: var(--color1);
+            background-color: transparent;
+         
+          } 
+      
+    }
+    
+    &.fixed > div.block-img  {
+        background-attachment: fixed;
+    }
+
+    & > img {
+        position: fixed;
+        top: 0;
+        left: 0;
+    
+        height: 100vh;
+    
+        @for $i from 1 through 20 { // Loop from 0 to 20 for steps of 10
+            $brightness: $i * 5; // Calculate the brightness percentage
+        
+            &.darken#{$brightness} > img {
+            filter: brightness(#{1 - $i * 0.05}); // Convert step to actual brightness value
+            }
+        }
+    
+    }
+
+ 
+ 
+    }
+
+ 
+    .content2cover  {
+        display:block;
+        width: 100%;
+        max-width: 1024px;
+        background-color: var(--color2);
+        color: var(--color1);
+        position: relative;
+        padding: 1rem;
+        
+    }
+
+}
+ 
+
+ 
+ 

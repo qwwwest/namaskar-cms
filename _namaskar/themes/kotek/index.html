@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="{{page.language}}">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if site.seo %}
+    <meta name="author" content="{{site.seo.author}}">
+    <meta name="generator" content="Namaskar">
+    <meta name="description" content="{{seo.desc}}">
+
+    <link rel="canonical" href="{{ seo.canonical }}" />
+    <meta property="og:locale" content="{{seo.locale}}" />
+    <meta property="og:site_name" content="{{site.name}}" />
+    <meta property="og:type" content="{{seo.type}}" />
+    <meta property="og:title" content="{{page.title}} - {{site.name}}" />
+    <meta property="og:description" content="{{seo.desc}}" />
+    <meta property="og:url" content="{{ seo.canonical }}" />
+    <meta property="og:image" content="{{ seo.img }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{page.title}} - {{site.name}}" />
+    <meta name="twitter:description" content="{{seo.desc}}" />
+    <meta name="twitter:image" content="{{seo.img}}" />
+    {% endif %}
+    <title>{{page.title}}</title>
+
+    <link href="{{asset}}/namaskar.min.css" rel="stylesheet">
+    <link href="{{asset}}/styles.css" rel="stylesheet">
+    {{site.fonts}}
+</head>
+
+<body{{page.body_class_attribute}}>
+
+
+    [region header.top ]
+    {% include navbar.html %}
+
+    [region header.bottom ]
+
+    [region hero ]
+    <div class="pb-3 flex-grow-1 d-flex flex-column flex-sm-row overflow-y" id="main">
+
+        {% if page.regions.sidebar.first || site.regions.sidebar.first %}
+
+        {% include aside.html %}
+        {% endif %}
+        <div class=" col overflow-y h-100 ">
+
+
+
+            [region breadcrumb]
+            {% if page.breadcrumb %}
+            {% include breadcrumb.html %}
+            {% endif %}
+
+
+
+
+            <main class="container">
+                [region help]
+
+                [region main.top]
+
+                {% if site.autoTitle %}
+                <h1>{{page.title}}</h1>
+                {% endif %}
+
+                [content]
+                [region main.bottom]
+            </main>
+
+        </div>
+    </div>
+
+    {% if site.regions.footer %}
+    <footer class="pt-3 mt-4 text-body-secondary border-top">
+        [region footer]
+    </footer>
+    {% endif %}
+
+
+    {% include modal.html %}
+
+    <script src="{{asset}}/lib/bs/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset }}/lib/namaskarLightbox.js"></script>
+
+
+
+
+    <script src="{{asset}}/namaskar.js"></script>
+    <script srec="{{asset}}/namaskar.{{site.name}}.js"></script>
+
+    </body>
+
+</html>

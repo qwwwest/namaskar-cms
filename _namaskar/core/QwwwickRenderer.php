@@ -367,6 +367,9 @@ class QwwwickRenderer
     {
         $content = trim($content);
 
+        if ($content === '')
+            return '';
+
         $content = $this->processShortcodes($content);
 
         $content = $this->processTokens($content);
@@ -379,6 +382,29 @@ class QwwwickRenderer
         // )
         //     $content = trim(substr($content, 3, -5)); // remove '<p>' tags
         return $content;
+    }
+
+
+
+    /*
+     * Render To css
+     */
+
+    //public function renderCSS($template)
+    public function renderCSS($content)
+    {
+
+        $this->newContext('styles.css');
+        $content = $this->renderBlock($content);
+        $content = $this->processShortcodes($content);
+
+        // ($this->conf)('page.content', trim($content));
+
+        $content = $this->processTokens($content);
+        // $html = $this->processShortcodes($html);
+        $this->oldContext();
+
+        return trim($content);
     }
 
     /*
@@ -411,6 +437,25 @@ class QwwwickRenderer
         $html = $this->processShortcodes($html);
         $this->oldContext();
 
+
+        // postprocess add class to element
+        $elements = ($this->conf)('theme.add.class');
+        if ($elements)
+            foreach ($elements as $tag => $classes) {
+
+                if ($tag === 'brandname')
+
+                    $html = str_replace("navbar-brand", "navbar-brand $classes", $html);
+                else
+                    if ($tag === 'img')
+
+                        $html = str_replace("img-fluid", "img-fluid $classes", $html);
+                    else
+
+                        $html = str_replace("<$tag>", "<$tag class=\"$classes\">", $html);
+
+            }
+
         return $html;
     }
 
@@ -423,10 +468,22 @@ class QwwwickRenderer
             $conf('page.body_classes[]', 'show-regions');
         }
 
+        if ($classes = $conf('theme.body.class')) {
+            $classes = explode(" ", $classes);
+            foreach ($classes as $key => $class) {
+                $conf('page.body_classes[]', $class);
+            }
+
+        }
 
         if ($conf('theme.navbar.fixed')) {
             $conf('page.body_classes[]', 'navbar-fixed');
         }
+
+        if ($type = $conf('theme.navbar.type') ?? 'auto') {
+            $conf('page.body_classes[]', "navbar-$type");
+        }
+
 
         $bodyclasses = $conf('page.body_classes');
 
@@ -437,6 +494,7 @@ class QwwwickRenderer
             $conf('page.body_class_attribute', " class='$classes'");
 
         }
+
 
     }
 
@@ -545,7 +603,10 @@ class QwwwickRenderer
             $basename = $parts[1];
         } else {
             // index.html
-            $theme = N('page.theme') ?? N('site.theme') ?? 'bootstrap5';
+            $theme = N('page.theme') ?? N('site.theme');
+            if ($theme === '') {
+                $theme = 'kotek';
+            }
             $basename = $template;
         }
 
@@ -562,7 +623,7 @@ class QwwwickRenderer
         }
         foreach ($this->tfolders as $tfolder) {
 
-            $file = "$tfolder/bootstrap5/$basename";
+            $file = "$tfolder/kotek/$basename";
 
             if (\file_exists($file)) {
                 return $file;
@@ -599,8 +660,12 @@ class QwwwickRenderer
         }
 
         // $vars['content'] = $content;
+        $parts = explode('[===]', $content);
+        $content = $parts[0];
+        $content2 = $parts[1] ?? '';
         $vars['content'] = $this->renderBlock($content);
-        ;
+        $vars['content2'] = $this->renderBlock($content2);
+
         // $vars = [...$attributes, 'content' => $content];
 
         $html = $this->include($templateFile, $vars);

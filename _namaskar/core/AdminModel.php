@@ -89,7 +89,7 @@ class AdminModel
 
             $place = trim("$row[city] $row[country]");
 
-
+            $row['message'] = str_replace("\n", '<br>', $row['message']);
             $table .= <<<HTML
                 <tr class="$status"><td><a href='contact?action=seen&id=$row[id]' class=status><svg class=bi><use xlink:href='#check' /></svg></a></td><td>
                 <details>
